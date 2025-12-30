@@ -6,7 +6,8 @@ from datetime import datetime
 class FaithfulThreadsAPITester:
     def __init__(self, base_url="https://faithful-threads.preview.emergentagent.com"):
         self.base_url = base_url
-        self.session = requests.Session()
+        self.user_session = requests.Session()
+        self.admin_session = requests.Session()
         self.admin_token = None
         self.user_token = None
         self.tests_run = 0
