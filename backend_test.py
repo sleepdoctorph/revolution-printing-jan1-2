@@ -159,8 +159,7 @@ class FaithfulThreadsAPITester:
             self.log_test("Get Current User", False, "No user token available")
             return
             
-        headers = {'Authorization': f'Bearer {self.user_token}'}
-        self.run_test("Get Current User", "GET", "auth/me", 200, headers=headers)
+        self.run_test("Get Current User", "GET", "auth/me", 200)
 
     def test_products_endpoints(self):
         """Test product-related endpoints"""
