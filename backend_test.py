@@ -29,33 +29,25 @@ class FaithfulThreadsAPITester:
             "details": details
         })
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, use_cookies=True):
+    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, use_admin=False):
         """Run a single API test"""
         url = f"{self.base_url}/api/{endpoint}"
         test_headers = {'Content-Type': 'application/json'}
         if headers:
             test_headers.update(headers)
 
+        # Choose the appropriate session
+        session = self.admin_session if use_admin else self.user_session
+
         try:
-            # Use session for cookie-based auth or individual request for token-based
-            if use_cookies:
-                if method == 'GET':
-                    response = self.session.get(url, headers=test_headers)
-                elif method == 'POST':
-                    response = self.session.post(url, json=data, headers=test_headers)
-                elif method == 'PUT':
-                    response = self.session.put(url, json=data, headers=test_headers)
-                elif method == 'DELETE':
-                    response = self.session.delete(url, headers=test_headers)
-            else:
-                if method == 'GET':
-                    response = requests.get(url, headers=test_headers)
-                elif method == 'POST':
-                    response = requests.post(url, json=data, headers=test_headers)
-                elif method == 'PUT':
-                    response = requests.put(url, json=data, headers=test_headers)
-                elif method == 'DELETE':
-                    response = requests.delete(url, headers=test_headers)
+            if method == 'GET':
+                response = session.get(url, headers=test_headers)
+            elif method == 'POST':
+                response = session.post(url, json=data, headers=test_headers)
+            elif method == 'PUT':
+                response = session.put(url, json=data, headers=test_headers)
+            elif method == 'DELETE':
+                response = session.delete(url, headers=test_headers)
 
             success = response.status_code == expected_status
             details = f"Status: {response.status_code}"
