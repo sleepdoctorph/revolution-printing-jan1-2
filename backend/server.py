@@ -605,7 +605,6 @@ async def update_order_status(order_id: str, status: str, user: dict = Depends(g
 @api_router.post("/payments/create")
 async def create_payment(payment: PaymentRequest, user: dict = Depends(get_current_user)):
     """Process payment through Square"""
-    from square.client import Client
     
     if not SQUARE_ACCESS_TOKEN:
         # Mock payment for demo without Square credentials
@@ -617,6 +616,8 @@ async def create_payment(payment: PaymentRequest, user: dict = Depends(get_curre
         return {"success": True, "payment_id": payment_id, "message": "Payment processed (demo mode)"}
     
     try:
+        from square.client import Client
+        
         square_client = Client(
             access_token=SQUARE_ACCESS_TOKEN,
             environment=SQUARE_ENVIRONMENT
