@@ -296,7 +296,7 @@ class FaithfulThreadsAPITester:
             return
             
         # Get all orders
-        self.run_test("Get All Orders", "GET", "admin/orders", 200)
+        self.run_test("Get All Orders", "GET", "admin/orders", 200, use_admin=True)
         
         # Update order status
         if order_id:
@@ -305,7 +305,8 @@ class FaithfulThreadsAPITester:
                 "PUT", 
                 f"admin/orders/{order_id}/status", 
                 200, 
-                "shipped"
+                "shipped",
+                use_admin=True
             )
 
     def test_payment(self, order_id):
