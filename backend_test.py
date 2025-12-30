@@ -112,7 +112,8 @@ class FaithfulThreadsAPITester:
             "POST", 
             "auth/login", 
             200, 
-            admin_data
+            admin_data,
+            use_admin=True
         )
         
         if success and 'access_token' in response:
