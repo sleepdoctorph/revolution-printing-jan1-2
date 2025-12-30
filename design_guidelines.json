@@ -1,0 +1,164 @@
+{
+  "identity": {
+    "name": "E1",
+    "mission": "Create a 'Clean Retro' Christian e-commerce experience that fuses 80s nostalgia with modern faith aesthetics.",
+    "principles": [
+      "Fusion over Imitation: Mix 80s Memphis design with modern clean SaaS layouts.",
+      "Emotion First: Every pixel should feel warm, welcoming, and joyful.",
+      "Content is King: Products are the heroes; the UI is the gallery.",
+      "Negative Space: Use generous cream-colored whitespace to let the bold colors breathe.",
+      "Contrast: High contrast borders and hard shadows (Neo-Brutalist Lite)."
+    ]
+  },
+  "design_system": {
+    "typography": {
+      "font_family": {
+        "heading": "Syne, sans-serif",
+        "body": "DM Sans, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "google_fonts_import": "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Syne:wght@400;700;800&display=swap",
+      "scale": {
+        "h1": "text-5xl md:text-7xl font-extrabold tracking-tight leading-none",
+        "h2": "text-3xl md:text-5xl font-bold tracking-tight",
+        "h3": "text-2xl md:text-3xl font-bold",
+        "body": "text-base md:text-lg leading-relaxed",
+        "caption": "text-sm font-medium tracking-wide uppercase"
+      }
+    },
+    "colors": {
+      "palette": {
+        "background": "#FFFBF2",
+        "foreground": "#1C1917",
+        "card": "#FFFFFF",
+        "card_foreground": "#1C1917",
+        "popover": "#FFFFFF",
+        "popover_foreground": "#1C1917",
+        "primary": "#D97706",
+        "primary_foreground": "#FFFFFF",
+        "secondary": "#BE123C",
+        "secondary_foreground": "#FFFFFF",
+        "muted": "#F5F5F4",
+        "muted_foreground": "#78716C",
+        "accent": "#0F766E",
+        "accent_foreground": "#FFFFFF",
+        "destructive": "#EF4444",
+        "destructive_foreground": "#FFFFFF",
+        "border": "#1C1917",
+        "input": "#E7E5E4",
+        "ring": "#1C1917"
+      },
+      "usage": {
+        "primary": "Main CTAs, Highlights, Brand Elements (Mustard Yellow)",
+        "secondary": "Sale tags, Urgent actions, Heart/Love motifs (Retro Red)",
+        "accent": "Success states, Freshness, Nature elements (Teal)",
+        "background": "Warm Cream/Paper texture feel - NEVER pure white #FFFFFF for page bg"
+      }
+    },
+    "visual_enhancers": {
+      "radius": "0.75rem",
+      "borders": "border-2 border-black",
+      "shadows": {
+        "default": "shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]",
+        "hover": "shadow-[6px_6px_0px_0px_rgba(28,25,23,1)]",
+        "active": "shadow-[2px_2px_0px_0px_rgba(28,25,23,1)] translate-x-[2px] translate-y-[2px]"
+      },
+      "textures": "Use subtle grain or noise overlay on the background if possible to enhance the retro paper feel."
+    }
+  },
+  "components": {
+    "buttons": {
+      "base": "inline-flex items-center justify-center rounded-full text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+      "variants": {
+        "default": "bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-y-[0px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+        "outline": "border-2 border-black bg-background hover:bg-accent hover:text-accent-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+        "ghost": "hover:bg-accent hover:text-accent-foreground"
+      }
+    },
+    "cards": {
+      "base": "rounded-xl border-2 border-black bg-card text-card-foreground shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]",
+      "product_card": "group relative overflow-hidden rounded-xl border-2 border-black bg-white transition-all hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+    },
+    "inputs": {
+      "base": "flex h-12 w-full rounded-md border-2 border-black bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    }
+  },
+  "layouts": {
+    "marketing_grid": {
+      "name": "The Tetris Grid",
+      "description": "Asymmetric grid for product showcases to avoid monotony.",
+      "classes": "grid grid-cols-1 md:grid-cols-12 gap-8",
+      "items": {
+        "hero": "col-span-1 md:col-span-8 row-span-2",
+        "tall": "col-span-1 md:col-span-4 row-span-2",
+        "square": "col-span-1 md:col-span-4 row-span-1",
+        "wide": "col-span-1 md:col-span-8 row-span-1"
+      }
+    },
+    "dashboard_grid": {
+      "name": "The Control Room",
+      "description": "Dense, data-heavy grid for the admin panel.",
+      "classes": "grid grid-cols-1 md:grid-cols-4 gap-6",
+      "items": {
+        "stat": "col-span-1",
+        "chart_main": "col-span-1 md:col-span-3 row-span-2",
+        "list": "col-span-1 md:col-span-1 row-span-2"
+      }
+    }
+  },
+  "assets": {
+    "images": {
+      "products": {
+        "tshirts": [
+          "https://images.pexels.com/photos/9594086/pexels-photo-9594086.jpeg",
+          "https://images.pexels.com/photos/7598248/pexels-photo-7598248.jpeg"
+        ],
+        "hoodies": [
+          "https://images.pexels.com/photos/8217415/pexels-photo-8217415.jpeg",
+          "https://images.pexels.com/photos/9594086/pexels-photo-9594086.jpeg"
+        ],
+        "hats": [
+          "https://images.pexels.com/photos/15437441/pexels-photo-15437441.jpeg",
+          "https://images.pexels.com/photos/26886471/pexels-photo-26886471.jpeg"
+        ],
+        "mugs": [
+          "https://images.pexels.com/photos/6801212/pexels-photo-6801212.jpeg",
+          "https://images.pexels.com/photos/6801175/pexels-photo-6801175.jpeg"
+        ]
+      },
+      "lifestyle": [
+        "https://images.unsplash.com/photo-1712701083828-f692860260c0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGRpdmVyc2UlMjBmcmllbmRzJTIwbGF1Z2hpbmclMjBvdXRkb29ycyUyMHN1bnNldHxlbnwwfHx8fDE3NjcxMjc2ODV8MA&ixlib=rb-4.1.0&q=85",
+        "https://images.unsplash.com/photo-1751485119778-48ff6de718ef?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwyfHxoYXBweSUyMGRpdmVyc2UlMjBmcmllbmRzJTIwbGF1Z2hpbmclMjBvdXRkb29ycyUyMHN1bnNldHxlbnwwfHx8fDE3NjcxMjc2ODV8MA&ixlib=rb-4.1.0&q=85",
+        "https://images.pexels.com/photos/7148441/pexels-photo-7148441.jpeg"
+      ],
+      "art_placeholders": [
+        "https://images.pexels.com/photos/26447865/pexels-photo-26447865.jpeg",
+        "https://images.pexels.com/photos/3685210/pexels-photo-3685210.jpeg"
+      ]
+    },
+    "icons": "Use 'lucide-react' for all UI icons. Use 'phosphor-icons' (Duotone) for feature highlights if available."
+  },
+  "instructions_to_main_agent": {
+    "general": [
+      "Implement the 'Clean Retro' theme by strictly adhering to the color palette and border/shadow rules.",
+      "Do NOT use default Tailwind shadows. Use the custom hard shadows defined in 'visual_enhancers'.",
+      "Ensure all interactive elements have the 'data-testid' attribute.",
+      "Use the 'Tetris Grid' for the homepage product showcase.",
+      "Use the 'Control Room' grid for the Admin Dashboard.",
+      "For the 'About' page, focus on storytelling with large typography and lifestyle images.",
+      "Authentication pages should be simple, centered cards with the signature hard shadow style."
+    ],
+    "files_to_modify": [
+      "/app/frontend/src/index.css (Update CSS variables)",
+      "/app/frontend/tailwind.config.js (Extend theme with new colors/fonts)",
+      "/app/frontend/src/App.css (Clean up default styles)"
+    ]
+  },
+  "universal_guidelines": [
+    "Avoid 'AI Slop': No generic gradients, no 'Inter' font for headings, no soft/blurry shadows.",
+    "Spacing: Use generous padding (p-8, p-12) to let the design breathe.",
+    "Motion: Add hover states to EVERYTHING. Buttons should lift, cards should glow or lift.",
+    "Accessibility: Ensure text contrast is high (Black text on Cream bg is perfect).",
+    "Components: Use Shadcn/UI as the base, but HEAVILY customize the CSS to match the 'Neo-Brutalist Lite' style."
+  ]
+}
