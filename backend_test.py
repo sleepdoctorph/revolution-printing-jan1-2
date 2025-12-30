@@ -247,8 +247,6 @@ class FaithfulThreadsAPITester:
             self.log_test("Order Tests", False, "No user token available")
             return None
             
-        headers = {'Authorization': f'Bearer {self.user_token}'}
-        
         # Get products first
         success, products = self.run_test("Get Products for Order", "GET", "products", 200)
         if not success or not products:
@@ -280,15 +278,14 @@ class FaithfulThreadsAPITester:
             "POST", 
             "orders", 
             200, 
-            order_data, 
-            headers
+            order_data
         )
         
         if success and 'order_id' in response:
             order_id = response['order_id']
             
             # Get user orders
-            self.run_test("Get User Orders", "GET", "orders", 200, headers=headers)
+            self.run_test("Get User Orders", "GET", "orders", 200)
             
             return order_id
         
