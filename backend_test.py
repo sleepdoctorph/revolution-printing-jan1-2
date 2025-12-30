@@ -183,7 +183,7 @@ class FaithfulThreadsAPITester:
             self.log_test("Admin Product Tests", False, "No admin token available")
             return None
             
-        # Use session cookies for admin requests since the backend uses cookie-based auth
+        # Use admin session for admin requests
         # Create a new product
         new_product = {
             "name": "Test Product",
@@ -204,7 +204,8 @@ class FaithfulThreadsAPITester:
             "POST", 
             "admin/products", 
             200, 
-            new_product
+            new_product,
+            use_admin=True
         )
         
         if success and 'product_id' in response:
@@ -217,7 +218,8 @@ class FaithfulThreadsAPITester:
                 "PUT", 
                 f"admin/products/{product_id}", 
                 200, 
-                update_data
+                update_data,
+                use_admin=True
             )
             
             # Delete the product
@@ -225,7 +227,8 @@ class FaithfulThreadsAPITester:
                 "Delete Product", 
                 "DELETE", 
                 f"admin/products/{product_id}", 
-                200
+                200,
+                use_admin=True
             )
             
             return product_id
