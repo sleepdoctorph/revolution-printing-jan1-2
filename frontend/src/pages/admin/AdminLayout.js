@@ -5,8 +5,8 @@ import {
   ChevronRight, Menu, X 
 } from 'lucide-react';
 import axios from 'axios';
-import { Button } from '../components/ui/button';
-import { useAuth } from '../context/AuthContext';
+import { Button } from '../../components/ui/button';
+import { useAuth } from '../../context/AuthContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 

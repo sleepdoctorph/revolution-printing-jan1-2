@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Mail, Calendar, MessageSquare } from 'lucide-react';
 import axios from 'axios';
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 

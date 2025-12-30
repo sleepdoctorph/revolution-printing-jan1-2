@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Search, Mail, Calendar } from 'lucide-react';
 import axios from 'axios';
-import { Input } from '../../components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 

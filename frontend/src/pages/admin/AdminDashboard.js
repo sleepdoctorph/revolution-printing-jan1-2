@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { Package, ShoppingCart, Users, DollarSign, TrendingUp, Clock, ArrowRight } from 'lucide-react';
 import axios from 'axios';
-import { Button } from '../../components/ui/button';
+import { Button } from '@/components/ui/button';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
