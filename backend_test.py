@@ -28,7 +28,7 @@ class FaithfulThreadsAPITester:
             "details": details
         })
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, use_cookies=True):
         """Run a single API test"""
         url = f"{self.base_url}/api/{endpoint}"
         test_headers = {'Content-Type': 'application/json'}
@@ -36,14 +36,25 @@ class FaithfulThreadsAPITester:
             test_headers.update(headers)
 
         try:
-            if method == 'GET':
-                response = self.session.get(url, headers=test_headers)
-            elif method == 'POST':
-                response = self.session.post(url, json=data, headers=test_headers)
-            elif method == 'PUT':
-                response = self.session.put(url, json=data, headers=test_headers)
-            elif method == 'DELETE':
-                response = self.session.delete(url, headers=test_headers)
+            # Use session for cookie-based auth or individual request for token-based
+            if use_cookies:
+                if method == 'GET':
+                    response = self.session.get(url, headers=test_headers)
+                elif method == 'POST':
+                    response = self.session.post(url, json=data, headers=test_headers)
+                elif method == 'PUT':
+                    response = self.session.put(url, json=data, headers=test_headers)
+                elif method == 'DELETE':
+                    response = self.session.delete(url, headers=test_headers)
+            else:
+                if method == 'GET':
+                    response = requests.get(url, headers=test_headers)
+                elif method == 'POST':
+                    response = requests.post(url, json=data, headers=test_headers)
+                elif method == 'PUT':
+                    response = requests.put(url, json=data, headers=test_headers)
+                elif method == 'DELETE':
+                    response = requests.delete(url, headers=test_headers)
 
             success = response.status_code == expected_status
             details = f"Status: {response.status_code}"
