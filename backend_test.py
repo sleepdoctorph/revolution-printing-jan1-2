@@ -299,10 +299,8 @@ class FaithfulThreadsAPITester:
             self.log_test("Admin Order Tests", False, "No admin token available")
             return
             
-        headers = {'Authorization': f'Bearer {self.admin_token}'}
-        
         # Get all orders
-        self.run_test("Get All Orders", "GET", "admin/orders", 200, headers=headers)
+        self.run_test("Get All Orders", "GET", "admin/orders", 200)
         
         # Update order status
         if order_id:
@@ -311,8 +309,7 @@ class FaithfulThreadsAPITester:
                 "PUT", 
                 f"admin/orders/{order_id}/status", 
                 200, 
-                "shipped", 
-                headers
+                "shipped"
             )
 
     def test_payment(self, order_id):
