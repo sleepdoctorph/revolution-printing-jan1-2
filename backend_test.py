@@ -364,11 +364,9 @@ class FaithfulThreadsAPITester:
             self.log_test("Admin Stats", False, "No admin token available")
             return
             
-        headers = {'Authorization': f'Bearer {self.admin_token}'}
-        
-        self.run_test("Get Admin Stats", "GET", "admin/stats", 200, headers=headers)
-        self.run_test("Get Customers", "GET", "admin/customers", 200, headers=headers)
-        self.run_test("Get Contacts", "GET", "admin/contacts", 200, headers=headers)
+        self.run_test("Get Admin Stats", "GET", "admin/stats", 200)
+        self.run_test("Get Customers", "GET", "admin/customers", 200)
+        self.run_test("Get Contacts", "GET", "admin/contacts", 200)
 
     def run_all_tests(self):
         """Run all API tests"""
