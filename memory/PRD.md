@@ -9,19 +9,6 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - **Design**: Light & clean with 80's retro color palette (yellow/mustard, red, brown, blue)
 - **Admin Features**: Full dashboard (products, orders, customers)
 
-## User Personas
-1. **Shoppers**: Christian community looking for faith-themed apparel
-2. **Admin**: Store owner managing products, orders, customers
-
-## Core Requirements
-- Product catalog with categories (T-Shirts, Hoodies, Hats, Mugs)
-- Blank products catalog for customization
-- Shopping cart with checkout
-- User authentication (email/password + Google OAuth)
-- Admin dashboard for full store management
-- Contact form
-- About page
-
 ## What's Been Implemented (December 31, 2025)
 
 ### Backend (FastAPI + MongoDB)
@@ -34,12 +21,15 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Database seeding with initial products
 - ✅ Gildan product import endpoint (/api/admin/import-gildan)
 - ✅ Gildan description update endpoint (/api/admin/update-gildan-descriptions)
+- ✅ **Gildan color images endpoint** (/api/admin/update-gildan-color-images)
 - ✅ Image upload for products
 
 ### Frontend (React + Tailwind + Shadcn/UI)
 - ✅ Homepage with hero, categories, featured products
 - ✅ Shop page with filtering and search
 - ✅ Product detail page with size/color selection
+- ✅ **Color swatches with proper hex colors** (20 colors displayed)
+- ✅ **Product image changes when color is clicked** (for 4 main Gildan products)
 - ✅ Shopping cart drawer
 - ✅ Checkout flow
 - ✅ Login/Register with Google OAuth
@@ -49,34 +39,27 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Admin Dashboard (products, orders, customers, messages)
 - ✅ Product image upload in admin
 
-### Design
-- ✅ 80's retro theme with mustard primary, red secondary
-- ✅ Neo-brutalist card shadows
-- ✅ Syne + DM Sans typography
-- ✅ Responsive design
+### Recent Session Updates (December 31, 2025)
+- ✅ **Fixed color display** - All 20 colors now show with proper hex color values
+- ✅ **Added color-specific images** - Product mockup changes when customer clicks on a color
+- ✅ Updated 4 main Gildan products with color images:
+  - Gildan 5000 (Heavy Cotton)
+  - Gildan 64000 (Softstyle)
+  - Gildan 2000 (Ultra Cotton)
+  - Gildan 8000 (DryBlend)
 
-### Recent Session (December 31, 2025)
-- ✅ Scraped and imported 20 Gildan t-shirt products from S&S Activewear wholesaler
-- ✅ **Updated Gildan products with REAL descriptions from wholesaler** (fabric content, weight, specifications)
-- ✅ Added fabric and weight fields to product API responses
-- ✅ Total products now: 33 (12 original + 1 existing Gildan + 20 new Gildan)
-- ✅ Fixed admin dashboard loading issue
-- ✅ Admin login now redirects to /admin dashboard
-- ✅ Comprehensive E2E testing passed (21 backend tests, all frontend flows verified)
+## Color Mapping
+The frontend now includes a comprehensive color map translating apparel color names to hex values:
+- White (#FFFFFF), Black (#000000), Navy (#001F3F), Red (#DC2626)
+- Sport Grey (#8B8B8B), Carolina Blue (#56A0D3), Forest Green (#228B22)
+- And 60+ more apparel industry colors
 
-## Product Details (Gildan)
-All 20 Gildan products now include:
-- **Real descriptions** from S&S Activewear (fabric content, weight, construction details)
-- **Fabric type** (e.g., "100% Cotton", "50% Cotton, 50% Polyester")
-- **Weight** (e.g., "5.3 oz", "6.0 oz")
-- **Product images** from the wholesaler
-- **Available colors and sizes**
-
-## Product Counts by Category
+## Product Counts
 - T-Shirts: 24 (4 Faithful Threads + 20 Gildan blanks)
 - Hoodies: 3
 - Hats: 3
 - Mugs: 3
+- **Total**: 33 products
 
 ## Prioritized Backlog
 
@@ -84,11 +67,13 @@ All 20 Gildan products now include:
 - [x] Core e-commerce flow complete
 - [x] Wholesaler product import (Gildan)
 - [x] Real product descriptions from wholesaler
+- [x] Color swatches with proper colors
+- [x] Product image changes with color selection
 
 ### P1 (High Priority)
 - [ ] Square payment integration with real credentials
 - [ ] Email notifications for orders
-- [ ] Inventory management alerts
+- [ ] Add color images to remaining 16 Gildan products
 
 ### P2 (Medium Priority)
 - [ ] Product reviews/ratings
@@ -107,41 +92,15 @@ All 20 Gildan products now include:
 
 ## API Endpoints
 
-### Auth
-- POST /api/auth/login - User login
-- POST /api/auth/register - User registration
-- GET /api/auth/me - Get current user
-- POST /api/auth/logout - Logout
-
-### Products
-- GET /api/products - Get all products (supports ?category, ?is_blank, ?featured)
-- GET /api/products/{id} - Get single product
-- POST /api/admin/products - Create product (admin)
-- PUT /api/admin/products/{id} - Update product (admin)
-- DELETE /api/admin/products/{id} - Delete product (admin)
-
-### Admin
-- GET /api/admin/stats - Dashboard statistics
-- GET /api/admin/orders - All orders
-- PUT /api/admin/orders/{id}/status - Update order status
-- GET /api/admin/customers - All customers
-- GET /api/admin/contacts - Contact messages
-- POST /api/admin/import-gildan - Import Gildan products
-- POST /api/admin/update-gildan-descriptions - Update Gildan products with real descriptions
-
-### Other
-- POST /api/orders - Create order
-- GET /api/orders - User's orders
-- POST /api/payments/create - Process payment (DEMO MODE)
-- POST /api/contact - Submit contact form
+### Admin - Color Images
+- POST /api/admin/update-gildan-color-images - Update products with color-specific images from S&S Activewear
 
 ## Technical Notes
-- Square Payment is in DEMO MODE - returns success without actual payment processing
-- All Gildan products are marked as "blank" (is_blank: true)
-- Featured products: Gildan 5000, 64000, 2000, H000
-- Product API now returns `fabric` and `weight` fields for Gildan products
+- Square Payment is in DEMO MODE
+- Color images use S&S Activewear CDN: `https://cdn.ssactivewear.com/Images/Color/{colorStyleID}_f_fm.jpg`
+- Color mapping in frontend: `/app/frontend/src/pages/ProductDetailPage.js`
 
 ## Next Tasks
 1. Add Square API credentials for real payment processing
-2. Implement email notifications (order confirmation)
-3. Implement inventory tracking
+2. Add color images to remaining Gildan products
+3. Implement email notifications (order confirmation)
