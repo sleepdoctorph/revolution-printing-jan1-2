@@ -97,14 +97,7 @@ const getColorImageUrl = (product, colorName) => {
     return product.color_images[colorName];
   }
   
-  // For Gildan products, try to construct the color-specific image URL
-  if (product.brand === 'Gildan' && product.images?.[0]) {
-    const baseUrl = product.images[0];
-    // S&S Activewear uses different image IDs for different colors
-    // For now, return the base image - we'll enhance this with actual color mappings
-    return baseUrl;
-  }
-  
+  // Fallback to the main product image
   return product.images?.[0] || 'https://via.placeholder.com/600';
 };
 
