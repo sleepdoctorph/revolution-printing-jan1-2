@@ -30,9 +30,14 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      await login(loginForm.email, loginForm.password);
+      const response = await login(loginForm.email, loginForm.password);
       toast.success('Welcome back!');
-      navigate(from, { replace: true });
+      // Redirect admin users to admin dashboard, others to their intended destination
+      if (response.user?.is_admin) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Login failed');
     } finally {
