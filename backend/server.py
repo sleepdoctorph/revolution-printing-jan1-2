@@ -422,7 +422,9 @@ async def get_products(
             is_blank=p.get("is_blank", False),
             stock=p.get("stock", 0),
             featured=p.get("featured", False),
-            created_at=created_at
+            created_at=created_at,
+            fabric=p.get("fabric"),
+            weight=p.get("weight")
         ))
     
     return result
