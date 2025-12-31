@@ -110,6 +110,8 @@ class ProductResponse(BaseModel):
     stock: int
     featured: bool
     created_at: datetime
+    fabric: Optional[str] = None
+    weight: Optional[str] = None
 
 class CartItem(BaseModel):
     product_id: str
