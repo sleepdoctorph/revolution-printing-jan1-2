@@ -768,6 +768,93 @@ async def get_contacts(user: dict = Depends(get_admin_user)):
 
 # ======================== SEED DATA ========================
 
+@api_router.post("/admin/update-gildan-all-colors")
+async def update_gildan_all_colors(user: dict = Depends(get_admin_user)):
+    """Update Gildan products with ALL colors from S&S Activewear wholesaler"""
+    
+    # Complete color list for Gildan 5000 - 75 colors from S&S Activewear
+    gildan_5000_all_colors = [
+        "White", "Black", "Antique Cherry Red", "Antique Irish Green", "Antique Jade Dome",
+        "Antique Orange", "Antique Sapphire", "Aquatic", "Ash", "Azalea", "Berry", "Blackberry",
+        "Blue Dusk", "Brown Savana", "Cardinal", "Carolina Blue", "Charcoal", "Cobalt",
+        "Coral Silk", "Cornsilk", "Daisy", "Dark Chocolate", "Dark Heather", "Dusty Rose",
+        "Electric Green", "Forest Green", "Garnet", "Gold", "Graphite Heather", "Gravel",
+        "Heather Military Green", "Heather Navy", "Heather Radiant Orchid", "Heather Red",
+        "Heather Sapphire", "Heliconia", "Ice Grey", "Indigo Blue", "Irish Green", "Kiwi",
+        "Light Blue", "Light Pink", "Lilac", "Lime", "Maroon", "Midnight", "Military Green",
+        "Mint Green", "Natural", "Navy", "Neon Blue", "Neon Green", "Off White", "Old Gold",
+        "Orange", "Purple", "Red", "Royal", "Russet", "Safety Green", "Safety Orange",
+        "Safety Pink", "Sand", "Sapphire", "Sky", "Sport Grey", "Sunset", "Tangerine",
+        "Tennessee Orange", "Texas Orange", "Tropical Blue", "Turf Green", "Tweed", "Violet",
+        "Yellow Haze"
+    ]
+    
+    # Color image IDs for ALL Gildan 5000 colors
+    gildan_5000_color_ids = {
+        "White": "16813", "Black": "16787", "Antique Cherry Red": "33476", "Antique Irish Green": "33477",
+        "Antique Jade Dome": "33496", "Antique Orange": "33499", "Antique Sapphire": "33483",
+        "Aquatic": "114510", "Ash": "16785", "Azalea": "16786", "Berry": "33485", "Blackberry": "33481",
+        "Blue Dusk": "114522", "Brown Savana": "33488", "Cardinal": "16788", "Carolina Blue": "16789",
+        "Charcoal": "16790", "Cobalt": "40523", "Coral Silk": "33479", "Cornsilk": "42437",
+        "Daisy": "16791", "Dark Chocolate": "30025", "Dark Heather": "40520", "Dusty Rose": "114512",
+        "Electric Green": "37317", "Forest Green": "16793", "Garnet": "32126", "Gold": "30026",
+        "Graphite Heather": "46045", "Gravel": "33486", "Heather Military Green": "33475",
+        "Heather Navy": "68108", "Heather Radiant Orchid": "52325", "Heather Red": "33487",
+        "Heather Sapphire": "33474", "Heliconia": "32127", "Ice Grey": "37312", "Indigo Blue": "16795",
+        "Irish Green": "30027", "Kiwi": "30028", "Light Blue": "16798", "Light Pink": "30029",
+        "Lilac": "37313", "Lime": "30030", "Maroon": "27238", "Midnight": "37314",
+        "Military Green": "30031", "Mint Green": "40519", "Natural": "16802", "Navy": "16803",
+        "Neon Blue": "42440", "Neon Green": "42441", "Off White": "114519", "Old Gold": "32128",
+        "Orange": "16804", "Purple": "30032", "Red": "27239", "Royal": "16806", "Russet": "33482",
+        "Safety Green": "40521", "Safety Orange": "40522", "Safety Pink": "42438", "Sand": "16807",
+        "Sapphire": "16808", "Sky": "16809", "Sport Grey": "16810", "Sunset": "37315",
+        "Tangerine": "16811", "Tennessee Orange": "32129", "Texas Orange": "42439",
+        "Tropical Blue": "37316", "Turf Green": "33495", "Tweed": "33480", "Violet": "16812",
+        "Yellow Haze": "16814"
+    }
+    
+    # Build color_images dict
+    color_images = {}
+    for color, color_id in gildan_5000_color_ids.items():
+        color_images[color] = f"https://cdn.ssactivewear.com/Images/Color/{color_id}_f_fm.jpg"
+    
+    # Update Gildan 5000
+    result_5000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex Heavy Cotton™ T-Shirt"},
+        {"$set": {
+            "colors": gildan_5000_all_colors,
+            "color_images": color_images
+        }}
+    )
+    
+    # Complete color list for Gildan 64000 Softstyle - 64 colors
+    gildan_64000_all_colors = [
+        "White", "Black", "Antique Cherry Red", "Antique Irish Green", "Antique Sapphire",
+        "Azalea", "Berry", "Cardinal", "Carolina Blue", "Charcoal", "Cherry Red", "Cobalt",
+        "Coral Silk", "Cornsilk", "Daisy", "Dark Heather", "Dark Navy", "Dusty Rose",
+        "Graphite Heather", "Gravel", "Heather Irish Green", "Heather Maroon", "Heather Military Green",
+        "Heather Navy", "Heather Orange", "Heather Purple", "Heather Red", "Heather Royal",
+        "Heather Sapphire", "Heliconia", "Indigo Blue", "Irish Green", "Kelly Green", "Light Blue",
+        "Light Pink", "Lilac", "Lime", "Maroon", "Midnight", "Midnight Navy", "Military Green",
+        "Mint Green", "Natural", "Navy", "Neon Blue", "Neon Green", "Old Gold", "Orange",
+        "Paragon", "Purple", "Red", "Royal", "Russet", "Sand", "Sapphire", "Sport Grey",
+        "Tangerine", "Teal", "Tennessee Orange", "Tropical Blue", "Turf Green", "Violet",
+        "White Mist", "Yellow Haze"
+    ]
+    
+    result_64000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex Softstyle® T-Shirt"},
+        {"$set": {"colors": gildan_64000_all_colors}}
+    )
+    
+    return {
+        "message": "Gildan products updated with all colors",
+        "gildan_5000_colors": len(gildan_5000_all_colors),
+        "gildan_5000_updated": result_5000.modified_count,
+        "gildan_64000_colors": len(gildan_64000_all_colors),
+        "gildan_64000_updated": result_64000.modified_count
+    }
+
 @api_router.post("/admin/import-gildan")
 async def import_gildan_products(user: dict = Depends(get_admin_user)):
     """Import Gildan t-shirt products from scraped wholesaler data"""
