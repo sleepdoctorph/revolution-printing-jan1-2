@@ -506,6 +506,55 @@ async def delete_product(product_id: str, user: dict = Depends(get_admin_user)):
         raise HTTPException(status_code=404, detail="Product not found")
     return {"message": "Product deleted"}
 
+# ======================== IMAGE UPLOAD ROUTES ========================
+
+@api_router.post("/admin/upload")
+async def upload_image(file: UploadFile = File(...), user: dict = Depends(get_admin_user)):
+    """Upload an image and return its URL"""
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Invalid file type. Allowed: JPEG, PNG, GIF, WebP")
+    
+    # Generate unique filename
+    ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    file_path = UPLOAD_DIR / filename
+    
+    # Save file
+    try:
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        logger.error(f"Upload error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to save file")
+    
+    # Return the URL
+    return {"url": f"/api/uploads/{filename}", "filename": filename}
+
+@api_router.post("/admin/upload-multiple")
+async def upload_multiple_images(files: List[UploadFile] = File(...), user: dict = Depends(get_admin_user)):
+    """Upload multiple images and return their URLs"""
+    allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    urls = []
+    
+    for file in files:
+        if file.content_type not in allowed_types:
+            continue
+        
+        ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+        filename = f"{uuid.uuid4().hex}.{ext}"
+        file_path = UPLOAD_DIR / filename
+        
+        try:
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            urls.append(f"/api/uploads/{filename}")
+        except Exception as e:
+            logger.error(f"Upload error: {str(e)}")
+    
+    return {"urls": urls}
+
 # ======================== ORDER ROUTES ========================
 
 @api_router.post("/orders", response_model=OrderResponse)
