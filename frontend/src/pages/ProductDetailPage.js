@@ -121,7 +121,19 @@ const colorMap = {
   'yellow haze': '#F0E68C',
   'paragon': '#6B5B95',
   'teal': '#008080',
-  'white mist': '#F5F5F5'
+  'white mist': '#F5F5F5',
+  // Hoodie specific colors
+  'iris': '#5A4FCF',
+  'metro blue': '#4169E1',
+  'oceana': '#4F94CD',
+  'orchid': '#DA70D6',
+  'pistachio': '#93C572',
+  'stone blue': '#89A4B8',
+  'vegas gold': '#C5B358',
+  'khaki': '#C3B091',
+  'cocoa': '#875F42',
+  'olive': '#808000',
+  'pink lemonade': '#FFB6C1'
 };
 
 // Get hex color from color name
