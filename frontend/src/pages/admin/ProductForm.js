@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft, Loader2, Plus, X } from 'lucide-react';
+import { ChevronLeft, Loader2, Plus, X, Upload, Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,15 +16,17 @@ const ProductForm = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const isEditing = !!productId;
+  const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(isEditing);
   const [form, setForm] = useState({
     name: '',
     description: '',
     price: '',
     category: 'tshirts',
-    images: [''],
+    images: [],
     colors: [''],
     sizes: [''],
     brand: '',
@@ -44,7 +46,7 @@ const ProductForm = () => {
             description: product.description,
             price: product.price.toString(),
             category: product.category,
-            images: product.images.length > 0 ? product.images : [''],
+            images: product.images.length > 0 ? product.images : [],
             colors: product.colors.length > 0 ? product.colors : [''],
             sizes: product.sizes.length > 0 ? product.sizes : [''],
             brand: product.brand,
@@ -74,9 +76,59 @@ const ProductForm = () => {
   };
 
   const removeArrayItem = (field, index) => {
-    if (form[field].length > 1) {
+    if (form[field].length > 1 || field === 'images') {
       const newArray = form[field].filter((_, i) => i !== index);
       setForm({ ...form, [field]: newArray });
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    const newImages = [...form.images];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error(`${file.name} is not an image`);
+        continue;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`${file.name} is too large (max 5MB)`);
+        continue;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await axios.post(`${API_URL}/api/admin/upload`, formData, {
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        // Use the full URL for the image
+        const imageUrl = `${API_URL}${response.data.url}`;
+        newImages.push(imageUrl);
+        toast.success(`${file.name} uploaded`);
+      } catch (error) {
+        console.error('Upload error:', error);
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+
+    setForm({ ...form, images: newImages });
+    setUploading(false);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -249,33 +301,111 @@ const ProductForm = () => {
           </div>
         </div>
 
-        {/* Images */}
+        {/* Images Upload */}
         <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
-          <h2 className="font-heading text-xl font-bold mb-6">Images</h2>
-          <div className="space-y-3">
-            {form.images.map((image, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  value={image}
-                  onChange={(e) => handleArrayChange('images', index, e.target.value)}
-                  placeholder="Image URL"
-                  className="border-2 border-black"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeArrayItem('images', index)}
-                  disabled={form.images.length === 1}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-            <Button type="button" variant="outline" onClick={() => addArrayItem('images')} className="border-2 border-black">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Image
-            </Button>
+          <h2 className="font-heading text-xl font-bold mb-6">Product Images</h2>
+          
+          {/* Upload Area */}
+          <div className="mb-6">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="hidden"
+              id="image-upload"
+            />
+            <label
+              htmlFor="image-upload"
+              className={`
+                flex flex-col items-center justify-center w-full h-40 
+                border-2 border-dashed border-black rounded-xl 
+                cursor-pointer hover:bg-muted transition-colors
+                ${uploading ? 'opacity-50 pointer-events-none' : ''}
+              `}
+            >
+              {uploading ? (
+                <Loader2 className="h-10 w-10 animate-spin text-primary mb-2" />
+              ) : (
+                <Upload className="h-10 w-10 text-muted-foreground mb-2" />
+              )}
+              <span className="text-lg font-medium">
+                {uploading ? 'Uploading...' : 'Click to upload images'}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                PNG, JPG, GIF, WebP up to 5MB
+              </span>
+            </label>
+          </div>
+
+          {/* Image Preview Grid */}
+          {form.images.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {form.images.map((image, index) => (
+                <div key={index} className="relative group">
+                  <div className="aspect-square rounded-lg border-2 border-black overflow-hidden bg-muted">
+                    <img
+                      src={image}
+                      alt={`Product ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/200?text=Error';
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute -top-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeArrayItem('images', index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                  {index === 0 && (
+                    <span className="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
+                      Main
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {form.images.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <ImageIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No images uploaded yet</p>
+            </div>
+          )}
+
+          {/* Manual URL Input */}
+          <div className="mt-6 pt-6 border-t">
+            <p className="text-sm text-muted-foreground mb-3">Or add image URL manually:</p>
+            <div className="flex gap-2">
+              <Input
+                placeholder="https://example.com/image.jpg"
+                className="border-2 border-black"
+                id="manual-url"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="border-2 border-black"
+                onClick={() => {
+                  const input = document.getElementById('manual-url');
+                  if (input.value) {
+                    setForm({ ...form, images: [...form.images, input.value] });
+                    input.value = '';
+                    toast.success('Image URL added');
+                  }
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add URL
+              </Button>
+            </div>
           </div>
         </div>
 
