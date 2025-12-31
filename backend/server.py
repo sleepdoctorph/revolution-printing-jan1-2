@@ -1013,6 +1013,140 @@ async def update_gildan_all_colors(user: dict = Depends(get_admin_user)):
         "gildan_64000_updated": result_64000.modified_count
     }
 
+@api_router.post("/admin/import-gildan-hoodies")
+async def import_gildan_hoodies(user: dict = Depends(get_admin_user)):
+    """Import Gildan hoodie products from S&S Activewear wholesaler data"""
+    
+    gildan_hoodies = [
+        {
+            "style": "18500",
+            "name": "Gildan Unisex Heavy Blend™ Hooded Sweatshirt",
+            "description": "8.0 oz., 50% cotton, 50% polyester preshrunk fleece. Air jet yarn for softer feel and reduced pilling. Double-lined hood with matching drawcord. Pouch pocket. Double-needle stitching throughout. 1x1 athletic rib with spandex. Quarter-turned to eliminate center crease. The classic hoodie for screen printing and embroidery.",
+            "price": 32.04,
+            "colors": ["White", "Black", "Antique Cherry Red", "Antique Sapphire", "Ash", "Azalea", "Cardinal Red", "Carolina Blue", "Charcoal", "Cherry Red", "Dark Chocolate", "Dark Heather", "Forest Green", "Gold", "Graphite Heather", "Gravel", "Heliconia", "Indigo Blue", "Irish Green", "Light Blue", "Light Pink", "Maroon", "Military Green", "Navy", "Orange", "Purple", "Red", "Royal", "Safety Green", "Safety Orange", "Sand", "Sapphire", "Sport Grey", "Tennessee Orange", "Texas Orange", "Vegas Gold", "Violet", "White", "Yellow Haze"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/395_fm.jpg",
+            "fabric": "50% Cotton, 50% Polyester",
+            "weight": "8.0 oz"
+        },
+        {
+            "style": "18600",
+            "name": "Gildan Unisex Heavy Blend™ Full-Zip Hooded Sweatshirt",
+            "description": "8.0 oz., 50% cotton, 50% polyester preshrunk fleece. Air jet yarn for softer feel and reduced pilling. Double-lined hood with matching drawcord. Full-zip with YKK zipper. Split pouch pocket. Double-needle stitching throughout. 1x1 athletic rib with spandex.",
+            "price": 47.02,
+            "colors": ["White", "Black", "Ash", "Cardinal Red", "Carolina Blue", "Dark Chocolate", "Dark Heather", "Forest Green", "Graphite Heather", "Irish Green", "Maroon", "Military Green", "Navy", "Purple", "Red", "Royal", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/415_fm.jpg",
+            "fabric": "50% Cotton, 50% Polyester",
+            "weight": "8.0 oz"
+        },
+        {
+            "style": "18500B",
+            "name": "Gildan Youth Heavy Blend™ Hooded Sweatshirt",
+            "description": "8.0 oz., 50% cotton, 50% polyester preshrunk fleece. Youth version of the classic Heavy Blend hoodie. Air jet yarn for softer feel. Double-lined hood with matching drawcord. Pouch pocket. Double-needle stitching. 1x1 athletic rib with spandex.",
+            "price": 33.00,
+            "colors": ["White", "Black", "Carolina Blue", "Charcoal", "Dark Heather", "Forest Green", "Gold", "Graphite Heather", "Heliconia", "Irish Green", "Light Pink", "Maroon", "Navy", "Purple", "Red", "Royal", "Sport Grey"],
+            "sizes": ["XS", "S", "M", "L", "XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/557_fm.jpg",
+            "fabric": "50% Cotton, 50% Polyester",
+            "weight": "8.0 oz"
+        },
+        {
+            "style": "SF500",
+            "name": "Gildan Unisex Softstyle® Midweight Hooded Sweatshirt",
+            "description": "8.5 oz., 80% ring-spun cotton, 20% polyester midweight fleece. Retail-quality Softstyle hoodie with superior softness. Jersey-lined hood. Flat drawcord. Pouch pocket. Tear-away label. Modern fit with side seams.",
+            "price": 34.28,
+            "colors": ["White", "Black", "Aquatic", "Ash", "Blue Dusk", "Brown Savana", "Cardinal", "Carolina Blue", "Charcoal", "Cobalt", "Cocoa", "Dark Heather", "Dusty Rose", "Forest Green", "Graphite Heather", "Irish Green", "Light Pink", "Maroon", "Military Green", "Natural", "Navy", "Orchid", "Pistachio", "Purple", "Red", "Royal", "Sand", "Sapphire", "Sport Grey", "Stone Blue", "Tangerine", "Vegas Gold", "White"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/9352_fm.jpg",
+            "fabric": "80% Ring-spun Cotton, 20% Polyester",
+            "weight": "8.5 oz"
+        },
+        {
+            "style": "19500",
+            "name": "Gildan Unisex Hammer™ Maxweight Hooded Sweatshirt",
+            "description": "10.0 oz., 100% ring-spun cotton face fleece. Premium Hammer collection super heavyweight hoodie. 100% cotton face for superior printability. Jersey-lined hood. Flat drawcord. Pouch pocket. Tear-away label. Maximum warmth and durability.",
+            "price": 45.46,
+            "colors": ["Blue Dusk", "Cherry Red", "Deep Royal", "Garnet", "Gravel", "Off White", "Olive", "Pitch Black", "Tan"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/12449_fm.jpg",
+            "fabric": "100% Ring-spun Cotton Face",
+            "weight": "10.0 oz"
+        },
+        {
+            "style": "12500",
+            "name": "Gildan Unisex DryBlend® Hooded Sweatshirt",
+            "description": "9.0 oz., 50% cotton, 50% DryBlend polyester preshrunk fleece. Moisture-wicking DryBlend technology. Air jet yarn for softer feel. Double-lined hood with matching drawcord. Pouch pocket. Double-needle stitching. 1x1 athletic rib with spandex.",
+            "price": 45.30,
+            "colors": ["White", "Black", "Ash", "Charcoal", "Forest Green", "Maroon", "Navy", "Red", "Royal", "Safety Green", "Safety Orange", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/423_fm.jpg",
+            "fabric": "50% Cotton, 50% Polyester DryBlend",
+            "weight": "9.0 oz"
+        },
+        {
+            "style": "18600B",
+            "name": "Gildan Youth Heavy Blend™ Full-Zip Hooded Sweatshirt",
+            "description": "8.0 oz., 50% cotton, 50% polyester preshrunk fleece. Youth full-zip hoodie. Air jet yarn for softer feel. Double-lined hood with matching drawcord. Full YKK zipper. Split pouch pocket. Double-needle stitching. 1x1 athletic rib with spandex.",
+            "price": 39.74,
+            "colors": ["Black", "Navy", "Red", "Royal", "Sport Grey"],
+            "sizes": ["XS", "S", "M", "L", "XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/562_fm.jpg",
+            "fabric": "50% Cotton, 50% Polyester",
+            "weight": "8.0 oz"
+        },
+        {
+            "style": "SF500B",
+            "name": "Gildan Youth Softstyle® Midweight Hooded Sweatshirt",
+            "description": "8.5 oz., 80% ring-spun cotton, 20% polyester midweight fleece. Youth Softstyle hoodie with retail-quality softness. Jersey-lined hood. Flat drawcord. Pouch pocket. Tear-away label. Modern fit.",
+            "price": 30.54,
+            "colors": ["White", "Black", "Daisy", "Dark Heather", "Forest Green", "Light Pink", "Maroon", "Military Green", "Navy", "Pink Lemonade", "Red", "Royal", "Sand", "Sport Grey", "Stone Blue"],
+            "sizes": ["XS", "S", "M", "L", "XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/11668_fm.jpg",
+            "fabric": "80% Ring-spun Cotton, 20% Polyester",
+            "weight": "8.5 oz"
+        }
+    ]
+    
+    imported_count = 0
+    skipped_count = 0
+    
+    for hoodie in gildan_hoodies:
+        # Check if product already exists
+        existing = await db.products.find_one({"brand": "Gildan", "name": hoodie["name"]}, {"_id": 0})
+        if existing:
+            skipped_count += 1
+            continue
+            
+        product_id = f"prod_{uuid.uuid4().hex[:12]}"
+        product_doc = {
+            "product_id": product_id,
+            "name": hoodie["name"],
+            "description": hoodie["description"],
+            "price": hoodie["price"],
+            "category": "hoodies",
+            "images": [hoodie["image"]],
+            "colors": hoodie["colors"],
+            "sizes": hoodie["sizes"],
+            "brand": "Gildan",
+            "is_blank": True,
+            "stock": 500,
+            "featured": hoodie["style"] in ["18500", "SF500"],
+            "fabric": hoodie["fabric"],
+            "weight": hoodie["weight"],
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.products.insert_one(product_doc)
+        imported_count += 1
+    
+    return {
+        "message": "Gildan hoodies imported successfully",
+        "imported": imported_count,
+        "skipped": skipped_count,
+        "total": len(gildan_hoodies)
+    }
+
 @api_router.post("/admin/import-gildan")
 async def import_gildan_products(user: dict = Depends(get_admin_user)):
     """Import Gildan t-shirt products from scraped wholesaler data"""
