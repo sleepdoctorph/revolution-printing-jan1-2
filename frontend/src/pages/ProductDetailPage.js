@@ -119,6 +119,7 @@ const ProductDetailPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [displayImage, setDisplayImage] = useState('');
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -131,6 +132,8 @@ const ProductDetailPage = () => {
         if (response.data.sizes?.length > 0) {
           setSelectedSize(response.data.sizes[0]);
         }
+        // Set initial display image
+        setDisplayImage(response.data.images?.[0] || 'https://via.placeholder.com/600');
       } catch (error) {
         console.error('Error fetching product:', error);
         navigate('/shop');
@@ -140,6 +143,18 @@ const ProductDetailPage = () => {
     };
     fetchProduct();
   }, [productId, navigate]);
+
+  // Update display image when color changes
+  useEffect(() => {
+    if (product && selectedColor) {
+      const colorImage = getColorImageUrl(product, selectedColor);
+      setDisplayImage(colorImage);
+    }
+  }, [product, selectedColor]);
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+  };
 
   const handleAddToCart = () => {
     if (product) {
