@@ -73,8 +73,12 @@ const AdminLayout = () => {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}>
           <div className="p-6 border-b border-muted-foreground/20">
-            <Link to="/" className="font-heading text-xl font-bold text-primary">
-              Faithful Threads
+            <Link to="/">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_faithful-threads/artifacts/w3pha3fr_logo%201.png" 
+                alt="Revolution Printing" 
+                className="h-10 object-contain"
+              />
             </Link>
             <p className="text-sm text-muted-foreground mt-1">Admin Panel</p>
           </div>

@@ -70,9 +70,11 @@ const LoginPage = () => {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl font-extrabold text-primary mb-2">
-            Faithful Threads
-          </h1>
+          <img 
+            src="https://customer-assets.emergentagent.com/job_faithful-threads/artifacts/w3pha3fr_logo%201.png" 
+            alt="Revolution Printing" 
+            className="h-16 object-contain mb-2"
+          />
           <p className="text-muted-foreground">Sign in to your account</p>
         </div>
 

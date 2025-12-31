@@ -40,9 +40,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2" data-testid="logo">
-            <span className="font-heading text-2xl font-extrabold text-primary">
-              Faithful Threads
-            </span>
+            <img 
+              src="https://customer-assets.emergentagent.com/job_faithful-threads/artifacts/w3pha3fr_logo%201.png" 
+              alt="Revolution Printing" 
+              className="h-12 object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}
