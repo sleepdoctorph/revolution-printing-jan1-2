@@ -988,104 +988,104 @@ async def import_gildan_products(user: dict = Depends(get_admin_user)):
 async def update_gildan_descriptions(user: dict = Depends(get_admin_user)):
     """Update Gildan products with actual descriptions from S&S Activewear wholesaler"""
     
-    # Real descriptions scraped from S&S Activewear product pages
+    # Real descriptions scraped from S&S Activewear product pages - matched by product name
     gildan_descriptions = {
-        "5000": {
+        "Gildan Unisex Heavy Cotton™ T-Shirt": {
             "description": "5.3 oz., 100% preshrunk cotton. Seamless double-needle 7/8\" collar. Taped neck and shoulders. Double-needle sleeve and bottom hems. Quarter-turned to eliminate center crease. Available in 68 colors from XS to 5XL. The industry standard for screen printing and promotional apparel.",
             "fabric": "100% Cotton",
             "weight": "5.3 oz"
         },
-        "64000": {
+        "Gildan Unisex Softstyle® T-Shirt": {
             "description": "4.5 oz., 100% ring-spun cotton. Softstyle yarn for a soft hand feel. Fitted silhouette with side seam construction. Shoulder-to-shoulder tape. Tear-away label. Available in 64 colors from XS to 5XL. A retail-quality blank ideal for fashion-forward designs.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.5 oz"
         },
-        "8000": {
+        "Gildan Unisex DryBlend® T-Shirt": {
             "description": "5.6 oz., 50% cotton, 50% polyester. DryBlend wicking performance. Preshrunk to minimize shrinkage. Seamless double-needle collar. Taped neck and shoulders. Double-needle sleeve and bottom hems. Ideal for athletic wear and performance applications.",
             "fabric": "50% Cotton, 50% Polyester",
             "weight": "5.6 oz"
         },
-        "2000": {
+        "Gildan Unisex Ultra Cotton® T-Shirt": {
             "description": "6.0 oz., 100% cotton preshrunk jersey knit. Seamless double-needle 7/8\" collar. Taped neck and shoulders. Double-needle sleeve and bottom hems. Quarter-turned. Ultra-durable heavyweight fabric perfect for workwear and everyday basics.",
             "fabric": "100% Cotton",
             "weight": "6.0 oz"
         },
-        "5000B": {
+        "Gildan Youth Heavy Cotton™ T-Shirt": {
             "description": "5.3 oz., 100% preshrunk cotton youth tee. Seamless double-needle collar. Taped neck and shoulders. Double-needle sleeve and bottom hems. Available in sizes XS-XL. Perfect blank for youth events, schools, and family matching.",
             "fabric": "100% Cotton",
             "weight": "5.3 oz"
         },
-        "64000CVC": {
+        "Gildan Unisex Softstyle® CVC T-Shirt": {
             "description": "4.5 oz., 62% polyester, 38% cotton CVC jersey. Softstyle CVC blend creates a unique heathered look. Semi-fitted contoured silhouette with side seam construction. Tear-away label. Modern retail-inspired fit.",
             "fabric": "62% Polyester, 38% Cotton CVC",
             "weight": "4.5 oz"
         },
-        "65000": {
+        "Gildan Unisex Softstyle® Midweight T-Shirt": {
             "description": "5.3 oz., 100% ring-spun cotton midweight tee. Retail-quality soft hand feel. Set-in sleeves with tear-away label. Modern fit between classic and fitted. Available in 22 colors from S to 4XL. The perfect balance of comfort and durability.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "5.3 oz"
         },
-        "H000": {
+        "Gildan Unisex Hammer™ T-Shirt": {
             "description": "6.0 oz., 100% combed ring-spun cotton. Premium Hammer collection with modern styling. Fashion collar and side seams. Tear-away label. Available in 38 colors. Elevated blank for premium retail and custom apparel.",
             "fabric": "100% Combed Ring-spun Cotton",
             "weight": "6.0 oz"
         },
-        "42000": {
+        "Gildan Unisex Performance® T-Shirt": {
             "description": "4.5 oz., 100% polyester jersey knit. Core Performance with AquaFX wicking and Freshcare odor control. Self-fabric collar with heat transfer label. Set-in sleeves. Perfect for athletics, teams, and outdoor activities.",
             "fabric": "100% Polyester",
             "weight": "4.5 oz"
         },
-        "3000": {
+        "Gildan Unisex Light Cotton T-Shirt": {
             "description": "4.5 oz., 100% ring-spun cotton lightweight tee. Soft hand feel with retail-quality finish. Side seam construction with tear-away label. Extended size range from XS to 6XL. Ideal for layering or warm weather.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.5 oz"
         },
-        "5000L": {
+        "Gildan Women's Heavy Cotton™ T-Shirt": {
             "description": "5.3 oz., 100% preshrunk cotton women's tee. Semi-fitted feminine silhouette with shorter sleeves. Seamless double-needle collar. Double-needle sleeve and bottom hems. Available in 30 colors from S to 3XL.",
             "fabric": "100% Cotton",
             "weight": "5.3 oz"
         },
-        "64000L": {
+        "Gildan Women's Softstyle® T-Shirt": {
             "description": "4.5 oz., 100% ring-spun cotton women's Softstyle tee. Contoured semi-fitted silhouette with side seam. Cap sleeves with tear-away label. Retail-quality soft hand. Available in 17 colors from S to 3XL.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.5 oz"
         },
-        "2300": {
+        "Gildan Unisex Ultra Cotton® Pocket T-Shirt": {
             "description": "6.0 oz., 100% cotton preshrunk pocket tee. Left chest pocket. Seamless double-needle collar. Taped neck and shoulders. Double-needle pocket, sleeve and bottom hems. Extended sizes S to 5XL available.",
             "fabric": "100% Cotton",
             "weight": "6.0 oz"
         },
-        "5300": {
+        "Gildan Unisex Heavy Cotton™ Pocket T-Shirt": {
             "description": "5.3 oz., 100% preshrunk cotton pocket tee. Heavyweight construction with left chest pocket. Seamless double-needle collar. Double-needle pocket, sleeve and bottom hems. Workwear-ready durability.",
             "fabric": "100% Cotton",
             "weight": "5.3 oz"
         },
-        "64V00": {
+        "Gildan Unisex Softstyle® V-Neck T-Shirt": {
             "description": "4.5 oz., 100% ring-spun cotton V-neck tee. Softstyle yarn for soft hand feel. Fitted silhouette with side seam. 1x1 rib V-neck collar. Tear-away label. Fashion-forward neckline for modern looks.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.5 oz"
         },
-        "64V00L": {
+        "Gildan Women's Softstyle® V-Neck T-Shirt": {
             "description": "4.5 oz., 100% ring-spun cotton women's V-neck. Semi-fitted feminine silhouette. Contoured side seam with 1x1 rib V-neck collar. Tear-away label. Perfect for layering and professional settings.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.5 oz"
         },
-        "75000": {
+        "Gildan Unisex Hammer™ Maxweight T-Shirt": {
             "description": "7.0 oz., 100% ring-spun cotton super heavyweight tee. Hammer Maxweight collection with premium construction. Fashion collar and side seams. Maximum durability for demanding applications and workwear.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "7.0 oz"
         },
-        "980": {
+        "Gildan Unisex Softstyle® Lightweight T-Shirt": {
             "description": "4.1 oz., 100% ring-spun cotton lightweight tee. Softstyle EZ Print with superior printability. Side seam construction. Tear-away label. Ultra-soft and perfect for fashion retail applications.",
             "fabric": "100% Ring-spun Cotton",
             "weight": "4.1 oz"
         },
-        "8300": {
+        "Gildan Unisex DryBlend® Pocket T-Shirt": {
             "description": "5.6 oz., 50% cotton, 50% polyester pocket tee. DryBlend wicking technology. Left chest pocket with double-needle stitching. Preshrunk for minimal shrinkage. Ideal for workwear and performance needs.",
             "fabric": "50% Cotton, 50% Polyester",
             "weight": "5.6 oz"
         },
-        "2000T": {
+        "Gildan Men's Tall Ultra Cotton® T-Shirt": {
             "description": "6.0 oz., 100% cotton preshrunk tall tee. 2\" extra body length for taller individuals. Seamless double-needle collar. Taped neck and shoulders. Available in tall sizes LT to 3XLT.",
             "fabric": "100% Cotton",
             "weight": "6.0 oz"
@@ -1095,10 +1095,10 @@ async def update_gildan_descriptions(user: dict = Depends(get_admin_user)):
     updated_count = 0
     not_found_count = 0
     
-    for style, details in gildan_descriptions.items():
-        # Find products with this style in their name
-        result = await db.products.update_many(
-            {"brand": "Gildan", "name": {"$regex": style}},
+    for name, details in gildan_descriptions.items():
+        # Find products with exact name match
+        result = await db.products.update_one(
+            {"brand": "Gildan", "name": name},
             {"$set": {
                 "description": details["description"],
                 "fabric": details["fabric"],
@@ -1113,8 +1113,8 @@ async def update_gildan_descriptions(user: dict = Depends(get_admin_user)):
     return {
         "message": "Gildan product descriptions updated successfully",
         "updated": updated_count,
-        "styles_not_found": not_found_count,
-        "total_styles": len(gildan_descriptions)
+        "not_found": not_found_count,
+        "total_products": len(gildan_descriptions)
     }
 
 @api_router.post("/seed")
