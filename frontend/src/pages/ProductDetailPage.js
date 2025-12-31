@@ -256,23 +256,33 @@ const ProductDetailPage = () => {
             {product.colors?.length > 0 && (
               <div>
                 <label className="font-heading font-bold text-sm mb-2 block">
-                  Color: {selectedColor}
+                  Color: <span className="font-normal">{selectedColor}</span>
                 </label>
-                <div className="flex flex-wrap gap-3">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-10 h-10 rounded-full border-2 transition-all ${
-                        selectedColor === color
-                          ? 'border-primary ring-2 ring-primary ring-offset-2'
-                          : 'border-black hover:scale-110'
-                      }`}
-                      style={{ backgroundColor: color.toLowerCase() }}
-                      title={color}
-                    />
-                  ))}
+                <div className="flex flex-wrap gap-2">
+                  {product.colors.map((color) => {
+                    const hexColor = getColorHex(color);
+                    const isLight = hexColor === '#FFFFFF' || hexColor === '#FAF9F6' || hexColor === '#B2BEB5';
+                    return (
+                      <button
+                        key={color}
+                        onClick={() => handleColorSelect(color)}
+                        className={`w-8 h-8 rounded-full transition-all ${
+                          selectedColor === color
+                            ? 'ring-2 ring-primary ring-offset-2 scale-110'
+                            : 'hover:scale-110'
+                        } ${isLight ? 'border-2 border-gray-300' : 'border border-gray-200'}`}
+                        style={{ backgroundColor: hexColor }}
+                        title={color}
+                        data-testid={`color-${color.toLowerCase().replace(/\s+/g, '-')}`}
+                      />
+                    );
+                  })}
                 </div>
+                {product.colors.length > 10 && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {product.colors.length} colors available
+                  </p>
+                )}
               </div>
             )}
 
