@@ -8,6 +8,106 @@ import { useCart } from '../context/CartContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Color name to hex mapping for apparel colors
+const colorMap = {
+  // Basic colors
+  'white': '#FFFFFF',
+  'black': '#000000',
+  'navy': '#001F3F',
+  'red': '#DC2626',
+  'royal': '#4169E1',
+  'sport grey': '#8B8B8B',
+  'charcoal': '#36454F',
+  'forest green': '#228B22',
+  'maroon': '#800000',
+  'carolina blue': '#56A0D3',
+  'ash': '#B2BEB5',
+  'gold': '#FFD700',
+  'orange': '#FF6600',
+  'purple': '#800080',
+  'irish green': '#009A44',
+  'heliconia': '#E4007C',
+  'light blue': '#ADD8E6',
+  'light pink': '#FFB6C1',
+  'daisy': '#FFD54F',
+  'lime': '#32CD32',
+  'azalea': '#F19CBB',
+  'cherry red': '#DE3163',
+  'military green': '#4B5320',
+  'sapphire': '#0F52BA',
+  'dark heather': '#4A4A4A',
+  'cardinal red': '#C41E3A',
+  'safety green': '#78FF00',
+  'safety orange': '#FF6700',
+  'graphite heather': '#5C5C5C',
+  'gravel': '#6E6E6E',
+  'brown savana': '#8B4513',
+  'sand': '#C2B280',
+  'coral silk': '#FF7F50',
+  'dusty rose': '#DCAE96',
+  'antique cherry red': '#CD5C5C',
+  'antique irish green': '#3CB371',
+  'heather navy': '#4A5568',
+  'heather red': '#E57373',
+  'heather purple': '#9370DB',
+  'heather royal': '#6495ED',
+  'pitch black': '#0D0D0D',
+  'navy mist': '#7B8FA1',
+  'red mist': '#D4A5A5',
+  'gunmetal': '#536267',
+  'cement': '#A9A9A9',
+  'caribbean mist': '#6FB7B7',
+  'daisy mist': '#F5E6AB',
+  'cactus': '#5D8A66',
+  'steel blue': '#4682B4',
+  'dark navy': '#1C2841',
+  'deep royal': '#002366',
+  'chalky mint': '#98FF98',
+  'chambray': '#A4C8D9',
+  'flo blue': '#00A3E0',
+  'lagoon blue': '#4682B4',
+  'off white': '#FAF9F6',
+  'scarlet red': '#FF2400',
+  'blue dusk': '#6699CC',
+  'garnet': '#733635',
+  'dark chocolate': '#3D1C00',
+  'tan': '#D2B48C',
+  'baby blue': '#89CFF0',
+  'caribbean blue': '#1AC1DD',
+  'charity pink': '#FF69B4',
+  'heather blue': '#7B9FC4',
+  'heather dark grey': '#5A5A5A',
+  'heather grey': '#9E9E9E',
+  'kelly green': '#4CBB17',
+  'mustard': '#FFDB58',
+  'sage': '#9CAF88',
+  'violet': '#8B00FF'
+};
+
+// Get hex color from color name
+const getColorHex = (colorName) => {
+  const key = colorName.toLowerCase().trim();
+  return colorMap[key] || '#CCCCCC';
+};
+
+// Generate S&S Activewear image URL for a specific color
+const getColorImageUrl = (product, colorName) => {
+  // If product has color_images mapping, use it
+  if (product.color_images && product.color_images[colorName]) {
+    return product.color_images[colorName];
+  }
+  
+  // For Gildan products, try to construct the color-specific image URL
+  if (product.brand === 'Gildan' && product.images?.[0]) {
+    const baseUrl = product.images[0];
+    // S&S Activewear uses different image IDs for different colors
+    // For now, return the base image - we'll enhance this with actual color mappings
+    return baseUrl;
+  }
+  
+  return product.images?.[0] || 'https://via.placeholder.com/600';
+};
+
 const ProductDetailPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
