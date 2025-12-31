@@ -1189,7 +1189,7 @@ async def update_gildan_color_images(user: dict = Depends(get_admin_user)):
     
     color_images_64000 = {}
     for color, color_id in gildan_64000_color_images.items():
-        color_images_64000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+        color_images_64000[color] = f"https://cdn.ssactivewear.com/Images/Color/{color_id}_f_fm.jpg"
     
     result_64000 = await db.products.update_one(
         {"brand": "Gildan", "name": "Gildan Unisex Softstyle® T-Shirt"},
