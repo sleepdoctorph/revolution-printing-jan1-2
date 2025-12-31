@@ -425,7 +425,8 @@ async def get_products(
             featured=p.get("featured", False),
             created_at=created_at,
             fabric=p.get("fabric"),
-            weight=p.get("weight")
+            weight=p.get("weight"),
+            color_images=p.get("color_images")
         ))
     
     return result
