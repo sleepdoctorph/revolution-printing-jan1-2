@@ -29,7 +29,7 @@ const AboutPage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1712701083828-f692860260c0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGRpdmVyc2UlMjBmcmllbmRzJTIwbGF1Z2hpbmclMjBvdXRkb29ycyUyMHN1bnNldHxlbnwwfHx8fDE3NjcxMjc2ODV8MA&ixlib=rb-4.1.0&q=85"
+                src="https://customer-assets.emergentagent.com/job_faithful-threads/artifacts/8voklgto_webpage%20image.png"
                 alt="Community"
                 className="rounded-xl border-2 border-black shadow-brutal-lg w-full h-96 object-cover"
               />
