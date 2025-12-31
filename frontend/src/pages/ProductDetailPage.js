@@ -207,9 +207,9 @@ const ProductDetailPage = () => {
           <div className="space-y-4">
             <div className="aspect-square rounded-xl border-2 border-black overflow-hidden shadow-brutal-lg bg-white">
               <img
-                src={displayImage}
-                alt={`${product.name} - ${selectedColor}`}
-                className="w-full h-full object-cover transition-opacity duration-300"
+                src={product.images?.[selectedImage] || 'https://via.placeholder.com/600'}
+                alt={product.name}
+                className="w-full h-full object-cover"
               />
             </div>
             {product.images?.length > 1 && (
@@ -217,10 +217,8 @@ const ProductDetailPage = () => {
                 {product.images.map((image, index) => (
                   <button
                     key={index}
-                    onClick={() => {
-                      setSelectedImage(index);
-                      setDisplayImage(image);
-                    }}
+                    type="button"
+                    onClick={() => setSelectedImage(index)}
                     className={`w-20 h-20 rounded-lg border-2 overflow-hidden transition-all ${
                       selectedImage === index 
                         ? 'border-primary shadow-brutal-sm' 
