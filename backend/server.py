@@ -1158,7 +1158,7 @@ async def update_gildan_color_images(user: dict = Depends(get_admin_user)):
     # Build color_images dict for Gildan 5000
     color_images_5000 = {}
     for color, color_id in gildan_5000_color_images.items():
-        color_images_5000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+        color_images_5000[color] = f"https://cdn.ssactivewear.com/Images/Color/{color_id}_f_fm.jpg"
     
     # Update Gildan 5000 (Heavy Cotton)
     result_5000 = await db.products.update_one(
