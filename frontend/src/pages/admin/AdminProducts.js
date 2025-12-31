@@ -16,12 +16,12 @@ const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('all');
 
   const fetchProducts = async () => {
     try {
       let url = `${API_URL}/api/products`;
-      if (category) url += `?category=${category}`;
+      if (category && category !== 'all') url += `?category=${category}`;
       const response = await axios.get(url);
       setProducts(response.data);
     } catch (error) {
