@@ -112,6 +112,7 @@ class ProductResponse(BaseModel):
     created_at: datetime
     fabric: Optional[str] = None
     weight: Optional[str] = None
+    color_images: Optional[dict] = None
 
 class CartItem(BaseModel):
     product_id: str
