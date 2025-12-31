@@ -768,6 +768,164 @@ async def get_contacts(user: dict = Depends(get_admin_user)):
 
 # ======================== SEED DATA ========================
 
+@api_router.post("/admin/update-all-gildan-color-images")
+async def update_all_gildan_color_images(user: dict = Depends(get_admin_user)):
+    """Update ALL Gildan products with color-specific images from S&S Activewear"""
+    
+    # Product color mappings extracted from S&S Activewear
+    product_color_mappings = {
+        # Gildan 5000B - Youth Heavy Cotton
+        "Gildan Youth Heavy Cotton™ T-Shirt": {
+            "White": "21029", "Black": "21005", "Aquatic": "114534", "Ash": "21003", "Azalea": "21004",
+            "Blue Dusk": "66834", "Cardinal": "21006", "Carolina Blue": "21007", "Charcoal": "21008",
+            "Cobalt": "40568", "Coral Silk": "37348", "Daisy": "21009", "Dark Heather": "40573",
+            "Dusty Rose": "114536", "Electric Green": "37350", "Forest Green": "21011", "Garnet": "32229",
+            "Gold": "21012", "Graphite Heather": "46153", "Heather Navy": "32235", "Heather Red": "78839",
+            "Heather Sapphire": "78832", "Heliconia": "32230", "Indigo Blue": "21013", "Irish Green": "21014",
+            "Kiwi": "21015", "Light Blue": "21016", "Light Pink": "21017", "Lime": "21018", "Maroon": "27882",
+            "Military Green": "33351", "Mint Green": "40569", "Natural": "21019", "Navy": "21020",
+            "Neon Blue": "42453", "Neon Green": "42454", "Off White": "66835", "Orange": "21021",
+            "Purple": "21022", "Red": "27883", "Royal": "21023", "Safety Green": "40574",
+            "Safety Orange": "40575", "Safety Pink": "42452", "Sand": "21024", "Sapphire": "21025",
+            "Sky": "29962", "Sport Grey": "21026", "Tennessee Orange": "32232", "Tropical Blue": "37351",
+            "Violet": "21028"
+        },
+        # Gildan 5000L - Women's Heavy Cotton
+        "Gildan Women's Heavy Cotton™ T-Shirt": {
+            "White": "33429", "Black": "33413", "Aquatic": "114524", "Azalea": "33412",
+            "Blue Dusk": "114532", "Carolina Blue": "37386", "Charcoal": "33414", "Coral Silk": "33432",
+            "Daisy": "37387", "Dark Heather": "40578", "Dusty Rose": "114526", "Heather Sapphire": "33417",
+            "Heliconia": "33419", "Irish Green": "33430", "Light Blue": "33420", "Light Pink": "37389",
+            "Maroon": "33422", "Navy": "33423", "Off White": "114529", "Orange": "33424",
+            "Purple": "33425", "Red": "33426", "Royal": "33427", "Sapphire": "33431",
+            "Sport Grey": "33428", "Tropical Blue": "37393", "Violet": "37394"
+        },
+        # Gildan H000 - Hammer T-Shirt
+        "Gildan Unisex Hammer™ T-Shirt": {
+            "White": "66670", "Black": "66651", "Chambray": "66674", "Dark Navy": "66663",
+            "Deep Royal": "66666", "Graphite Heather": "66655", "Off White": "107649",
+            "Scarlet Red": "66667", "Seafoam": "66678", "Sport Grey": "66668"
+        },
+        # Gildan 64000L - Women's Softstyle
+        "Gildan Women's Softstyle® T-Shirt": {
+            "White": "17263", "Black": "17243", "Azalea": "17241", "Charcoal": "17244",
+            "Cherry Red": "17245", "Dark Heather": "17246", "Heather Purple": "52381",
+            "Heather Royal": "32236", "Heliconia": "17251", "Irish Green": "17252",
+            "Light Blue": "33443", "Maroon": "17256", "Navy": "17257", "Royal": "17260",
+            "Sapphire": "17261", "Sport Grey": "17262"
+        },
+        # Gildan 64V00 - V-Neck
+        "Gildan Unisex Softstyle® V-Neck T-Shirt": {
+            "White": "17273", "Black": "17267", "Charcoal": "33466", "Cherry Red": "17268",
+            "Dark Heather": "17269", "Heather Irish Green": "33464", "Heather Purple": "33465",
+            "Navy": "52389", "Royal": "17272", "Sport Grey": "33468"
+        },
+        # Gildan 64V00L - Women's V-Neck
+        "Gildan Women's Softstyle® V-Neck T-Shirt": {
+            "White": "17283", "Black": "17278", "Azalea": "17276", "Cherry Red": "17279",
+            "Dark Heather": "17280", "Heather Purple": "52390", "Navy": "52391",
+            "Royal": "17282", "Sport Grey": "33471"
+        },
+        # Gildan 2300 - Ultra Cotton Pocket
+        "Gildan Unisex Ultra Cotton® Pocket T-Shirt": {
+            "White": "17175", "Black": "17168", "Ash": "17167", "Charcoal": "17169",
+            "Forest Green": "17170", "Light Blue": "17171", "Maroon": "17172",
+            "Navy": "17173", "Red": "17174", "Royal": "52303", "Safety Green": "30018",
+            "Safety Orange": "30019", "Sport Grey": "30020"
+        },
+        # Gildan 5300 - Heavy Cotton Pocket
+        "Gildan Unisex Heavy Cotton™ Pocket T-Shirt": {
+            "White": "33742", "Black": "33681", "Charcoal": "33686", "Graphite Heather": "33697",
+            "Irish Green": "33707", "Maroon": "33713", "Navy": "33718", "Orange": "33722",
+            "Red": "33724", "Sapphire": "33731", "Sport Grey": "33733"
+        },
+        # Gildan 8300 - DryBlend Pocket
+        "Gildan Unisex DryBlend® Pocket T-Shirt": {
+            "White": "17964", "Black": "17958", "Ash": "17956", "Forest Green": "17959",
+            "Graphite Heather": "46076", "Navy": "17960", "Red": "17961", "Royal": "17962",
+            "Safety Green": "17963", "Sport Grey": "30021"
+        },
+        # Gildan 42000 - Performance
+        "Gildan Unisex Performance® T-Shirt": {
+            "White": "17363", "Black": "17351", "Carolina Blue": "17352", "Charcoal": "17353",
+            "Gold": "17354", "Irish Green": "17355", "Lime": "17356", "Maroon": "17357",
+            "Military Green": "33345", "Navy": "17358", "Orange": "17359", "Purple": "17360",
+            "Red": "17361", "Royal": "17362", "Safety Green": "30010", "Safety Orange": "30011"
+        },
+        # Gildan 64000CVC - Softstyle CVC
+        "Gildan Unisex Softstyle® CVC T-Shirt": {
+            "White": "30043", "Pitch Black": "30042", "Navy Mist": "30040", "Red Mist": "30044",
+            "Gunmetal": "30039", "Dusty Rose": "66770", "Cement": "66768", "Caribbean Mist": "66767",
+            "Daisy Mist": "66769", "Cactus": "66766", "Steel Blue": "66771"
+        },
+        # Gildan 65000 - Softstyle Midweight
+        "Gildan Unisex Softstyle® Midweight T-Shirt": {
+            "White": "91103", "Pitch Black": "91101", "Navy": "91099", "Red": "91102",
+            "Royal": "91104", "Sport Grey": "91105", "Charcoal": "91096", "Maroon": "91098",
+            "Irish Green": "91097", "Light Blue": "91109", "Sapphire": "91106",
+            "Brown Savana": "91107", "Mustard": "91100", "Graphite Heather": "91108"
+        },
+        # Gildan 75000 - Hammer Maxweight
+        "Gildan Unisex Hammer™ Maxweight T-Shirt": {
+            "White": "33660", "Pitch Black": "35158", "Deep Royal": "33658", "Forest Green": "33641",
+            "Blue Dusk": "35154", "Cherry Red": "35153", "Dark Chocolate": "35157",
+            "Garnet": "35156", "Graphite Heather": "33650", "Tan": "35155"
+        },
+        # Gildan 980 - Softstyle Lightweight
+        "Gildan Unisex Softstyle® Lightweight T-Shirt": {
+            "White": "75177", "Black": "75165", "Charcoal": "75166", "Baby Blue": "75164",
+            "Caribbean Blue": "52347", "Charity Pink": "75175", "Graphite Heather": "75168",
+            "Heather Blue": "75169", "Heather Dark Grey": "75170", "Heather Grey": "75171",
+            "Heather Navy": "75172", "Heather Purple": "75173", "Kelly Green": "75174",
+            "Military Green": "75176", "Navy": "52376", "Red": "52379"
+        },
+        # Gildan 3000 - Light Cotton
+        "Gildan Unisex Light Cotton T-Shirt": {
+            "White": "101285", "Black": "101271", "Navy": "101279", "Red": "101282",
+            "Royal": "101283", "Sport Grey": "101284", "Carolina Blue": "101273",
+            "Charcoal": "101274", "Forest Green": "101275", "Gold": "101276",
+            "Graphite Heather": "101277", "Gravel": "101278", "Heather Navy": "101288",
+            "Light Blue": "101289", "Light Pink": "101290", "Maroon": "101291",
+            "Military Green": "101292", "Orange": "101293", "Purple": "101294",
+            "Sage": "101280", "Sand": "101281"
+        },
+        # Gildan 2000T - Men's Tall Ultra Cotton
+        "Gildan Men's Tall Ultra Cotton® T-Shirt": {
+            "White": "17145", "Black": "17139", "Charcoal": "17140", "Navy": "17142",
+            "Royal": "17143", "Safety Green": "17144", "Sport Grey": "17146"
+        }
+    }
+    
+    updated_count = 0
+    products_updated = []
+    
+    for product_name, color_ids in product_color_mappings.items():
+        # Build color_images dict
+        color_images = {}
+        colors_list = []
+        for color, color_id in color_ids.items():
+            color_images[color] = f"https://cdn.ssactivewear.com/Images/Color/{color_id}_f_fm.jpg"
+            colors_list.append(color)
+        
+        # Update the product
+        result = await db.products.update_one(
+            {"brand": "Gildan", "name": product_name},
+            {"$set": {
+                "color_images": color_images,
+                "colors": colors_list
+            }}
+        )
+        
+        if result.modified_count > 0:
+            updated_count += 1
+            products_updated.append(product_name)
+    
+    return {
+        "message": "All Gildan products updated with color images",
+        "total_updated": updated_count,
+        "products_updated": products_updated
+    }
+
 @api_router.post("/admin/update-gildan-all-colors")
 async def update_gildan_all_colors(user: dict = Depends(get_admin_user)):
     """Update Gildan products with ALL colors from S&S Activewear wholesaler"""
