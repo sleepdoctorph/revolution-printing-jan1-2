@@ -271,11 +271,7 @@ const ProductDetailPage = () => {
                       <button
                         key={color}
                         type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleColorSelect(color);
-                        }}
+                        onClick={() => setSelectedColor(color)}
                         className={`w-8 h-8 rounded-full transition-all ${
                           selectedColor === color
                             ? 'ring-2 ring-primary ring-offset-2 scale-110'
