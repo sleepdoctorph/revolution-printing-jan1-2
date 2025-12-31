@@ -33,6 +33,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Payment processing (DEMO MODE)
 - ✅ Database seeding with initial products
 - ✅ Gildan product import endpoint (/api/admin/import-gildan)
+- ✅ Gildan description update endpoint (/api/admin/update-gildan-descriptions)
 - ✅ Image upload for products
 
 ### Frontend (React + Tailwind + Shadcn/UI)
@@ -56,10 +57,20 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 
 ### Recent Session (December 31, 2025)
 - ✅ Scraped and imported 20 Gildan t-shirt products from S&S Activewear wholesaler
+- ✅ **Updated Gildan products with REAL descriptions from wholesaler** (fabric content, weight, specifications)
+- ✅ Added fabric and weight fields to product API responses
 - ✅ Total products now: 33 (12 original + 1 existing Gildan + 20 new Gildan)
 - ✅ Fixed admin dashboard loading issue
 - ✅ Admin login now redirects to /admin dashboard
 - ✅ Comprehensive E2E testing passed (21 backend tests, all frontend flows verified)
+
+## Product Details (Gildan)
+All 20 Gildan products now include:
+- **Real descriptions** from S&S Activewear (fabric content, weight, construction details)
+- **Fabric type** (e.g., "100% Cotton", "50% Cotton, 50% Polyester")
+- **Weight** (e.g., "5.3 oz", "6.0 oz")
+- **Product images** from the wholesaler
+- **Available colors and sizes**
 
 ## Product Counts by Category
 - T-Shirts: 24 (4 Faithful Threads + 20 Gildan blanks)
@@ -72,6 +83,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 ### P0 (Critical) - COMPLETED
 - [x] Core e-commerce flow complete
 - [x] Wholesaler product import (Gildan)
+- [x] Real product descriptions from wholesaler
 
 ### P1 (High Priority)
 - [ ] Square payment integration with real credentials
@@ -115,6 +127,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - GET /api/admin/customers - All customers
 - GET /api/admin/contacts - Contact messages
 - POST /api/admin/import-gildan - Import Gildan products
+- POST /api/admin/update-gildan-descriptions - Update Gildan products with real descriptions
 
 ### Other
 - POST /api/orders - Create order
@@ -126,6 +139,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - Square Payment is in DEMO MODE - returns success without actual payment processing
 - All Gildan products are marked as "blank" (is_blank: true)
 - Featured products: Gildan 5000, 64000, 2000, H000
+- Product API now returns `fabric` and `weight` fields for Gildan products
 
 ## Next Tasks
 1. Add Square API credentials for real payment processing
