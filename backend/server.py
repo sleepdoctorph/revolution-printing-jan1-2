@@ -456,7 +456,8 @@ async def get_product(product_id: str):
         featured=product.get("featured", False),
         created_at=created_at,
         fabric=product.get("fabric"),
-        weight=product.get("weight")
+        weight=product.get("weight"),
+        color_images=product.get("color_images")
     )
 
 @api_router.post("/admin/products", response_model=ProductResponse)
