@@ -83,7 +83,7 @@ const AdminProducts = () => {
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             <SelectItem value="tshirts">T-Shirts</SelectItem>
             <SelectItem value="hoodies">Hoodies</SelectItem>
             <SelectItem value="hats">Hats</SelectItem>
