@@ -759,6 +759,231 @@ async def get_contacts(user: dict = Depends(get_admin_user)):
 
 # ======================== SEED DATA ========================
 
+@api_router.post("/admin/import-gildan")
+async def import_gildan_products(user: dict = Depends(get_admin_user)):
+    """Import Gildan t-shirt products from scraped wholesaler data"""
+    
+    # Gildan products scraped from S&S Activewear
+    gildan_products = [
+        {
+            "style": "5000",
+            "name": "Gildan Unisex Heavy Cotton™ T-Shirt",
+            "description": "A classic, durable t-shirt made from 100% preshrunk cotton. Perfect for everyday wear and custom printing. Features a seamless collar for comfort and double-needle sleeves and hem for durability.",
+            "price": 8.99,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Charcoal", "Forest Green", "Maroon", "Carolina Blue", "Ash", "Gold", "Orange", "Purple", "Irish Green", "Heliconia", "Light Blue", "Light Pink", "Daisy", "Lime"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/16_fm.jpg"
+        },
+        {
+            "style": "64000",
+            "name": "Gildan Unisex Softstyle® T-Shirt",
+            "description": "A softer, more fashion-forward fit with 100% ring-spun cotton. Lighter weight for superior comfort. Side seam construction and shoulder-to-shoulder tape for durability.",
+            "price": 7.99,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Charcoal", "Dark Heather", "Carolina Blue", "Azalea", "Cherry Red", "Irish Green", "Heliconia", "Maroon", "Military Green", "Purple", "Sapphire"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/32_fm.jpg"
+        },
+        {
+            "style": "8000",
+            "name": "Gildan Unisex DryBlend® T-Shirt",
+            "description": "50% Cotton, 50% Polyester blend with moisture-wicking properties. Keeps you dry and comfortable. Preshrunk to minimize shrinkage.",
+            "price": 6.99,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Carolina Blue", "Ash", "Forest Green", "Maroon", "Gold", "Dark Heather"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/146_fm.jpg"
+        },
+        {
+            "style": "2000",
+            "name": "Gildan Unisex Ultra Cotton® T-Shirt",
+            "description": "6.0 oz., 100% preshrunk cotton. Heavyweight t-shirt with classic fit. Features seamless collar, taped neck and shoulders, and double-needle sleeve and bottom hems.",
+            "price": 8.49,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Charcoal", "Ash", "Forest Green", "Maroon", "Carolina Blue", "Gold", "Cardinal Red", "Purple", "Irish Green", "Heliconia", "Safety Green", "Safety Orange"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/39_fm.jpg"
+        },
+        {
+            "style": "5000B",
+            "name": "Gildan Youth Heavy Cotton™ T-Shirt",
+            "description": "Youth version of the classic Heavy Cotton tee. 5.3 oz., 100% preshrunk cotton. Seamless collar and double-needle sleeves and hem.",
+            "price": 5.99,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Carolina Blue", "Forest Green", "Light Blue", "Light Pink"],
+            "sizes": ["XS", "S", "M", "L", "XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/543_fm.jpg"
+        },
+        {
+            "style": "64000CVC",
+            "name": "Gildan Unisex Softstyle® CVC T-Shirt",
+            "description": "Premium cotton-polyester blend for exceptional softness. 62% Polyester, 38% Cotton CVC Jersey. Modern fit with tear-away label.",
+            "price": 10.66,
+            "colors": ["White", "Pitch Black", "Navy Mist", "Red Mist", "Gunmetal", "Dusty Rose", "Cement", "Caribbean Mist", "Daisy Mist", "Cactus", "Steel Blue"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/8906_fm.jpg"
+        },
+        {
+            "style": "65000",
+            "name": "Gildan Unisex Softstyle® Midweight T-Shirt",
+            "description": "5.3 oz., 100% ring-spun cotton midweight tee. The perfect balance of comfort and durability. Modern fit with tear-away label.",
+            "price": 10.76,
+            "colors": ["White", "Pitch Black", "Navy", "Red", "Royal", "Sport Grey", "Charcoal", "Maroon", "Irish Green", "Light Blue", "Sapphire", "Brown Savana", "Mustard", "Graphite Heather"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/11191_fm.jpg"
+        },
+        {
+            "style": "H000",
+            "name": "Gildan Unisex Hammer™ T-Shirt",
+            "description": "6.0 oz., 100% combed ring-spun cotton. Premium heavyweight tee with a modern fit. Features fashion collar and side seams.",
+            "price": 13.54,
+            "colors": ["White", "Black", "Dark Navy", "Deep Royal", "Chalky Mint", "Chambray", "Flo Blue", "Graphite Heather", "Lagoon Blue", "Off White", "Scarlet Red", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/6233_fm.jpg"
+        },
+        {
+            "style": "42000",
+            "name": "Gildan Unisex Performance® T-Shirt",
+            "description": "100% Polyester moisture-wicking performance tee. Features AquaFX® and Freshcare® antimicrobial properties. Perfect for athletic and outdoor wear.",
+            "price": 12.82,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Carolina Blue", "Charcoal", "Gold", "Irish Green", "Lime", "Military Green", "Orange", "Purple", "Safety Green", "Safety Orange", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2691_fm.jpg"
+        },
+        {
+            "style": "3000",
+            "name": "Gildan Unisex Light Cotton T-Shirt",
+            "description": "4.5 oz., 100% ring-spun cotton lightweight tee. Perfect for layering or warm weather. Tear-away label and side seams.",
+            "price": 7.49,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Carolina Blue", "Charcoal", "Forest Green", "Gold", "Graphite Heather", "Gravel", "Heather Navy", "Light Blue", "Light Pink", "Maroon", "Military Green", "Orange", "Purple", "Sage", "Sand"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "6XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/12514_fm.jpg"
+        },
+        {
+            "style": "5000L",
+            "name": "Gildan Women's Heavy Cotton™ T-Shirt",
+            "description": "Women's version of the classic Heavy Cotton tee. 5.3 oz., 100% preshrunk cotton. Semi-fitted silhouette for a feminine look.",
+            "price": 7.99,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Sport Grey", "Azalea", "Carolina Blue", "Charcoal", "Coral Silk", "Daisy", "Dark Heather", "Dusty Rose", "Heliconia", "Irish Green", "Light Blue", "Light Pink", "Maroon", "Purple", "Sapphire"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2115_fm.jpg"
+        },
+        {
+            "style": "64000L",
+            "name": "Gildan Women's Softstyle® T-Shirt",
+            "description": "Women's Softstyle tee with a modern feminine fit. 4.5 oz., 100% ring-spun cotton. Semi-fitted with side seams.",
+            "price": 7.49,
+            "colors": ["White", "Black", "Navy", "Azalea", "Charcoal", "Cherry Red", "Dark Heather", "Heather Purple", "Heather Royal", "Heliconia", "Irish Green", "Light Blue", "Maroon", "Royal", "Sapphire", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/809_fm.jpg"
+        },
+        {
+            "style": "2300",
+            "name": "Gildan Unisex Ultra Cotton® Pocket T-Shirt",
+            "description": "Classic pocket tee with 6.0 oz., 100% preshrunk cotton. Features left chest pocket, seamless collar, and double-needle stitching throughout.",
+            "price": 13.84,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Ash", "Charcoal", "Forest Green", "Light Blue", "Maroon", "Safety Green", "Safety Orange", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/155_fm.jpg"
+        },
+        {
+            "style": "5300",
+            "name": "Gildan Unisex Heavy Cotton™ Pocket T-Shirt",
+            "description": "Heavy Cotton pocket tee with 5.3 oz., 100% preshrunk cotton. Features left chest pocket and double-needle stitching for durability.",
+            "price": 11.46,
+            "colors": ["White", "Black", "Navy", "Red", "Charcoal", "Graphite Heather", "Irish Green", "Maroon", "Orange", "Sapphire", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/4467_fm.jpg"
+        },
+        {
+            "style": "64V00",
+            "name": "Gildan Unisex Softstyle® V-Neck T-Shirt",
+            "description": "4.5 oz., 100% ring-spun cotton V-neck tee. Modern fit with fashion-forward V-neck style. Tear-away label.",
+            "price": 12.30,
+            "colors": ["White", "Black", "Navy", "Charcoal", "Cherry Red", "Dark Heather", "Heather Irish Green", "Heather Purple", "Royal", "Sport Grey"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2116_fm.jpg"
+        },
+        {
+            "style": "64V00L",
+            "name": "Gildan Women's Softstyle® V-Neck T-Shirt",
+            "description": "Women's V-neck with 4.5 oz., 100% ring-spun cotton. Semi-fitted feminine silhouette with fashionable V-neck.",
+            "price": 10.68,
+            "colors": ["White", "Black", "Navy", "Azalea", "Cherry Red", "Dark Heather", "Heather Purple", "Royal", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2117_fm.jpg"
+        },
+        {
+            "style": "75000",
+            "name": "Gildan Unisex Hammer™ Maxweight T-Shirt",
+            "description": "7.0 oz., 100% ring-spun cotton super heavyweight tee. Maximum durability for demanding applications. Fashion collar with side seams.",
+            "price": 12.30,
+            "colors": ["White", "Pitch Black", "Deep Royal", "Forest Green", "Blue Dusk", "Cherry Red", "Dark Chocolate", "Garnet", "Graphite Heather", "Tan"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/12448_fm.jpg"
+        },
+        {
+            "style": "980",
+            "name": "Gildan Unisex Softstyle® Lightweight T-Shirt",
+            "description": "4.1 oz., 100% ring-spun cotton ultra-lightweight tee. Perfect for layering or summer wear. Modern fit with tear-away label.",
+            "price": 6.99,
+            "colors": ["White", "Black", "Charcoal", "Baby Blue", "Caribbean Blue", "Charity Pink", "Graphite Heather", "Heather Blue", "Heather Dark Grey", "Heather Grey", "Heather Navy", "Heather Purple", "Kelly Green", "Military Green", "Navy", "Red"],
+            "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/10649_fm.jpg"
+        },
+        {
+            "style": "8300",
+            "name": "Gildan Unisex DryBlend® Pocket T-Shirt",
+            "description": "50/50 Cotton/Poly DryBlend pocket tee with moisture-wicking properties. Features left chest pocket and preshrunk fabric.",
+            "price": 11.70,
+            "colors": ["White", "Black", "Navy", "Red", "Royal", "Ash", "Forest Green", "Graphite Heather", "Safety Green", "Sport Grey"],
+            "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/160_fm.jpg"
+        },
+        {
+            "style": "2000T",
+            "name": "Gildan Men's Tall Ultra Cotton® T-Shirt",
+            "description": "Tall version of the Ultra Cotton tee with 2\" extra length. 6.0 oz., 100% preshrunk cotton. Perfect for taller individuals.",
+            "price": 15.72,
+            "colors": ["White", "Black", "Navy", "Charcoal", "Royal", "Safety Green", "Sport Grey"],
+            "sizes": ["LT", "XLT", "2XLT", "3XLT"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/148_fm.jpg"
+        }
+    ]
+    
+    imported_count = 0
+    skipped_count = 0
+    
+    for product in gildan_products:
+        # Check if product already exists by style number
+        existing = await db.products.find_one({"brand": "Gildan", "name": {"$regex": product["style"]}}, {"_id": 0})
+        if existing:
+            skipped_count += 1
+            continue
+            
+        product_id = f"prod_{uuid.uuid4().hex[:12]}"
+        product_doc = {
+            "product_id": product_id,
+            "name": product["name"],
+            "description": product["description"],
+            "price": product["price"],
+            "category": "tshirts",
+            "images": [product["image"]],
+            "colors": product["colors"],
+            "sizes": product["sizes"],
+            "brand": "Gildan",
+            "is_blank": True,
+            "stock": 500,
+            "featured": product["style"] in ["5000", "64000", "2000", "H000"],
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.products.insert_one(product_doc)
+        imported_count += 1
+    
+    return {
+        "message": f"Gildan products imported successfully",
+        "imported": imported_count,
+        "skipped": skipped_count,
+        "total": len(gildan_products)
+    }
+
 @api_router.post("/seed")
 async def seed_database():
     """Seed initial product data"""
