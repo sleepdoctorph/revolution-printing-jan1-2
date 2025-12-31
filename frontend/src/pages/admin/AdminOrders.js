@@ -12,7 +12,7 @@ const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const fetchOrders = async () => {
     try {
@@ -57,7 +57,7 @@ const AdminOrders = () => {
     const matchesSearch = o.order_id.toLowerCase().includes(search.toLowerCase()) ||
       o.shipping_address?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
       o.shipping_address?.lastName?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = !statusFilter || o.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
