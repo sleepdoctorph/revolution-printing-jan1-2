@@ -1123,6 +1123,145 @@ async def update_gildan_descriptions(user: dict = Depends(get_admin_user)):
         "total_products": len(gildan_descriptions)
     }
 
+@api_router.post("/admin/update-gildan-color-images")
+async def update_gildan_color_images(user: dict = Depends(get_admin_user)):
+    """Update Gildan products with color-specific images from S&S Activewear"""
+    
+    # Color image IDs scraped from S&S Activewear for Gildan 5000 (Heavy Cotton)
+    # Format: colorStyleID mapped to color name
+    gildan_5000_color_images = {
+        "White": "16813",
+        "Black": "16787", 
+        "Navy": "16807",
+        "Red": "16810",
+        "Royal": "16812",
+        "Sport Grey": "16817",
+        "Charcoal": "16790",
+        "Forest Green": "16793",
+        "Maroon": "16803",
+        "Carolina Blue": "16789",
+        "Ash": "16785",
+        "Gold": "30026",
+        "Orange": "16809",
+        "Purple": "16816",
+        "Irish Green": "16795",
+        "Heliconia": "16794",
+        "Light Blue": "16800",
+        "Light Pink": "16801",
+        "Daisy": "16791",
+        "Lime": "16802"
+    }
+    
+    # Build color_images dict for Gildan 5000
+    color_images_5000 = {}
+    for color, color_id in gildan_5000_color_images.items():
+        color_images_5000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+    
+    # Update Gildan 5000 (Heavy Cotton)
+    result_5000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex Heavy Cotton™ T-Shirt"},
+        {"$set": {"color_images": color_images_5000}}
+    )
+    
+    # Color images for Gildan 64000 (Softstyle)
+    gildan_64000_color_images = {
+        "White": "29885",
+        "Black": "29881",
+        "Navy": "29883",
+        "Red": "52378",
+        "Royal": "29884",
+        "Sport Grey": "29886",
+        "Charcoal": "16925",
+        "Dark Heather": "32215",
+        "Carolina Blue": "52352",
+        "Azalea": "52348",
+        "Cherry Red": "16926",
+        "Irish Green": "32217",
+        "Heliconia": "52366",
+        "Maroon": "32218",
+        "Military Green": "33312",
+        "Purple": "52377",
+        "Sapphire": "29887"
+    }
+    
+    color_images_64000 = {}
+    for color, color_id in gildan_64000_color_images.items():
+        color_images_64000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+    
+    result_64000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex Softstyle® T-Shirt"},
+        {"$set": {"color_images": color_images_64000}}
+    )
+    
+    # Color images for Gildan 2000 (Ultra Cotton)
+    gildan_2000_color_images = {
+        "White": "17130",
+        "Black": "17075",
+        "Navy": "17103",
+        "Red": "17110",
+        "Royal": "17113",
+        "Sport Grey": "17117",
+        "Charcoal": "29996",
+        "Ash": "17072",
+        "Forest Green": "29997",
+        "Maroon": "17099",
+        "Carolina Blue": "17078",
+        "Gold": "29998",
+        "Cardinal Red": "17077",
+        "Purple": "17109",
+        "Irish Green": "17091",
+        "Heliconia": "17087",
+        "Safety Green": "17114",
+        "Safety Orange": "17115"
+    }
+    
+    color_images_2000 = {}
+    for color, color_id in gildan_2000_color_images.items():
+        color_images_2000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+    
+    result_2000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex Ultra Cotton® T-Shirt"},
+        {"$set": {"color_images": color_images_2000}}
+    )
+    
+    # Color images for Gildan 8000 (DryBlend)
+    gildan_8000_color_images = {
+        "White": "17927",
+        "Black": "17904",
+        "Navy": "17917",
+        "Red": "17920",
+        "Royal": "17921",
+        "Sport Grey": "17924",
+        "Carolina Blue": "17905",
+        "Ash": "17902",
+        "Forest Green": "17910",
+        "Maroon": "17916",
+        "Gold": "17911",
+        "Dark Heather": "32135"
+    }
+    
+    color_images_8000 = {}
+    for color, color_id in gildan_8000_color_images.items():
+        color_images_8000[color] = f"https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=600,f=auto/Images/Color/{color_id}_f.jpg"
+    
+    result_8000 = await db.products.update_one(
+        {"brand": "Gildan", "name": "Gildan Unisex DryBlend® T-Shirt"},
+        {"$set": {"color_images": color_images_8000}}
+    )
+    
+    total_updated = result_5000.modified_count + result_64000.modified_count + result_2000.modified_count + result_8000.modified_count
+    
+    return {
+        "message": "Gildan color images updated successfully",
+        "updated": total_updated,
+        "products_updated": {
+            "5000_heavy_cotton": result_5000.modified_count,
+            "64000_softstyle": result_64000.modified_count,
+            "2000_ultra_cotton": result_2000.modified_count,
+            "8000_dryblend": result_8000.modified_count
+        }
+    }
+
 @api_router.post("/seed")
 async def seed_database():
     """Seed initial product data"""
