@@ -452,7 +452,9 @@ async def get_product(product_id: str):
         is_blank=product.get("is_blank", False),
         stock=product.get("stock", 0),
         featured=product.get("featured", False),
-        created_at=created_at
+        created_at=created_at,
+        fabric=product.get("fabric"),
+        weight=product.get("weight")
     )
 
 @api_router.post("/admin/products", response_model=ProductResponse)
