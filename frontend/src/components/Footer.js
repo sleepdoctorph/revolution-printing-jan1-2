@@ -9,11 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1">
-            <img 
-              src="https://customer-assets.emergentagent.com/job_faithful-threads/artifacts/w3pha3fr_logo%201.png" 
-              alt="Revolution Printing" 
-              className="h-16 object-contain mb-4"
-            />
+            <h3 className="font-heading text-2xl font-bold text-primary mb-4">Revolution Printing</h3>
             <p className="text-muted-foreground text-sm mb-4">
               Spreading faith through fashion. Quality Christian apparel for the whole family.
             </p>
