@@ -112,6 +112,24 @@
     }
 }
 
+@keyframes sparkle-burst {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 3px gold);
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px gold);
+    }
+    100% {
+        transform: scale(0) rotate(360deg) translateY(-20px);
+        opacity: 0;
+        filter: drop-shadow(0 0 0px gold);
+    }
+}
+
 @keyframes sparkle-particle {
     0% {
         transform: scale(0) rotate(0deg);
