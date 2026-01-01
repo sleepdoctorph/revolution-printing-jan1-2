@@ -15,6 +15,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 import httpx
 import shutil
+import resend
 
 ROOT_DIR = Path(__file__).parent
 UPLOAD_DIR = ROOT_DIR / "uploads"
@@ -38,6 +39,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SQUARE_ACCESS_TOKEN = os.environ.get('SQUARE_ACCESS_TOKEN', '')
 SQUARE_LOCATION_ID = os.environ.get('SQUARE_LOCATION_ID', '')
 SQUARE_ENVIRONMENT = os.environ.get('SQUARE_ENVIRONMENT', 'sandbox')
+
+# Resend Email Settings
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
+resend.api_key = RESEND_API_KEY
 
 app = FastAPI(title="Revolution Printing API")
 api_router = APIRouter(prefix="/api")
