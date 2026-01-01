@@ -21,12 +21,13 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addItem = useCallback((product, quantity = 1, color = '', size = '') => {
+  const addItem = useCallback((product, quantity = 1, color = '', size = '', design = null) => {
     setItems(prev => {
       const existingIndex = prev.findIndex(
         item => item.product_id === product.product_id && 
                 item.color === color && 
-                item.size === size
+                item.size === size &&
+                item.design_id === (design?.design_id || '')
       );
 
       if (existingIndex > -1) {
@@ -42,26 +43,29 @@ export const CartProvider = ({ children }) => {
         image: product.images?.[0] || '',
         color,
         size,
-        quantity
+        quantity,
+        design_id: design?.design_id || '',
+        design_name: design?.name || '',
+        design_image: design?.image_url || ''
       }];
     });
     setIsOpen(true);
   }, []);
 
-  const removeItem = useCallback((productId, color, size) => {
+  const removeItem = useCallback((productId, color, size, designId = '') => {
     setItems(prev => prev.filter(
-      item => !(item.product_id === productId && item.color === color && item.size === size)
+      item => !(item.product_id === productId && item.color === color && item.size === size && item.design_id === designId)
     ));
   }, []);
 
-  const updateQuantity = useCallback((productId, color, size, quantity) => {
+  const updateQuantity = useCallback((productId, color, size, quantity, designId = '') => {
     if (quantity <= 0) {
-      removeItem(productId, color, size);
+      removeItem(productId, color, size, designId);
       return;
     }
     
     setItems(prev => prev.map(item => {
-      if (item.product_id === productId && item.color === color && item.size === size) {
+      if (item.product_id === productId && item.color === color && item.size === size && item.design_id === designId) {
         return { ...item, quantity };
       }
       return item;
