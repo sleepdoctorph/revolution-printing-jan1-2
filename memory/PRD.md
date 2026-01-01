@@ -47,6 +47,19 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Product image upload in admin
 
 ### Recent Session Updates (January 1, 2026)
+- ✅ **Implemented 3-Step Purchase Flow**:
+  - Step 1: Product page with progress indicator + "Continue to Design Selection" button
+  - Step 2: Design selection page showing designs filtered by product category
+  - Step 3: Review order page with mockup preview showing design on product
+- ✅ **Design Management System**:
+  - Backend API for designs (CRUD endpoints)
+  - Admin page to upload/manage designs at `/admin/designs`
+  - Designs separated by category: "apparel" (T-shirts, Hoodies, Mugs) and "hats"
+  - Design image upload with file storage
+- ✅ **Cart updated** to include design information
+- ✅ **17 backend tests passed** for design API
+
+### Previous Session Updates (January 1, 2026)
 - ✅ **Imported 21 hats from 3 brands**:
   - YP Classics (14 products) - Trucker caps, dad hats, snapbacks
   - Richardson (6 products) - 112 Trucker, R-Flex, Youth styles
