@@ -108,21 +108,6 @@ const ShopPage = () => {
           ))}
         </div>
       </div>
-
-      {/* Blanks Filter */}
-      <div>
-        <h4 className="font-heading font-bold mb-3">Product Type</h4>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="blanks"
-            checked={showBlanks}
-            onCheckedChange={(checked) => setShowBlanks(checked)}
-          />
-          <label htmlFor="blanks" className="text-sm cursor-pointer">
-            Show blank products only
-          </label>
-        </div>
-      </div>
     </div>
   );
 
@@ -135,7 +120,7 @@ const ShopPage = () => {
             {category ? categories.find(c => c.value === category)?.label : 'All Products'}
           </h1>
           <p className="text-muted-foreground text-lg">
-            {showBlanks ? 'Blank products ready for customization' : 'Faith-inspired apparel for the whole family'}
+            Inspired by Scripture. Designed for Life.
           </p>
         </div>
 
