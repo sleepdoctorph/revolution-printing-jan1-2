@@ -295,11 +295,6 @@ const ProductDetailPage = () => {
                 <span className="font-bold text-3xl text-primary">
                   ${product.price.toFixed(2)}
                 </span>
-                {product.is_blank && (
-                  <span className="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
-                    Blank
-                  </span>
-                )}
               </div>
             </div>
 
