@@ -72,18 +72,11 @@ const HomePage = () => {
               </div>
             </div>
             <div className="relative animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <div className="grid grid-cols-2 gap-4">
-                <img
-                  src="https://images.pexels.com/photos/9594086/pexels-photo-9594086.jpeg"
-                  alt="Faith apparel"
-                  className="rounded-xl border-2 border-black shadow-brutal-lg w-full h-64 object-cover"
-                />
-                <img
-                  src="https://images.pexels.com/photos/8217415/pexels-photo-8217415.jpeg"
-                  alt="Christian hoodie"
-                  className="rounded-xl border-2 border-black shadow-brutal-lg w-full h-64 object-cover mt-8"
-                />
-              </div>
+              <img
+                src="https://customer-assets.emergentagent.com/job_faithapparel/artifacts/ayjfal3q_webpage%20image.png"
+                alt="Revolution Printing - Jesus Is My Rock shirt, Faith Over Fear hat, Saved By Grace mug"
+                className="rounded-xl border-2 border-black shadow-brutal-lg w-full h-auto object-cover"
+              />
             </div>
           </div>
         </div>
