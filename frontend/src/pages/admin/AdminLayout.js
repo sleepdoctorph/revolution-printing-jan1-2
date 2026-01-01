@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Package, ShoppingCart, Users, Inbox, Settings, 
+  LayoutDashboard, Package, ShoppingCart, Users, Inbox, Palette,
   ChevronRight, Menu, X 
 } from 'lucide-react';
 import axios from 'axios';
@@ -40,6 +40,7 @@ const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Products', href: '/admin/products', icon: Package },
+    { name: 'Designs', href: '/admin/designs', icon: Palette },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Customers', href: '/admin/customers', icon: Users },
     { name: 'Messages', href: '/admin/contacts', icon: Inbox },
