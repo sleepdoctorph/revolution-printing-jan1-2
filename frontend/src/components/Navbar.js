@@ -20,6 +20,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const navLinks = [
+    { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
     { name: 'T-Shirts', href: '/shop?category=tshirts' },
     { name: 'Hoodies', href: '/shop?category=hoodies' },
