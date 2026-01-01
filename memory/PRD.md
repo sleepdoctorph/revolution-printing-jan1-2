@@ -25,20 +25,25 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Gildan description update endpoint (/api/admin/update-gildan-descriptions)
 - ✅ **Gildan color images endpoint** (/api/admin/update-gildan-color-images)
 - ✅ Image upload for products
+- ✅ **Design CRUD API** (/api/designs, /api/admin/designs)
+- ✅ **Design image upload** (/api/admin/designs/upload)
 
 ### Frontend (React + Tailwind + Shadcn/UI)
 - ✅ Homepage with hero, categories, featured products
 - ✅ Shop page with filtering and search
-- ✅ Product detail page with size/color selection
+- ✅ **3-Step Purchase Flow**:
+  - Step 1: Product detail page with color/size selection + progress indicator
+  - Step 2: Design selection page (apparel designs for T-shirts/Hoodies/Mugs, hat designs for Hats)
+  - Step 3: Review order page with mockup preview + proceed to payment
 - ✅ **Color swatches with proper hex colors** (20 colors displayed)
-- ✅ **Product image changes when color is clicked** (for 4 main Gildan products)
-- ✅ Shopping cart drawer
+- ✅ Shopping cart drawer (now includes design info)
 - ✅ Checkout flow
 - ✅ Login/Register with Google OAuth
 - ✅ Admin redirect after login (admin users go to /admin)
 - ✅ About page
 - ✅ Contact page
-- ✅ Admin Dashboard (products, orders, customers, messages)
+- ✅ Admin Dashboard (products, orders, customers, messages, **designs**)
+- ✅ **Admin Designs page** - upload/manage designs with category selection
 - ✅ Product image upload in admin
 
 ### Recent Session Updates (January 1, 2026)
