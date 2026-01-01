@@ -88,7 +88,7 @@ const Navbar = () => {
         setGlowingLink(null);
         setSparkle(null);
         navigate(link.href);
-      }, 600);
+      }, 1200);
     }
   };
 
