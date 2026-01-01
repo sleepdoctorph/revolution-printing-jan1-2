@@ -191,6 +191,117 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+async def send_order_confirmation_email(order_data: dict, customer_email: str, customer_name: str):
+    """Send order confirmation email to customer"""
+    if not RESEND_API_KEY:
+        logger.warning("Resend API key not configured, skipping email")
+        return False
+    
+    try:
+        # Build items HTML
+        items_html = ""
+        for item in order_data.get("items", []):
+            design_info = f"<br><small>Design: {item.get('design_name', 'N/A')}</small>" if item.get('design_name') else ""
+            items_html += f"""
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #eee;">
+                    <strong>{item.get('product_name', 'Product')}</strong><br>
+                    <small style="color: #666;">Color: {item.get('color', 'N/A')} | Size: {item.get('size', 'N/A')}</small>
+                    {design_info}
+                </td>
+                <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: center;">{item.get('quantity', 1)}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">${item.get('price', 0):.2f}</td>
+            </tr>
+            """
+        
+        shipping = order_data.get("shipping_address", {})
+        shipping_html = f"""
+            {shipping.get('firstName', '')} {shipping.get('lastName', '')}<br>
+            {shipping.get('address', '')}<br>
+            {shipping.get('city', '')}, {shipping.get('state', '')} {shipping.get('zip', '')}<br>
+            {shipping.get('phone', '')}
+        """
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Order Confirmation</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; padding: 20px 0; border-bottom: 3px solid #E53E3E;">
+                <h1 style="color: #E53E3E; margin: 0;">Revolution Printing</h1>
+                <p style="color: #666; font-style: italic; margin: 5px 0;">Inspired by Scripture. Designed for Life.</p>
+            </div>
+            
+            <div style="padding: 30px 0;">
+                <h2 style="color: #333;">Thank You for Your Order! 🙏</h2>
+                <p>Dear {customer_name},</p>
+                <p>Thank you for choosing Revolution Printing! We're blessed to have you as part of our faith community. Your order has been received and we're getting it ready for you.</p>
+                
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h3 style="margin-top: 0; color: #E53E3E;">Order Details</h3>
+                    <p><strong>Order ID:</strong> {order_data.get('order_id', 'N/A')}</p>
+                    <p><strong>Order Date:</strong> {datetime.now().strftime('%B %d, %Y')}</p>
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: #E53E3E; color: white;">
+                            <th style="padding: 12px; text-align: left;">Item</th>
+                            <th style="padding: 12px; text-align: center;">Qty</th>
+                            <th style="padding: 12px; text-align: right;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items_html}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="padding: 12px; text-align: right;"><strong>Total:</strong></td>
+                            <td style="padding: 12px; text-align: right; font-size: 18px; color: #E53E3E;"><strong>${order_data.get('total_amount', 0):.2f}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h3 style="margin-top: 0; color: #E53E3E;">Shipping Address</h3>
+                    <p style="margin: 0;">{shipping_html}</p>
+                </div>
+                
+                <div style="background: #FFF5F5; padding: 20px; border-radius: 8px; border-left: 4px solid #E53E3E; margin: 20px 0;">
+                    <p style="margin: 0; font-style: italic;">"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future." - Jeremiah 29:11</p>
+                </div>
+                
+                <p>If you have any questions about your order, please don't hesitate to reach out to us at <a href="mailto:myrevolutionprinting@gmail.com" style="color: #E53E3E;">myrevolutionprinting@gmail.com</a></p>
+                
+                <p>God bless,<br><strong>The Revolution Printing Team</strong></p>
+            </div>
+            
+            <div style="text-align: center; padding: 20px 0; border-top: 1px solid #eee; color: #666; font-size: 12px;">
+                <p>© {datetime.now().year} Revolution Printing. All rights reserved.</p>
+                <p>Inspired by Scripture. Designed for Life.</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        params = {
+            "from": "Revolution Printing <onboarding@resend.dev>",
+            "to": [customer_email],
+            "subject": f"Order Confirmed! Thank you for your purchase #{order_data.get('order_id', '')}",
+            "html": html_content
+        }
+        
+        email = resend.Emails.send(params)
+        logger.info(f"Order confirmation email sent to {customer_email}, email_id: {email.get('id')}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send order confirmation email: {str(e)}")
+        return False
+
 async def get_current_user(request: Request) -> dict:
     # Check cookie first
     token = request.cookies.get("session_token")
