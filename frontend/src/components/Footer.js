@@ -95,7 +95,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Mail className="h-4 w-4 text-primary" />
-                hello@faithfulthreads.com
+                hello@revolutionprinting.com
               </li>
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Phone className="h-4 w-4 text-primary" />
@@ -112,7 +112,7 @@ const Footer = () => {
 
         <div className="border-t border-muted-foreground/20 mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} Faithful Threads. All rights reserved.
+            © {new Date().getFullYear()} Revolution Printing. All rights reserved.
           </p>
         </div>
       </div>

@@ -76,7 +76,7 @@ const ContactPage = () => {
             <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
               <Mail className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-bold text-lg mb-1">Email</h3>
-              <p className="text-muted-foreground">hello@faithfulthreads.com</p>
+              <p className="text-muted-foreground">hello@revolutionprinting.com</p>
             </div>
             <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
               <Phone className="h-8 w-8 text-primary mb-3" />

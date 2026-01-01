@@ -184,7 +184,7 @@ const ProductCard = ({ product }) => {
         {/* Content */}
         <div className="p-4">
           <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-            {product.brand || 'Faithful Threads'}
+            {product.brand || 'Revolution Printing'}
           </p>
           <h3 className="font-heading font-bold text-lg text-foreground mb-2 line-clamp-1">
             {product.name}

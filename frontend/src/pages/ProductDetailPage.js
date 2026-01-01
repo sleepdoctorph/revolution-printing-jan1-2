@@ -286,7 +286,7 @@ const ProductDetailPage = () => {
           <div className="space-y-6">
             <div>
               <p className="text-sm text-muted-foreground uppercase tracking-wide mb-1">
-                {product.brand || 'Faithful Threads'}
+                {product.brand || 'Revolution Printing'}
               </p>
               <h1 className="font-heading text-3xl md:text-4xl font-bold mb-2">
                 {product.name}
