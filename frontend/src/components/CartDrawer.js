@@ -1,11 +1,13 @@
 import React from 'react';
-import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, Palette } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../components/ui/sheet';
 import { Button } from '../components/ui/button';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { Separator } from '../components/ui/separator';
 import { useCart } from '../context/CartContext';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
@@ -49,18 +51,24 @@ const CartDrawer = () => {
               <div className="space-y-4 py-4">
                 {items.map((item, index) => (
                   <div
-                    key={`${item.product_id}-${item.color}-${item.size}`}
+                    key={`${item.product_id}-${item.color}-${item.size}-${item.design_id || 'no-design'}`}
                     className="flex gap-4 animate-fade-in"
                     style={{ animationDelay: `${index * 50}ms` }}
                     data-testid={`cart-item-${item.product_id}`}
                   >
                     {/* Image */}
-                    <div className="w-20 h-20 rounded-lg border-2 border-black overflow-hidden bg-muted flex-shrink-0">
+                    <div className="w-20 h-20 rounded-lg border-2 border-black overflow-hidden bg-muted flex-shrink-0 relative">
                       <img
                         src={item.image || 'https://via.placeholder.com/80'}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Design overlay indicator */}
+                      {item.design_image && (
+                        <div className="absolute bottom-1 right-1 w-6 h-6 bg-white rounded-full border border-black p-0.5">
+                          <Palette className="w-full h-full text-primary" />
+                        </div>
+                      )}
                     </div>
 
                     {/* Details */}
@@ -71,6 +79,11 @@ const CartDrawer = () => {
                         {item.color && item.size && ' / '}
                         {item.size && `${item.size}`}
                       </p>
+                      {item.design_name && (
+                        <p className="text-xs text-primary font-medium mt-0.5">
+                          Design: {item.design_name}
+                        </p>
+                      )}
                       <p className="font-bold text-primary mt-1">
                         ${item.price.toFixed(2)}
                       </p>
@@ -82,7 +95,7 @@ const CartDrawer = () => {
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6"
-                        onClick={() => removeItem(item.product_id, item.color, item.size)}
+                        onClick={() => removeItem(item.product_id, item.color, item.size, item.design_id)}
                         data-testid={`remove-item-${item.product_id}`}
                       >
                         <X className="h-4 w-4" />
@@ -92,7 +105,7 @@ const CartDrawer = () => {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => updateQuantity(item.product_id, item.color, item.size, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.product_id, item.color, item.size, item.quantity - 1, item.design_id)}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
@@ -103,7 +116,7 @@ const CartDrawer = () => {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => updateQuantity(item.product_id, item.color, item.size, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.product_id, item.color, item.size, item.quantity + 1, item.design_id)}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
