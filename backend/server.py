@@ -177,6 +177,23 @@ class OrderCreateWithDesign(BaseModel):
     shipping_address: dict
     total_amount: float
 
+class GuestOrderCreate(BaseModel):
+    items: List[CartItemWithDesign]
+    shipping_address: dict
+    total_amount: float
+    is_guest: bool = True
+    subscribe_to_updates: bool = False
+
+class GuestOrderResponse(BaseModel):
+    order_id: str
+    items: List[dict]
+    shipping_address: dict
+    total_amount: float
+    status: str
+    payment_id: Optional[str] = None
+    created_at: datetime
+    is_guest: bool = True
+
 # ======================== HELPER FUNCTIONS ========================
 
 def hash_password(password: str) -> str:
