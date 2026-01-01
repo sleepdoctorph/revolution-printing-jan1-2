@@ -724,7 +724,8 @@ async def create_order(order: OrderCreate, user: dict = Depends(get_current_user
                 "quantity": item.quantity,
                 "color": item.color,
                 "size": item.size,
-                "image": product.get("images", [""])[0] if product.get("images") else ""
+                "image": product.get("images", [""])[0] if product.get("images") else "",
+                "design_name": getattr(item, 'design_name', '') if hasattr(item, 'design_name') else ''
             })
     
     order_doc = {
@@ -739,6 +740,12 @@ async def create_order(order: OrderCreate, user: dict = Depends(get_current_user
     }
     
     await db.orders.insert_one(order_doc)
+    
+    # Send order confirmation email
+    customer_email = user.get("email", "")
+    customer_name = order.shipping_address.get("firstName", user.get("name", "Valued Customer"))
+    if customer_email:
+        await send_order_confirmation_email(order_doc, customer_email, customer_name)
     
     return OrderResponse(
         order_id=order_id,
