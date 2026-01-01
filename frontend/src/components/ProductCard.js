@@ -247,13 +247,17 @@ const ProductCard = ({ product }) => {
             {product.colors?.length > 0 && (
               <div className="flex gap-1">
                 {product.colors.slice(0, 4).map((color, i) => {
-                  const hexColor = getColorHex(color);
-                  const isLight = hexColor === '#FFFFFF' || hexColor === '#FAF9F6' || hexColor === '#B2BEB5' || hexColor === '#F5F5DC';
+                  const { isTwoTone, color1, color2 } = getTwoToneColors(color);
+                  const isLight = color1 === '#FFFFFF' || color1 === '#FAF9F6' || color1 === '#B2BEB5' || color1 === '#F5F5DC';
                   return (
                     <span
                       key={i}
-                      className={`w-4 h-4 rounded-full ${isLight ? 'border-2 border-gray-300' : 'border border-black'}`}
-                      style={{ backgroundColor: hexColor }}
+                      className={`w-4 h-4 rounded-full overflow-hidden ${isLight ? 'border-2 border-gray-300' : 'border border-black'}`}
+                      style={isTwoTone ? {
+                        background: `linear-gradient(135deg, ${color1} 50%, ${color2} 50%)`
+                      } : {
+                        backgroundColor: color1
+                      }}
                       title={color}
                     />
                   );
