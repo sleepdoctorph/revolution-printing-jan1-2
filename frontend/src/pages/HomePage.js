@@ -31,7 +31,7 @@ const HomePage = () => {
 
   const categories = [
     { name: 'T-Shirts', slug: 'tshirts', image: 'https://customer-assets.emergentagent.com/job_faithapparel/artifacts/yimlwpen_image.png', color: 'bg-primary' },
-    { name: 'Hoodies', slug: 'hoodies', image: 'https://images.pexels.com/photos/8217415/pexels-photo-8217415.jpeg', color: 'bg-secondary' },
+    { name: 'Hoodies', slug: 'hoodies', image: 'https://customer-assets.emergentagent.com/job_faithapparel/artifacts/msgx2mng_hoody.png', color: 'bg-secondary' },
     { name: 'Hats', slug: 'hats', image: 'https://customer-assets.emergentagent.com/job_faithapparel/artifacts/sts99fzr_hat%20category.png', color: 'bg-accent' },
     { name: 'Mugs', slug: 'mugs', image: 'https://customer-assets.emergentagent.com/job_faithapparel/artifacts/v6zpunbr_mug%20category.png', color: 'bg-chart-4' },
   ];
