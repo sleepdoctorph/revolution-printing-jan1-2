@@ -75,7 +75,11 @@ const AdminLayout = () => {
         `}>
           <div className="p-6 border-b border-muted-foreground/20">
             <Link to="/">
-              <span className="font-heading text-xl font-bold text-primary">Revolution Printing</span>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_faithapparel/artifacts/odi1used_logo%201.png" 
+                alt="Revolution Printing" 
+                className="h-10 object-contain"
+              />
             </Link>
             <p className="text-sm text-muted-foreground mt-1">Admin Panel</p>
           </div>
