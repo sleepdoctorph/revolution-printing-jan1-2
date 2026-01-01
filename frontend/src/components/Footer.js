@@ -95,16 +95,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Mail className="h-4 w-4 text-primary" />
-                hello@revolutionprinting.com
+                myrevolutionprinting@gmail.com
               </li>
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Phone className="h-4 w-4 text-primary" />
-                (555) 123-4567
+                604-787-0686
               </li>
               <li className="flex items-start gap-2 text-muted-foreground text-sm">
                 <MapPin className="h-4 w-4 text-primary mt-0.5" />
-                123 Faith Street<br />
-                Grace City, GC 12345
+                Coquitlam, BC
               </li>
             </ul>
           </div>
