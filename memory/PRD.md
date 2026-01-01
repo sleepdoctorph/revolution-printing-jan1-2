@@ -9,7 +9,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - **Design**: Light & clean with 80's retro color palette (yellow/mustard, red, brown, blue)
 - **Admin Features**: Full dashboard (products, orders, customers)
 
-## What's Been Implemented (December 31, 2025)
+## What's Been Implemented (January 1, 2026)
 
 ### Backend (FastAPI + MongoDB)
 - ✅ User authentication (JWT + Google OAuth via Emergent)
@@ -20,6 +20,8 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Payment processing (DEMO MODE)
 - ✅ Database seeding with initial products
 - ✅ Gildan product import endpoint (/api/admin/import-gildan)
+- ✅ Gildan hoodies import endpoint (/api/admin/import-gildan-hoodies)
+- ✅ **Hats import endpoint** (/api/admin/import-hats) - YP Classics, Richardson, Flexfit
 - ✅ Gildan description update endpoint (/api/admin/update-gildan-descriptions)
 - ✅ **Gildan color images endpoint** (/api/admin/update-gildan-color-images)
 - ✅ Image upload for products
