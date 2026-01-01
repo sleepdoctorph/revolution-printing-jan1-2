@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Mail, Calendar, MessageSquare } from 'lucide-react';
+import { Mail, Calendar, MessageSquare, Reply, Send, X, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminContacts = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/admin/contacts`, { withCredentials: true });
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/api/admin/contacts`, { 
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true 
+        });
         setContacts(response.data);
       } catch (error) {
         console.error('Error fetching contacts:', error);
@@ -22,6 +32,36 @@ const AdminContacts = () => {
     };
     fetchContacts();
   }, []);
+
+  const handleReply = async (contact) => {
+    if (!replyMessage.trim()) {
+      toast.error('Please enter a reply message');
+      return;
+    }
+
+    setSending(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${API_URL}/api/admin/contacts/${contact.contact_id}/reply`,
+        { message: replyMessage },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`Reply sent to ${contact.email}`);
+      setReplyingTo(null);
+      setReplyMessage('');
+      
+      // Mark as read
+      setContacts(contacts.map(c => 
+        c.contact_id === contact.contact_id ? { ...c, read: true } : c
+      ));
+    } catch (error) {
+      console.error('Error sending reply:', error);
+      toast.error('Failed to send reply');
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div data-testid="admin-contacts">
@@ -69,10 +109,70 @@ const AdminContacts = () => {
                     </span>
                   </div>
                 </div>
+                <Button
+                  onClick={() => {
+                    setReplyingTo(replyingTo === contact.contact_id ? null : contact.contact_id);
+                    setReplyMessage('');
+                  }}
+                  variant="outline"
+                  className="border-2 border-black shadow-brutal hover-lift"
+                  data-testid={`reply-btn-${contact.contact_id}`}
+                >
+                  <Reply className="h-4 w-4 mr-2" />
+                  Reply
+                </Button>
               </div>
-              <p className="text-foreground bg-muted p-4 rounded-lg">
+              
+              <p className="text-foreground bg-muted p-4 rounded-lg mb-4">
                 {contact.message}
               </p>
+
+              {/* Reply Form */}
+              {replyingTo === contact.contact_id && (
+                <div className="border-t-2 border-dashed border-muted pt-4 mt-4 animate-fade-in">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Reply className="h-4 w-4 text-primary" />
+                    <span className="font-medium">Reply to {contact.name}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 ml-auto"
+                      onClick={() => setReplyingTo(null)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={replyMessage}
+                    onChange={(e) => setReplyMessage(e.target.value)}
+                    placeholder="Type your reply here..."
+                    className="border-2 border-black mb-3 min-h-[120px]"
+                    data-testid={`reply-textarea-${contact.contact_id}`}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleReply(contact)}
+                      disabled={sending || !replyMessage.trim()}
+                      className="bg-primary text-white border-2 border-black shadow-brutal hover-lift"
+                      data-testid={`send-reply-btn-${contact.contact_id}`}
+                    >
+                      {sending ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4 mr-2" />
+                      )}
+                      Send Reply
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setReplyingTo(null)}
+                      className="border-2 border-black"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
