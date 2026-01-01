@@ -185,6 +185,18 @@ const getColorHex = (colorName) => {
   return '#CCCCCC';
 };
 
+// Get both colors for two-tone swatches (for hats)
+const getTwoToneColors = (colorName) => {
+  const key = colorName.toLowerCase().trim();
+  if (key.includes('/')) {
+    const parts = key.split('/');
+    const color1 = colorMap[parts[0].trim()] || '#CCCCCC';
+    const color2 = colorMap[parts[1].trim()] || '#FFFFFF';
+    return { isTwoTone: true, color1, color2 };
+  }
+  return { isTwoTone: false, color1: getColorHex(colorName), color2: null };
+};
+
 const ProductDetailPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
