@@ -1,13 +1,14 @@
-# Faithful Threads - Christian E-Commerce Store
+# Revolution Printing - Christian E-Commerce Store
 
 ## Original Problem Statement
 Build a Christian t-shirt, Hat and mug business e-commerce site with authentication, product catalog (blanks and designs), about page, contact page, and admin dashboard.
 
 ## User Choices
-- **Payment**: Square (DEMO MODE - no real credentials)
-- **Authentication**: Both JWT-based custom auth + Google OAuth (Emergent)
+- **Payment**: Square (SANDBOX MODE - Production keys available in GO_LIVE_CHECKLIST.md)
+- **Authentication**: Both JWT-based custom auth + Google OAuth (Emergent) + Guest Checkout
 - **Design**: Light & clean with 80's retro color palette (yellow/mustard, red, brown, blue)
 - **Admin Features**: Full dashboard (products, orders, customers)
+- **Email**: Resend for transactional emails
 
 ## What's Been Implemented (January 1, 2026)
 
@@ -17,7 +18,7 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Orders management
 - ✅ Contact form API
 - ✅ Admin stats API
-- ✅ Payment processing (DEMO MODE)
+- ✅ Payment processing (SANDBOX MODE - Square)
 - ✅ Database seeding with initial products
 - ✅ Gildan product import endpoint (/api/admin/import-gildan)
 - ✅ Gildan hoodies import endpoint (/api/admin/import-gildan-hoodies)
@@ -27,6 +28,10 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Image upload for products
 - ✅ **Design CRUD API** (/api/designs, /api/admin/designs)
 - ✅ **Design image upload** (/api/admin/designs/upload)
+- ✅ **Guest checkout API** (/api/orders/guest) - No auth required
+- ✅ **Newsletter subscribers collection** - Stores email subscriptions from guest checkout
+- ✅ **Order confirmation emails** via Resend
+- ✅ **Admin contact reply** - Send emails to customers via Resend
 
 ### Frontend (React + Tailwind + Shadcn/UI)
 - ✅ Homepage with hero, categories, featured products
@@ -37,16 +42,30 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
   - Step 3: Review order page with mockup preview + proceed to payment
 - ✅ **Color swatches with proper hex colors** (20 colors displayed)
 - ✅ Shopping cart drawer (now includes design info)
-- ✅ Checkout flow
-- ✅ Login/Register with Google OAuth
+- ✅ **Checkout flow with Guest Checkout support**
+- ✅ Login/Register with Google OAuth + **"Continue as Guest" option**
 - ✅ Admin redirect after login (admin users go to /admin)
 - ✅ About page
 - ✅ Contact page
 - ✅ Admin Dashboard (products, orders, customers, messages, **designs**)
 - ✅ **Admin Designs page** - upload/manage designs with category selection
 - ✅ Product image upload in admin
+- ✅ **Newsletter signup checkbox** at checkout
 
-### Recent Session Updates (January 1, 2026)
+### Latest Session Updates (January 1, 2026)
+- ✅ **Guest Checkout Feature** (COMPLETE):
+  - "Continue as Guest" button on login page
+  - Guest users can checkout without creating an account
+  - Backend `/api/orders/guest` endpoint - no authentication required
+  - Email required for order confirmation
+  - Newsletter subscription option at checkout
+  - Order confirmation email sent to guest email
+  - **8/8 backend tests passed** for guest checkout API
+- ✅ **Newsletter System**:
+  - `newsletter_subscribers` MongoDB collection
+  - Automatic subscription during guest checkout (opt-in)
+
+### Previous Session Updates (January 1, 2026)
 - ✅ **Implemented 3-Step Purchase Flow**:
   - Step 1: Product page with progress indicator + "Continue to Design Selection" button
   - Step 2: Design selection page showing designs filtered by product category
@@ -102,8 +121,10 @@ The frontend now includes a comprehensive color map translating apparel color na
 - [x] Product image changes with color selection
 
 ### P1 (High Priority)
-- [ ] Square payment integration with real credentials
-- [ ] Email notifications for orders
+- [ ] **Switch Square to Production** - Keys ready in GO_LIVE_CHECKLIST.md
+- [ ] **Upload designs** via Admin → Designs page
+- [ ] **Set retail prices** - Currently using wholesale prices
+- [x] Email notifications for orders (Resend integration complete)
 - [ ] Add color images to remaining 16 Gildan products
 
 ### P2 (Medium Priority)
@@ -111,11 +132,13 @@ The frontend now includes a comprehensive color map translating apparel color na
 - [ ] Wishlist functionality
 - [ ] Order tracking
 - [ ] Discount codes/coupons
+- [ ] Connect custom domain
 
 ### P3 (Nice to have)
-- [ ] Newsletter signup
+- [x] Newsletter signup (available at checkout)
 - [ ] Social sharing
 - [ ] Related products recommendations
+- [ ] Image zoom-on-hover for products
 
 ## Test Credentials
 - **Admin Email**: admin@faithfulthreads.com
@@ -131,9 +154,18 @@ The frontend now includes a comprehensive color map translating apparel color na
 - Color images use S&S Activewear CDN: `https://cdn.ssactivewear.com/Images/Color/{colorStyleID}_f_fm.jpg`
 - Color mapping in frontend: `/app/frontend/src/pages/ProductDetailPage.js`
 
-## Next Tasks
-1. **Upload designs** - Add your Christian-themed designs via Admin → Designs page
-2. Add Square API credentials for real payment processing
-3. Set product prices (currently using default wholesale prices)
-4. Import mugs from wholesaler (if desired)
-5. Implement email notifications (order confirmation)
+## Next Tasks (Go-Live Checklist)
+See `/app/memory/GO_LIVE_CHECKLIST.md` for full details:
+1. **Switch Square to Production** - Production keys are ready
+2. **Upload designs** - Add Christian-themed designs via Admin → Designs
+3. **Set retail prices** - Update from wholesale to retail pricing
+4. **Connect custom domain** - Deploy via Emergent platform
+
+## API Endpoints - Guest Checkout
+- POST `/api/orders/guest` - Create guest order (no auth)
+  - Requires: `items`, `shipping_address` (with `email`), `total_amount`
+  - Optional: `subscribe_to_updates` (boolean)
+
+## Test Files
+- `/app/tests/test_guest_checkout.py` - 8 guest checkout tests
+- `/app/test_reports/pytest/pytest_guest_checkout.xml` - Test results
