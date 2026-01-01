@@ -54,11 +54,6 @@ const Footer = () => {
                   Mugs
                 </Link>
               </li>
-              <li>
-                <Link to="/shop?blanks=true" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  Blank Products
-                </Link>
-              </li>
             </ul>
           </div>
 
