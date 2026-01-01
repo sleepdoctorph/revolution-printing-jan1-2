@@ -76,19 +76,18 @@ const ContactPage = () => {
             <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
               <Mail className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-bold text-lg mb-1">Email</h3>
-              <p className="text-muted-foreground">hello@revolutionprinting.com</p>
+              <p className="text-muted-foreground">myrevolutionprinting@gmail.com</p>
             </div>
             <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
               <Phone className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-bold text-lg mb-1">Phone</h3>
-              <p className="text-muted-foreground">(555) 123-4567</p>
+              <p className="text-muted-foreground">604-787-0686</p>
             </div>
             <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
               <MapPin className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-heading font-bold text-lg mb-1">Address</h3>
               <p className="text-muted-foreground">
-                123 Faith Street<br />
-                Grace City, GC 12345
+                Coquitlam, BC
               </p>
             </div>
           </div>
