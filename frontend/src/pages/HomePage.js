@@ -30,7 +30,7 @@ const HomePage = () => {
   }, []);
 
   const categories = [
-    { name: 'T-Shirts', slug: 'tshirts', image: 'https://images.pexels.com/photos/9594086/pexels-photo-9594086.jpeg', color: 'bg-primary' },
+    { name: 'T-Shirts', slug: 'tshirts', image: 'https://customer-assets.emergentagent.com/job_faithapparel/artifacts/yimlwpen_image.png', color: 'bg-primary' },
     { name: 'Hoodies', slug: 'hoodies', image: 'https://images.pexels.com/photos/8217415/pexels-photo-8217415.jpeg', color: 'bg-secondary' },
     { name: 'Hats', slug: 'hats', image: 'https://images.pexels.com/photos/15437441/pexels-photo-15437441.jpeg', color: 'bg-accent' },
     { name: 'Mugs', slug: 'mugs', image: 'https://images.pexels.com/photos/6801212/pexels-photo-6801212.jpeg', color: 'bg-chart-4' },
