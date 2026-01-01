@@ -365,21 +365,26 @@ const ProductDetailPage = () => {
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {product.colors.map((color) => {
-                    const hexColor = getColorHex(color);
-                    const isLight = hexColor === '#FFFFFF' || hexColor === '#FAF9F6' || hexColor === '#B2BEB5';
+                    const { isTwoTone, color1, color2 } = getTwoToneColors(color);
+                    const isLight = color1 === '#FFFFFF' || color1 === '#FAF9F6' || color1 === '#B2BEB5';
+                    
                     return (
                       <button
                         key={color}
                         type="button"
                         onClick={() => setSelectedColor(color)}
-                        className={`w-8 h-8 rounded-full transition-all ${
+                        className={`w-8 h-8 rounded-full transition-all overflow-hidden ${
                           selectedColor === color
                             ? 'ring-2 ring-primary ring-offset-2 scale-110'
                             : 'hover:scale-110'
                         } ${isLight ? 'border-2 border-gray-300' : 'border border-gray-200'}`}
-                        style={{ backgroundColor: hexColor }}
+                        style={isTwoTone ? {
+                          background: `linear-gradient(135deg, ${color1} 50%, ${color2} 50%)`
+                        } : {
+                          backgroundColor: color1
+                        }}
                         title={color}
-                        data-testid={`color-${color.toLowerCase().replace(/\s+/g, '-')}`}
+                        data-testid={`color-${color.toLowerCase().replace(/[\s/]+/g, '-')}`}
                       />
                     );
                   })}
