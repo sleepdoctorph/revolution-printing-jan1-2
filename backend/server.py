@@ -774,6 +774,80 @@ async def create_order(order: OrderCreate, user: dict = Depends(get_current_user
         created_at=datetime.now(timezone.utc)
     )
 
+@api_router.post("/orders/guest", response_model=GuestOrderResponse)
+async def create_guest_order(order: GuestOrderCreate):
+    """Create an order for guest users (no authentication required)"""
+    order_id = f"order_{uuid.uuid4().hex[:12]}"
+    
+    # Validate email is provided in shipping address
+    customer_email = order.shipping_address.get("email", "")
+    if not customer_email:
+        raise HTTPException(status_code=400, detail="Email is required for guest checkout")
+    
+    # Build order items with product details
+    items_with_details = []
+    for item in order.items:
+        product = await db.products.find_one({"product_id": item.product_id}, {"_id": 0})
+        if product:
+            items_with_details.append({
+                "product_id": item.product_id,
+                "product_name": product["name"],
+                "price": product["price"],
+                "quantity": item.quantity,
+                "color": item.color,
+                "size": item.size,
+                "image": product.get("images", [""])[0] if product.get("images") else "",
+                "design_id": item.design_id,
+                "design_name": item.design_name
+            })
+    
+    order_doc = {
+        "order_id": order_id,
+        "user_id": "guest",
+        "is_guest": True,
+        "customer_email": customer_email,
+        "items": items_with_details,
+        "shipping_address": order.shipping_address,
+        "total_amount": order.total_amount,
+        "status": "pending",
+        "payment_id": None,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.orders.insert_one(order_doc)
+    
+    # Handle newsletter subscription
+    if order.subscribe_to_updates:
+        subscriber_doc = {
+            "subscriber_id": f"sub_{uuid.uuid4().hex[:12]}",
+            "email": customer_email,
+            "name": f"{order.shipping_address.get('firstName', '')} {order.shipping_address.get('lastName', '')}".strip(),
+            "source": "guest_checkout",
+            "subscribed_at": datetime.now(timezone.utc).isoformat()
+        }
+        # Upsert to avoid duplicates
+        await db.newsletter_subscribers.update_one(
+            {"email": customer_email},
+            {"$set": subscriber_doc},
+            upsert=True
+        )
+        logger.info(f"Newsletter subscription added for {customer_email}")
+    
+    # Send order confirmation email
+    customer_name = order.shipping_address.get("firstName", "Valued Customer")
+    if customer_email:
+        await send_order_confirmation_email(order_doc, customer_email, customer_name)
+    
+    return GuestOrderResponse(
+        order_id=order_id,
+        items=items_with_details,
+        shipping_address=order.shipping_address,
+        total_amount=order.total_amount,
+        status="pending",
+        is_guest=True,
+        created_at=datetime.now(timezone.utc)
+    )
+
 @api_router.get("/orders", response_model=List[OrderResponse])
 async def get_user_orders(user: dict = Depends(get_current_user)):
     orders = await db.orders.find({"user_id": user["user_id"]}, {"_id": 0}).to_list(100)
