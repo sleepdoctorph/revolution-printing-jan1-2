@@ -217,6 +217,30 @@ const ProductDetailPage = () => {
   return (
     <div className="min-h-screen bg-background py-8" data-testid="product-detail-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Progress Steps */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-bold">
+              1
+            </div>
+            <span className="ml-2 text-sm font-bold">Select Product</span>
+          </div>
+          <div className="w-16 h-1 bg-muted mx-2" />
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted text-muted-foreground font-bold">
+              2
+            </div>
+            <span className="ml-2 text-sm text-muted-foreground">Choose Design</span>
+          </div>
+          <div className="w-16 h-1 bg-muted mx-2" />
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted text-muted-foreground font-bold">
+              3
+            </div>
+            <span className="ml-2 text-sm text-muted-foreground">Review & Pay</span>
+          </div>
+        </div>
+
         {/* Back Button */}
         <Button
           variant="ghost"
