@@ -20,15 +20,56 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Shop', href: '/shop' },
-    { name: 'T-Shirts', href: '/shop?category=tshirts' },
-    { name: 'Hoodies', href: '/shop?category=hoodies' },
-    { name: 'Hats', href: '/shop?category=hats' },
-    { name: 'Mugs', href: '/shop?category=mugs' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Home', href: '/', isCategory: false },
+    { name: 'Shop', href: '/shop', isCategory: false },
+    { name: 'T-Shirts', href: '/shop?category=tshirts', isCategory: true },
+    { name: 'Hoodies', href: '/shop?category=hoodies', isCategory: true },
+    { name: 'Hats', href: '/shop?category=hats', isCategory: true },
+    { name: 'Mugs', href: '/shop?category=mugs', isCategory: true },
+    { name: 'About', href: '/about', isCategory: false },
+    { name: 'Contact', href: '/contact', isCategory: false },
   ];
+
+  const createSparkles = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Create sparkle container
+    const container = document.createElement('div');
+    container.className = 'sparkle-container';
+    container.style.left = `${centerX}px`;
+    container.style.top = `${centerY}px`;
+    document.body.appendChild(container);
+    
+    // Create multiple sparkles
+    for (let i = 0; i < 12; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      const angle = (i / 12) * Math.PI * 2;
+      const distance = 30 + Math.random() * 40;
+      sparkle.style.left = `${Math.cos(angle) * distance}px`;
+      sparkle.style.top = `${Math.sin(angle) * distance}px`;
+      sparkle.style.animationDelay = `${Math.random() * 0.2}s`;
+      container.appendChild(sparkle);
+    }
+    
+    // Remove container after animation
+    setTimeout(() => container.remove(), 800);
+  };
+
+  const handleCategoryClick = (e, link) => {
+    if (link.isCategory) {
+      e.preventDefault();
+      e.target.classList.add('nav-link-sparkle');
+      createSparkles(e);
+      
+      setTimeout(() => {
+        e.target.classList.remove('nav-link-sparkle');
+        navigate(link.href);
+      }, 500);
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
