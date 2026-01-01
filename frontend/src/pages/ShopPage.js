@@ -17,7 +17,6 @@ const ShopPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
-  const [showBlanks, setShowBlanks] = useState(searchParams.get('blanks') === 'true');
   const [filterOpen, setFilterOpen] = useState(false);
 
   const category = searchParams.get('category') || '';
@@ -38,7 +37,6 @@ const ShopPage = () => {
         const params = new URLSearchParams();
         
         if (category) params.append('category', category);
-        if (showBlanks) params.append('is_blank', 'true');
         
         if (params.toString()) {
           url += `?${params.toString()}`;
