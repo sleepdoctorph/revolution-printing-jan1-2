@@ -115,5 +115,6 @@ The frontend now includes a comprehensive color map translating apparel color na
 
 ## Next Tasks
 1. Add Square API credentials for real payment processing
-2. Add color images to remaining Gildan products
-3. Implement email notifications (order confirmation)
+2. Import mugs from wholesaler (if desired)
+3. Add color images to remaining Gildan products
+4. Implement email notifications (order confirmation)
