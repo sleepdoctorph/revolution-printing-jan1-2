@@ -1901,6 +1901,444 @@ async def update_gildan_color_images(user: dict = Depends(get_admin_user)):
         }
     }
 
+
+@api_router.post("/admin/import-hats")
+async def import_hats(user: dict = Depends(get_admin_user)):
+    """Import hat products from YP Classics, Richardson, and Flexfit brands"""
+    
+    hats_data = [
+        # YP Classics (16 products)
+        {
+            "style": "6606",
+            "name": "YP Classics Retro Trucker Cap",
+            "description": "Classic retro trucker cap with foam front and mesh back. Snapback closure for adjustable fit. Six-panel construction with structured crown. Pre-curved visor. Perfect for custom embroidery and screen printing.",
+            "price": 15.92,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Black/White", "Black/White/Black", "Brown/Khaki", "Caramel", "Caramel/Black", "Charcoal", "Charcoal/Black", "Charcoal/Navy", "Charcoal/Neon Green", "Heather Grey", "Kelly/White", "Khaki", "Maroon/White", "Navy", "Navy/White", "Navy/White/Navy", "Olive", "Orange", "Purple", "Red", "Red/Black", "Red/White", "Red/White/Red", "Royal", "Royal/White", "Royal/White/Royal", "Silver", "Texas Orange", "Teal", "Vegas Gold", "White/Black", "White/Maroon", "White/Navy", "White/Red", "White/Royal", "Yellow", "Charcoal/White", "Heather/Black", "Kelly", "Light Pink", "Loden", "Pink", "Red/White/Black", "Royal/White/Black"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/3783_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "6506",
+            "name": "YP Classics Five-Panel Retro Trucker Cap",
+            "description": "Five-panel retro trucker cap with foam front and mesh back. Snapback closure. Structured crown with flat brim. Modern streetwear silhouette. Great for embroidery and patches.",
+            "price": 16.38,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Black/White", "Brown/Khaki", "Charcoal", "Charcoal/White", "Heather/Black", "Heather/White", "Khaki", "Navy", "Navy/White", "Red/White", "Royal/White"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/5768_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "6089M",
+            "name": "YP Classics Premium Flat Bill Snapback Cap",
+            "description": "Premium snapback with flat bill visor. Structured six-panel design with classic fit. Green undervisor. Plastic snap closure. Pro-style cap perfect for embroidery and sublimation.",
+            "price": 17.62,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Black/Camo", "Black/Purple", "Black/Red", "Black/Silver", "Camo/Black", "Dark Grey", "Dark Heather", "Dark Heather/Black", "Dark Navy", "Gold", "Heather Grey", "Kelly", "Khaki", "Maroon", "Navy", "Navy/White", "Purple", "Red", "Royal", "Sport Grey"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2293_fm.jpg",
+            "fabric": "80% Acrylic, 20% Wool",
+            "weight": "N/A"
+        },
+        {
+            "style": "6006",
+            "name": "YP Classics Five-Panel Classic Trucker Cap",
+            "description": "Classic five-panel trucker cap with foam front and mesh back. Snapback closure. Structured crown. Pre-curved visor. Timeless trucker style for casual and promotional wear.",
+            "price": 16.84,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Black/White", "Black/White/Black", "Brown/White", "Charcoal", "Charcoal/Black", "Charcoal/White", "Heather/Black", "Heather/White", "Kelly/White/Kelly", "Khaki/White", "Maroon/White", "Navy", "Navy/White", "Navy/White/Navy", "Purple/White", "Red/White", "Red/White/Red", "Royal", "Royal/White"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2523_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "6245CM",
+            "name": "YP Classics Classic Dad Hat",
+            "description": "Unstructured low-profile dad hat with pre-curved visor. Cotton twill construction. Slide buckle closure with grommet. Soft crown for comfortable all-day wear. Classic relaxed style.",
+            "price": 19.88,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Cranberry", "Dark Grey", "Green Camo", "Khaki", "Light Blue", "Navy", "Orange", "Pink", "Spruce", "Stone"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/4338_fm.jpg",
+            "fabric": "100% Cotton",
+            "weight": "N/A"
+        },
+        {
+            "style": "6789M",
+            "name": "YP Classics Premium Curved Bill Snapback Cap",
+            "description": "Premium snapback cap with pre-curved visor. Structured six-panel design. Plastic snap closure. Grey undervisor. Professional look for corporate and team apparel.",
+            "price": 21.38,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Dark Grey", "Heather Grey", "Navy", "Red", "Royal"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/6812_fm.jpg",
+            "fabric": "80% Acrylic, 20% Wool",
+            "weight": "N/A"
+        },
+        {
+            "style": "6389",
+            "name": "YP Classics CVC Snapback Cap",
+            "description": "CVC cotton/polyester blend snapback cap. Six-panel structured design with pre-curved visor. Plastic snap closure. Soft-touch fabric for comfort. Modern casual style.",
+            "price": 13.50,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Charcoal", "Dark Heather Grey", "Navy"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/10422_fm.jpg",
+            "fabric": "Cotton/Polyester CVC",
+            "weight": "N/A"
+        },
+        {
+            "style": "6601",
+            "name": "YP Classics Elite Cap",
+            "description": "Elite performance cap with structured crown. Pre-curved visor with snapback closure. Six-panel construction. Athletic style suitable for sports and casual wear.",
+            "price": 16.82,
+            "brand": "YP Classics",
+            "colors": ["Black", "Black/White", "Charcoal", "Charcoal/Black", "Heather/Black", "Heather/White", "Moss Green/Khaki", "Navy", "Navy/White"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/11758_fm.jpg",
+            "fabric": "Polyester",
+            "weight": "N/A"
+        },
+        {
+            "style": "6007",
+            "name": "YP Classics Five-Panel Cotton Twill Snapback Cap",
+            "description": "Five-panel cotton twill snapback. Structured crown with flat visor. Plastic snap closure. Clean minimal design. Perfect canvas for embroidery.",
+            "price": 18.38,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Black/Red", "Navy", "Royal Blue"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2522_fm.jpg",
+            "fabric": "100% Cotton Twill",
+            "weight": "N/A"
+        },
+        {
+            "style": "5089M",
+            "name": "YP Classics Premium Five-Panel Snapback Cap",
+            "description": "Premium five-panel snapback with structured crown. Flat bill visor. Plastic snap closure. Green undervisor. Streetwear-inspired design.",
+            "price": 21.58,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Dark Grey", "Heather Grey", "Navy", "Royal"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/3782_fm.jpg",
+            "fabric": "80% Acrylic, 20% Wool",
+            "weight": "N/A"
+        },
+        {
+            "style": "5789M",
+            "name": "YP Classics Premium Five-Panel Curved Bill Snapback Cap",
+            "description": "Premium five-panel snapback with curved visor. Structured crown. Plastic snap closure. Modern profile. Great for custom branding.",
+            "price": 21.38,
+            "brand": "YP Classics",
+            "colors": ["Black", "Heather Grey", "Navy"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/8160_fm.jpg",
+            "fabric": "80% Acrylic, 20% Wool",
+            "weight": "N/A"
+        },
+        {
+            "style": "6245PT",
+            "name": "YP Classics Peached Cotton Twill Dad Hat",
+            "description": "Peached cotton twill dad hat with soft hand feel. Unstructured low-profile crown. Pre-curved visor. Slide buckle closure. Washed vintage look.",
+            "price": 19.84,
+            "brand": "YP Classics",
+            "colors": ["White", "Black", "Light Grey", "Loden"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/5646_fm.jpg",
+            "fabric": "100% Cotton Twill",
+            "weight": "N/A"
+        },
+        {
+            "style": "6245EC",
+            "name": "YP Classics EcoWash Dad Hat",
+            "description": "Eco-friendly dad hat with washed finish. Unstructured low-profile design. Pre-curved visor. Slide buckle closure. Sustainable style choice.",
+            "price": 20.94,
+            "brand": "YP Classics",
+            "colors": ["Black", "Navy", "Oak"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/9271_fm.jpg",
+            "fabric": "100% Cotton",
+            "weight": "N/A"
+        },
+        {
+            "style": "6502",
+            "name": "YP Classics Lightly-Structured Five-Panel Snapback Cap",
+            "description": "Lightly-structured five-panel cap. Pre-curved visor with snapback closure. Mid-profile crown. Versatile everyday style.",
+            "price": 15.52,
+            "brand": "YP Classics",
+            "colors": ["Black", "Charcoal", "Navy"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/5766_fm.jpg",
+            "fabric": "Cotton/Polyester",
+            "weight": "N/A"
+        },
+        
+        # Richardson (11 products)
+        {
+            "style": "112",
+            "name": "Richardson Snapback Trucker Cap",
+            "description": "The most popular trucker cap in the industry. Structured mid-profile with pre-curved visor. Mesh back with snapback closure. 112 is the go-to trucker for custom embroidery and screen printing.",
+            "price": 21.10,
+            "brand": "Richardson",
+            "colors": ["White", "Black", "Black/Charcoal", "Black/Gold", "Black/Vegas Gold", "Black/White", "Black/White/Heather Grey", "Black/White/Red", "Brown/Khaki", "Carmel/Black", "Charcoal/Black", "Charcoal/White", "Heather Grey/Black", "Heather Grey/Light Grey", "Heather Grey/White", "Kelly/White", "Khaki/White", "Loden/Black", "Maroon/White", "Navy", "Navy/White", "Orange/White", "Pink/White", "Purple/White", "Red/White", "Royal/White", "Split Charcoal/White", "Sport Grey", "Texas Orange/White", "Vegas Gold", "White/Black", "White/Charcoal", "White/Columbia Blue", "White/Dark Green", "White/Maroon", "White/Navy", "White/Red", "White/Royal", "Army Olive Green", "Cardinal/White", "Charcoal/Navy", "Columbia Blue/White", "Dark Green/White", "Hot Pink/White", "Khaki/Burgundy", "Khaki/Coffee", "Red/Black/White", "Red/White/Blue"],
+            "sizes": ["OSFM"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/4332_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "112FP",
+            "name": "Richardson Five-Panel Trucker Cap",
+            "description": "Five-panel version of the iconic 112 trucker. Structured crown with mesh back. Pre-curved visor. Snapback closure. Modern streetwear appeal.",
+            "price": 21.10,
+            "brand": "Richardson",
+            "colors": ["Army Olive Green/Tan", "Black/White", "Charcoal/Black", "Charcoal/White", "Heather Grey/Black", "Navy/White", "Ombre Blue/Navy"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/7614_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "110",
+            "name": "Richardson R-Flex Trucker Cap",
+            "description": "Fitted trucker cap with stretch mesh back. Structured crown with pre-curved visor. R-Flex fitted comfort. Premium trucker style.",
+            "price": 25.28,
+            "brand": "Richardson",
+            "colors": ["Black", "Black/White", "Charcoal/Black", "Heather Grey/Black", "Heather Grey/Navy", "Heather Grey/White", "Loden/Black", "Navy", "Royal/White"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/6367_fm.jpg",
+            "fabric": "Cotton/Spandex Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "112Y",
+            "name": "Richardson Youth Trucker Snapback Cap",
+            "description": "Youth-sized version of the classic 112 trucker. Structured crown with mesh back. Snapback closure sized for kids. Same quality construction.",
+            "price": 20.84,
+            "brand": "Richardson",
+            "colors": ["Black", "Heather Grey/Black", "Heather Grey/White", "Navy"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/9254_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "312",
+            "name": "Richardson Twill Back Trucker Cap",
+            "description": "Trucker cap with solid twill back instead of mesh. Structured crown with pre-curved visor. Snapback closure. Unique solid-back trucker style.",
+            "price": 22.00,
+            "brand": "Richardson",
+            "colors": ["Black/Charcoal", "Black/White", "Charcoal/Black", "Heather Grey/Black", "Loden/Black", "Navy/White", "Royal/White"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/6850_fm.jpg",
+            "fabric": "Cotton Twill",
+            "weight": "N/A"
+        },
+        {
+            "style": "632",
+            "name": "Richardson Laser Perf R-Flex Cap",
+            "description": "Performance cap with laser perforated panels for breathability. R-Flex fitted construction. Pre-curved visor. Athletic performance style.",
+            "price": 29.00,
+            "brand": "Richardson",
+            "colors": ["Black", "Charcoal"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/15653_fm.jpg",
+            "fabric": "Polyester Performance",
+            "weight": "N/A"
+        },
+        
+        # Flexfit (18 products)
+        {
+            "style": "6277",
+            "name": "Flexfit Cotton Blend Cap",
+            "description": "The original Flexfit cap. 6-panel structured mid-profile with pre-curved visor. Patented Flexfit technology for comfortable stretch fit. The industry standard for fitted caps.",
+            "price": 21.14,
+            "brand": "Flexfit",
+            "colors": ["White", "Black", "Brown", "Carolina Blue", "Coyote Brown", "Dark Grey", "Dark Navy", "Grey", "Khaki", "Kryptek Typhon", "Maroon", "Navy", "Olive Drab", "Purple", "Red", "Royal", "Silver", "Spruce", "Texas Orange", "True Navy", "Vegas Gold"],
+            "sizes": ["S/M", "L/XL", "XL/2XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/467_fm.jpg",
+            "fabric": "63% Polyester, 34% Cotton, 3% Spandex",
+            "weight": "N/A"
+        },
+        {
+            "style": "110M",
+            "name": "Flexfit 110 Mesh-Back Cap",
+            "description": "Flexfit 110 with mesh back panels. Adjustable snapback with Flexfit comfort. Structured crown with pre-curved visor. Breathable mesh for warm weather.",
+            "price": 22.04,
+            "brand": "Flexfit",
+            "colors": ["White", "Black", "Black/White", "Brown/Khaki", "Caramel/Khaki", "Charcoal", "Charcoal/Black", "Charcoal/White", "Coyote Brown/Black", "Coyote Brown/Khaki", "Heather Grey/Black", "Heather Grey/White", "Khaki/Brown", "Loden/Black", "Maroon/White", "Navy", "Navy/White", "Red/White", "Royal/White", "Silver/Black"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/8128_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "110F",
+            "name": "Flexfit 110 Snapback Cap",
+            "description": "Flexfit 110 flat bill snapback. Structured crown with flat visor. Adjustable snapback with Flexfit technology. Pro style with premium fit.",
+            "price": 28.96,
+            "brand": "Flexfit",
+            "colors": ["White", "Black", "Dark Navy", "Heather Grey", "Khaki", "Maroon", "Navy", "Royal"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2998_fm.jpg",
+            "fabric": "83% Acrylic, 15% Wool, 2% Spandex",
+            "weight": "N/A"
+        },
+        {
+            "style": "6511",
+            "name": "Flexfit Trucker Cap",
+            "description": "Flexfit trucker with mesh back. Structured crown with pre-curved visor. Flexfit fitted comfort without snapback. Classic trucker meets Flexfit technology.",
+            "price": 20.86,
+            "brand": "Flexfit",
+            "colors": ["Black", "Black/White", "Caramel/Black", "Charcoal", "Charcoal/Black", "Navy", "Navy/White", "Navy/White/Navy", "Red", "Royal", "Royal/White"],
+            "sizes": ["One Size"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/1682_fm.jpg",
+            "fabric": "Cotton/Polyester Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "6477",
+            "name": "Flexfit Wool-Blend Cap",
+            "description": "Premium wool-blend Flexfit cap. Structured mid-profile with pre-curved visor. Flexfit fitted technology. Elevated material for sophisticated style.",
+            "price": 27.00,
+            "brand": "Flexfit",
+            "colors": ["Black", "Brown", "Dark Heather", "Dark Navy", "Grey", "Heather Grey", "Maroon", "Navy", "Red"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/484_fm.jpg",
+            "fabric": "98% Polyester, 2% Spandex",
+            "weight": "N/A"
+        },
+        {
+            "style": "110P",
+            "name": "Flexfit 110 Cool & Dry Mini-Piqué Cap",
+            "description": "Performance piqué fabric with Cool & Dry technology. Flexfit 110 adjustable construction. Moisture-wicking for athletic wear. Structured crown.",
+            "price": 25.52,
+            "brand": "Flexfit",
+            "colors": ["White", "Black", "Navy", "Royal Blue", "Silver"],
+            "sizes": ["Adjustable"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/3750_fm.jpg",
+            "fabric": "100% Polyester Mini-Piqué",
+            "weight": "N/A"
+        },
+        {
+            "style": "6597",
+            "name": "Flexfit Cool & Dry Sport Cap",
+            "description": "Cool & Dry performance fabric Flexfit cap. Moisture-wicking and quick-drying. Structured crown with pre-curved visor. Ideal for sports and outdoor activities.",
+            "price": 25.24,
+            "brand": "Flexfit",
+            "colors": ["White", "Black", "Grey", "Navy", "Royal Blue"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2982_fm.jpg",
+            "fabric": "100% Polyester Cool & Dry",
+            "weight": "N/A"
+        },
+        {
+            "style": "6533",
+            "name": "Flexfit Ultrafiber Mesh Cap",
+            "description": "Ultrafiber cap with mesh side panels. Flexfit fitted construction. Structured crown with pre-curved visor. Enhanced breathability.",
+            "price": 25.08,
+            "brand": "Flexfit",
+            "colors": ["Black", "Dark Grey", "Navy", "Royal Blue"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2170_fm.jpg",
+            "fabric": "Polyester Ultrafiber/Mesh",
+            "weight": "N/A"
+        },
+        {
+            "style": "6580",
+            "name": "Flexfit Pro-Formance Cap",
+            "description": "Pro-Formance athletic cap with Flexfit technology. Structured performance crown. Pre-curved visor. Professional sports styling.",
+            "price": 25.36,
+            "brand": "Flexfit",
+            "colors": ["Black", "Dark Navy", "Grey"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/1330_fm.jpg",
+            "fabric": "100% Polyester Pro-Formance",
+            "weight": "N/A"
+        },
+        {
+            "style": "6277Y",
+            "name": "Flexfit Youth Cotton Blend Cap",
+            "description": "Youth-sized version of the classic 6277 Flexfit. Same quality construction in kid-friendly sizes. Structured crown with pre-curved visor.",
+            "price": 24.42,
+            "brand": "Flexfit",
+            "colors": ["Black", "Navy"],
+            "sizes": ["One Size"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/9359_fm.jpg",
+            "fabric": "63% Polyester, 34% Cotton, 3% Spandex",
+            "weight": "N/A"
+        },
+        {
+            "style": "6297F",
+            "name": "Flexfit Pro-Baseball On Field Cap",
+            "description": "Pro-style baseball cap designed for on-field performance. Flexfit fitted technology. Structured crown. Official baseball cap construction.",
+            "price": 22.80,
+            "brand": "Flexfit",
+            "colors": ["Red"],
+            "sizes": ["S/M", "L/XL"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/2462_fm.jpg",
+            "fabric": "100% Polyester",
+            "weight": "N/A"
+        },
+        {
+            "style": "6311",
+            "name": "Flexfit Mélange Trucker Cap",
+            "description": "Mélange heathered fabric trucker with mesh back. Flexfit adjustable snapback. Modern heathered look. Pre-curved visor.",
+            "price": 21.32,
+            "brand": "Flexfit",
+            "colors": ["Heather Grey/Red", "Heather Grey/Royal"],
+            "sizes": ["One Size"],
+            "image": "https://cdn.ssactivewear.com/cdn-cgi/image/quality=80,w=400,f=auto/Images/Style/4303_fm.jpg",
+            "fabric": "Polyester Mélange/Mesh",
+            "weight": "N/A"
+        }
+    ]
+    
+    imported_count = 0
+    skipped_count = 0
+    
+    for hat in hats_data:
+        # Check if product already exists
+        existing = await db.products.find_one({"brand": hat["brand"], "name": hat["name"]}, {"_id": 0})
+        if existing:
+            skipped_count += 1
+            continue
+            
+        product_id = f"prod_{uuid.uuid4().hex[:12]}"
+        product_doc = {
+            "product_id": product_id,
+            "name": hat["name"],
+            "description": hat["description"],
+            "price": hat["price"],
+            "category": "hats",
+            "images": [hat["image"]],
+            "colors": hat["colors"],
+            "sizes": hat["sizes"],
+            "brand": hat["brand"],
+            "is_blank": True,
+            "stock": 300,
+            "featured": hat["style"] in ["6277", "112", "6606"],  # Feature popular styles
+            "fabric": hat["fabric"],
+            "weight": hat["weight"],
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.products.insert_one(product_doc)
+        imported_count += 1
+    
+    return {
+        "message": "Hats imported successfully",
+        "imported": imported_count,
+        "skipped": skipped_count,
+        "total": len(hats_data),
+        "brands": ["YP Classics", "Richardson", "Flexfit"]
+    }
+
+
 @api_router.post("/seed")
 async def seed_database():
     """Seed initial product data"""
