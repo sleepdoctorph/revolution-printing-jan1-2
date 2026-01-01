@@ -174,10 +174,25 @@ const ProductDetailPage = () => {
     fetchProduct();
   }, [productId, navigate]);
 
-  const handleAddToCart = () => {
-    if (product) {
-      addItem(product, quantity, selectedColor, selectedSize);
+  const handleContinueToDesign = () => {
+    if (!selectedColor) {
+      toast.error('Please select a color');
+      return;
     }
+    if (!selectedSize) {
+      toast.error('Please select a size');
+      return;
+    }
+    
+    // Navigate to design selection (Step 2)
+    navigate('/select-design', {
+      state: {
+        product,
+        selectedColor,
+        selectedSize,
+        quantity
+      }
+    });
   };
 
   if (loading) {
