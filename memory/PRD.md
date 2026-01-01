@@ -132,7 +132,8 @@ The frontend now includes a comprehensive color map translating apparel color na
 - Color mapping in frontend: `/app/frontend/src/pages/ProductDetailPage.js`
 
 ## Next Tasks
-1. Add Square API credentials for real payment processing
-2. Import mugs from wholesaler (if desired)
-3. Add color images to remaining Gildan products
-4. Implement email notifications (order confirmation)
+1. **Upload designs** - Add your Christian-themed designs via Admin → Designs page
+2. Add Square API credentials for real payment processing
+3. Set product prices (currently using default wholesale prices)
+4. Import mugs from wholesaler (if desired)
+5. Implement email notifications (order confirmation)
