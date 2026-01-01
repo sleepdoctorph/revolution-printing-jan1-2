@@ -70,6 +70,8 @@ const AppContent = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
+          <Route path="/select-design" element={<DesignSelectionPage />} />
+          <Route path="/review-order" element={<ReviewOrderPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
