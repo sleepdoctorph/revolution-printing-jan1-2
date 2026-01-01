@@ -76,7 +76,9 @@ The frontend now includes a comprehensive color map translating apparel color na
 
 ### P0 (Critical) - COMPLETED
 - [x] Core e-commerce flow complete
-- [x] Wholesaler product import (Gildan)
+- [x] Wholesaler product import (Gildan T-Shirts)
+- [x] Gildan Hoodies import (8 styles)
+- [x] **Hats import** (21 styles from YP Classics, Richardson, Flexfit)
 - [x] Real product descriptions from wholesaler
 - [x] Color swatches with proper colors
 - [x] Product image changes with color selection
