@@ -369,15 +369,15 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            {/* Add to Cart */}
+            {/* Continue to Design Selection */}
             <Button
-              onClick={handleAddToCart}
+              onClick={handleContinueToDesign}
               disabled={product.stock === 0}
               className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift h-14 text-lg"
-              data-testid="add-to-cart-button"
+              data-testid="continue-to-design-button"
             >
-              <ShoppingBag className="h-5 w-5 mr-2" />
-              Add to Cart
+              <ArrowRight className="h-5 w-5 mr-2" />
+              Continue to Design Selection
             </Button>
 
             {/* Features */}
