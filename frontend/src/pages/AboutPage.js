@@ -17,7 +17,7 @@ const AboutPage = () => {
               Faith Woven Into Every Thread
             </h1>
             <p className="text-xl text-muted-foreground">
-              We believe that what you wear is an extension of who you are. That's why we created Faithful Threads - to help believers express their faith boldly through quality apparel.
+              We believe that what you wear is an extension of who you are. That's why we created Revolution Printing - to help believers express their faith boldly through quality apparel.
             </p>
           </div>
         </div>
@@ -37,7 +37,7 @@ const AboutPage = () => {
             <div>
               <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">Our Mission</h2>
               <p className="text-lg text-muted-foreground mb-6">
-                Faithful Threads was born from a simple idea: fashion can be a powerful tool for spreading faith. Every t-shirt, hoodie, hat, and mug we create is designed with purpose - to spark conversations, inspire hope, and remind wearers and onlookers alike of God's love.
+                Revolution Printing was born from a simple idea: fashion can be a powerful tool for spreading faith. Every t-shirt, hoodie, hat, and mug we create is designed with purpose - to spark conversations, inspire hope, and remind wearers and onlookers alike of God's love.
               </p>
               <p className="text-lg text-muted-foreground">
                 We're committed to using premium materials and ethical manufacturing practices, ensuring that our products are as righteous as the message they carry.
