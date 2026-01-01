@@ -908,6 +908,63 @@ async def submit_contact(message: ContactMessage):
     }
     
     await db.contacts.insert_one(contact_doc)
+    
+    # Send email notification to Revolution Printing
+    if RESEND_API_KEY:
+        try:
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>New Contact Message</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; padding: 20px 0; border-bottom: 3px solid #E53E3E;">
+                    <h1 style="color: #E53E3E; margin: 0;">Revolution Printing</h1>
+                    <p style="color: #666; margin: 5px 0;">New Contact Form Submission</p>
+                </div>
+                
+                <div style="padding: 30px 0;">
+                    <h2 style="color: #333;">📬 New Message Received</h2>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p><strong>From:</strong> {message.name}</p>
+                        <p><strong>Email:</strong> <a href="mailto:{message.email}">{message.email}</a></p>
+                        <p><strong>Subject:</strong> {message.subject}</p>
+                    </div>
+                    
+                    <div style="background: #FFF5F5; padding: 20px; border-radius: 8px; border-left: 4px solid #E53E3E; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #E53E3E;">Message:</h3>
+                        <p style="margin: 0; white-space: pre-wrap;">{message.message}</p>
+                    </div>
+                    
+                    <p style="color: #666; font-size: 12px;">
+                        This message was submitted via the contact form on your website.<br>
+                        You can also view it in your Admin Dashboard → Messages.
+                    </p>
+                </div>
+                
+                <div style="text-align: center; padding: 20px 0; border-top: 1px solid #eee; color: #666; font-size: 12px;">
+                    <p>© {datetime.now().year} Revolution Printing</p>
+                </div>
+            </body>
+            </html>
+            """
+            
+            params = {
+                "from": "Revolution Printing <onboarding@resend.dev>",
+                "to": ["myrevolutionprinting@gmail.com"],
+                "subject": f"New Contact: {message.subject}",
+                "html": html_content,
+                "reply_to": message.email
+            }
+            
+            resend.Emails.send(params)
+            logger.info(f"Contact notification email sent for {message.email}")
+        except Exception as e:
+            logger.error(f"Failed to send contact notification email: {str(e)}")
+    
     return {"message": "Message sent successfully", "contact_id": contact_id}
 
 @api_router.get("/admin/contacts")
