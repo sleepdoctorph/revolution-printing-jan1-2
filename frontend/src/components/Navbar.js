@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, LogOut, Settings } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -13,86 +13,22 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
-// Sparkle component
-const SparkleEffect = ({ x, y, onComplete }) => {
-  React.useEffect(() => {
-    const timer = setTimeout(onComplete, 1200);
-    return () => clearTimeout(timer);
-  }, [onComplete]);
-
-  const sparkles = Array.from({ length: 16 }, (_, i) => {
-    const angle = (i / 16) * Math.PI * 2;
-    const distance = 40 + Math.random() * 50;
-    return {
-      id: i,
-      x: Math.cos(angle) * distance,
-      y: Math.sin(angle) * distance,
-      delay: Math.random() * 0.3,
-      size: 14 + Math.random() * 10,
-    };
-  });
-
-  return (
-    <div 
-      className="fixed pointer-events-none z-[9999]"
-      style={{ left: x, top: y }}
-    >
-      {sparkles.map((sparkle) => (
-        <div
-          key={sparkle.id}
-          className="absolute text-yellow-400"
-          style={{
-            left: sparkle.x,
-            top: sparkle.y,
-            fontSize: sparkle.size,
-            animation: `sparkle-burst 1s ease-out forwards`,
-            animationDelay: `${sparkle.delay}s`,
-          }}
-        >
-          ✦
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [sparkle, setSparkle] = useState(null);
-  const [glowingLink, setGlowingLink] = useState(null);
 
   const navLinks = [
-    { name: 'Home', href: '/', isCategory: false },
-    { name: 'Shop', href: '/shop', isCategory: false },
-    { name: 'T-Shirts', href: '/shop?category=tshirts', isCategory: true },
-    { name: 'Hoodies', href: '/shop?category=hoodies', isCategory: true },
-    { name: 'Hats', href: '/shop?category=hats', isCategory: true },
-    { name: 'Mugs', href: '/shop?category=mugs', isCategory: true },
-    { name: 'About', href: '/about', isCategory: false },
-    { name: 'Contact', href: '/contact', isCategory: false },
+    { name: 'Home', href: '/' },
+    { name: 'Shop', href: '/shop' },
+    { name: 'T-Shirts', href: '/shop?category=tshirts' },
+    { name: 'Hoodies', href: '/shop?category=hoodies' },
+    { name: 'Hats', href: '/shop?category=hats' },
+    { name: 'Mugs', href: '/shop?category=mugs' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
   ];
-
-  const handleCategoryClick = (e, link) => {
-    if (link.isCategory) {
-      e.preventDefault();
-      
-      const rect = e.currentTarget.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      setGlowingLink(link.name);
-      setSparkle({ x: centerX, y: centerY, href: link.href });
-      
-      setTimeout(() => {
-        setGlowingLink(null);
-        setSparkle(null);
-        navigate(link.href);
-      }, 1200);
-    }
-  };
 
   const handleLogout = async () => {
     await logout();
