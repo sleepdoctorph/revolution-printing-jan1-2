@@ -56,10 +56,10 @@ The frontend now includes a comprehensive color map translating apparel color na
 
 ## Product Counts
 - T-Shirts: 24 (4 Faithful Threads + 20 Gildan blanks)
-- Hoodies: 3
-- Hats: 3
-- Mugs: 3
-- **Total**: 33 products
+- Hoodies: 8 (Gildan blanks)
+- Hats: 21 (YP Classics, Richardson, Flexfit blanks) 
+- Mugs: 3 (Faithful Threads designs)
+- **Total**: 52 products
 
 ## Prioritized Backlog
 
