@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Minus, Plus, ShoppingBag, ChevronLeft, Truck, Shield, RotateCcw } from 'lucide-react';
+import { Minus, Plus, ArrowRight, ChevronLeft, Truck, Shield, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
