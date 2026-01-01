@@ -792,6 +792,153 @@ async def get_contacts(user: dict = Depends(get_admin_user)):
     contacts = await db.contacts.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return contacts
 
+# ======================== DESIGN ROUTES ========================
+
+@api_router.get("/designs", response_model=List[DesignResponse])
+async def get_designs(category: Optional[str] = None):
+    """Get all designs, optionally filtered by category (apparel or hats)"""
+    query = {}
+    if category:
+        query["category"] = category
+    
+    designs = await db.designs.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    result = []
+    for d in designs:
+        created_at = d.get("created_at")
+        if isinstance(created_at, str):
+            created_at = datetime.fromisoformat(created_at)
+        result.append(DesignResponse(
+            design_id=d["design_id"],
+            name=d["name"],
+            category=d["category"],
+            image_url=d.get("image_url", ""),
+            created_at=created_at
+        ))
+    return result
+
+@api_router.get("/designs/{design_id}", response_model=DesignResponse)
+async def get_design(design_id: str):
+    """Get a single design by ID"""
+    design = await db.designs.find_one({"design_id": design_id}, {"_id": 0})
+    if not design:
+        raise HTTPException(status_code=404, detail="Design not found")
+    
+    created_at = design.get("created_at")
+    if isinstance(created_at, str):
+        created_at = datetime.fromisoformat(created_at)
+    
+    return DesignResponse(
+        design_id=design["design_id"],
+        name=design["name"],
+        category=design["category"],
+        image_url=design.get("image_url", ""),
+        created_at=created_at
+    )
+
+@api_router.post("/admin/designs", response_model=DesignResponse)
+async def create_design(design: DesignCreate, user: dict = Depends(get_admin_user)):
+    """Create a new design (admin only)"""
+    design_id = f"design_{uuid.uuid4().hex[:12]}"
+    
+    design_doc = {
+        "design_id": design_id,
+        "name": design.name,
+        "category": design.category,  # "apparel" or "hats"
+        "image_url": design.image_url,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.designs.insert_one(design_doc)
+    
+    return DesignResponse(
+        design_id=design_id,
+        name=design.name,
+        category=design.category,
+        image_url=design.image_url,
+        created_at=datetime.now(timezone.utc)
+    )
+
+@api_router.put("/admin/designs/{design_id}", response_model=DesignResponse)
+async def update_design(design_id: str, design: DesignCreate, user: dict = Depends(get_admin_user)):
+    """Update a design (admin only)"""
+    existing = await db.designs.find_one({"design_id": design_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Design not found")
+    
+    update_data = {
+        "name": design.name,
+        "category": design.category,
+        "image_url": design.image_url
+    }
+    
+    await db.designs.update_one({"design_id": design_id}, {"$set": update_data})
+    
+    created_at = existing.get("created_at")
+    if isinstance(created_at, str):
+        created_at = datetime.fromisoformat(created_at)
+    
+    return DesignResponse(
+        design_id=design_id,
+        name=design.name,
+        category=design.category,
+        image_url=design.image_url,
+        created_at=created_at
+    )
+
+@api_router.delete("/admin/designs/{design_id}")
+async def delete_design(design_id: str, user: dict = Depends(get_admin_user)):
+    """Delete a design (admin only)"""
+    result = await db.designs.delete_one({"design_id": design_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Design not found")
+    return {"message": "Design deleted successfully"}
+
+@api_router.post("/admin/designs/upload")
+async def upload_design_image(
+    file: UploadFile = File(...),
+    user: dict = Depends(get_admin_user)
+):
+    """Upload a design image file"""
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Invalid file type. Only JPEG, PNG, WebP, GIF allowed.")
+    
+    # Create designs upload directory
+    designs_dir = UPLOAD_DIR / "designs"
+    designs_dir.mkdir(exist_ok=True)
+    
+    ext = file.filename.split(".")[-1] if "." in file.filename else "png"
+    filename = f"design_{uuid.uuid4().hex[:12]}.{ext}"
+    file_path = designs_dir / filename
+    
+    try:
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        return {"url": f"/api/uploads/designs/{filename}"}
+    except Exception as e:
+        logger.error(f"Design upload error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Upload failed")
+
+@api_router.get("/admin/designs", response_model=List[DesignResponse])
+async def get_admin_designs(user: dict = Depends(get_admin_user)):
+    """Get all designs for admin management"""
+    designs = await db.designs.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    result = []
+    for d in designs:
+        created_at = d.get("created_at")
+        if isinstance(created_at, str):
+            created_at = datetime.fromisoformat(created_at)
+        result.append(DesignResponse(
+            design_id=d["design_id"],
+            name=d["name"],
+            category=d["category"],
+            image_url=d.get("image_url", ""),
+            created_at=created_at
+        ))
+    return result
+
 # ======================== SEED DATA ========================
 
 @api_router.post("/admin/update-all-gildan-color-images")
