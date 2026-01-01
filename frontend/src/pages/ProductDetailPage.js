@@ -145,7 +145,6 @@ const getColorHex = (colorName) => {
 const ProductDetailPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { addItem } = useCart();
   
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
