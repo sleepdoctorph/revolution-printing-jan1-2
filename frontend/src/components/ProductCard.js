@@ -165,11 +165,6 @@ const ProductCard = ({ product }) => {
               Featured
             </span>
           )}
-          {product.is_blank && (
-            <span className="absolute top-3 right-3 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full border border-black">
-              Blank
-            </span>
-          )}
           {/* Quick Add Button */}
           <Button
             onClick={handleQuickAdd}
