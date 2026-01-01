@@ -39,7 +39,7 @@ SQUARE_ACCESS_TOKEN = os.environ.get('SQUARE_ACCESS_TOKEN', '')
 SQUARE_LOCATION_ID = os.environ.get('SQUARE_LOCATION_ID', '')
 SQUARE_ENVIRONMENT = os.environ.get('SQUARE_ENVIRONMENT', 'sandbox')
 
-app = FastAPI(title="Faithful Threads API")
+app = FastAPI(title="Revolution Printing API")
 api_router = APIRouter(prefix="/api")
 
 # Configure logging
@@ -2729,7 +2729,7 @@ async def seed_database():
 
 @api_router.get("/")
 async def root():
-    return {"message": "Faithful Threads API", "version": "1.0.0"}
+    return {"message": "Revolution Printing API", "version": "1.0.0"}
 
 @api_router.get("/health")
 async def health_check():
