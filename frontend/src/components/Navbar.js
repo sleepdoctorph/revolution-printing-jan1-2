@@ -54,7 +54,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-foreground hover:text-primary font-medium transition-colors"
+                className="text-foreground hover:text-primary font-medium transition-all duration-300 ease-out hover:scale-105"
                 data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
               >
                 {link.name}
