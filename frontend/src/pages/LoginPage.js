@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Loader2, UserX, Shield } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { Checkbox } from '../components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
@@ -15,7 +16,14 @@ const LoginPage = () => {
   
   const [loading, setLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [registerForm, setRegisterForm] = useState({ 
+    name: '', 
+    email: '', 
+    password: '', 
+    confirmPassword: '',
+    agreeToPrivacy: false,
+    subscribeToUpdates: false
+  });
 
   const from = location.state?.from?.pathname || '/';
 
@@ -32,7 +40,6 @@ const LoginPage = () => {
     try {
       const response = await login(loginForm.email, loginForm.password);
       toast.success('Welcome back!');
-      // Redirect admin users to admin dashboard, others to their intended destination
       if (response.user?.is_admin) {
         navigate('/admin', { replace: true });
       } else {
@@ -48,6 +55,11 @@ const LoginPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     
+    if (!registerForm.agreeToPrivacy) {
+      toast.error('Please agree to the Privacy Policy to continue');
+      return;
+    }
+    
     if (registerForm.password !== registerForm.confirmPassword) {
       toast.error('Passwords do not match');
       return;
@@ -56,7 +68,7 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      await register(registerForm.email, registerForm.password, registerForm.name);
+      await register(registerForm.email, registerForm.password, registerForm.name, registerForm.subscribeToUpdates);
       toast.success('Account created successfully!');
       navigate(from, { replace: true });
     } catch (error) {
@@ -70,6 +82,10 @@ const LoginPage = () => {
     loginWithGoogle();
   };
 
+  const handleGuestCheckout = () => {
+    navigate('/checkout', { state: { guestCheckout: true } });
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4" data-testid="login-page">
       <div className="w-full max-w-md">
@@ -80,7 +96,7 @@ const LoginPage = () => {
             alt="Revolution Printing" 
             className="h-20 object-contain mx-auto mb-2"
           />
-          <p className="text-muted-foreground">Sign in to your account</p>
+          <p className="text-muted-foreground">Sign in or continue as guest</p>
         </div>
 
         {/* Auth Card */}
@@ -215,6 +231,36 @@ const LoginPage = () => {
                     />
                   </div>
                 </div>
+                
+                {/* Privacy Policy Checkbox */}
+                <div className="flex items-start space-x-3 pt-2">
+                  <Checkbox
+                    id="privacy"
+                    checked={registerForm.agreeToPrivacy}
+                    onCheckedChange={(checked) => setRegisterForm({ ...registerForm, agreeToPrivacy: checked })}
+                    className="mt-1"
+                    data-testid="privacy-checkbox"
+                  />
+                  <label htmlFor="privacy" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                    I agree to the <span className="text-primary font-medium underline">Privacy Policy</span>. 
+                    Your personal information will be kept secure and never shared with third parties.
+                  </label>
+                </div>
+                
+                {/* Newsletter Signup Checkbox */}
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="newsletter"
+                    checked={registerForm.subscribeToUpdates}
+                    onCheckedChange={(checked) => setRegisterForm({ ...registerForm, subscribeToUpdates: checked })}
+                    className="mt-1"
+                    data-testid="newsletter-checkbox"
+                  />
+                  <label htmlFor="newsletter" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                    Sign me up for product updates, new designs, and exclusive promotions!
+                  </label>
+                </div>
+                
                 <Button
                   type="submit"
                   disabled={loading}
@@ -249,7 +295,7 @@ const LoginPage = () => {
             type="button"
             variant="outline"
             onClick={handleGoogleLogin}
-            className="w-full border-2 border-black shadow-brutal hover-lift h-12"
+            className="w-full border-2 border-black shadow-brutal hover-lift h-12 mb-3"
             data-testid="google-login-button"
           >
             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -272,6 +318,29 @@ const LoginPage = () => {
             </svg>
             Continue with Google
           </Button>
+
+          {/* Guest Checkout */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGuestCheckout}
+            className="w-full border-2 border-black shadow-brutal hover-lift h-12"
+            data-testid="guest-checkout-button"
+          >
+            <UserX className="h-5 w-5 mr-2" />
+            Continue as Guest
+          </Button>
+          
+          {/* Privacy Notice */}
+          <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-muted">
+            <div className="flex items-start gap-3">
+              <Shield className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                <strong>Your privacy matters.</strong> We protect your personal information with industry-standard security. 
+                We never sell or share your data. By continuing, you agree to our terms of service.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
