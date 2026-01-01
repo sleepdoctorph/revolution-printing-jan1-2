@@ -203,7 +203,7 @@ const ShopPage = () => {
             ) : products.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-xl text-muted-foreground mb-4">No products found</p>
-                <Button onClick={() => { setSearchQuery(''); setShowBlanks(false); handleCategoryChange(''); }}>
+                <Button onClick={() => { setSearchQuery(''); handleCategoryChange(''); }}>
                   Clear Filters
                 </Button>
               </div>
