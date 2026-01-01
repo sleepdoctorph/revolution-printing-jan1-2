@@ -13,6 +13,8 @@ import CartDrawer from './components/CartDrawer';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import DesignSelectionPage from './pages/DesignSelectionPage';
+import ReviewOrderPage from './pages/ReviewOrderPage';
 import LoginPage from './pages/LoginPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -28,6 +30,7 @@ import ProductForm from './pages/admin/ProductForm';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminCustomers from './pages/admin/AdminCustomers';
 import AdminContacts from './pages/admin/AdminContacts';
+import AdminDesigns from './pages/admin/AdminDesigns';
 
 import './App.css';
 
