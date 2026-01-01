@@ -95,7 +95,8 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-foreground hover:text-primary font-medium transition-colors"
+                onClick={(e) => handleCategoryClick(e, link)}
+                className="text-foreground hover:text-primary font-medium transition-all duration-200 px-2 py-1"
                 data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
               >
                 {link.name}
