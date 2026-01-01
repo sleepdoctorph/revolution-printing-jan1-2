@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, LogOut, Settings } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -13,11 +13,54 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
+// Sparkle component
+const SparkleEffect = ({ x, y, onComplete }) => {
+  React.useEffect(() => {
+    const timer = setTimeout(onComplete, 800);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  const sparkles = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i / 12) * Math.PI * 2;
+    const distance = 30 + Math.random() * 40;
+    return {
+      id: i,
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance,
+      delay: Math.random() * 0.2,
+    };
+  });
+
+  return (
+    <div 
+      className="fixed pointer-events-none z-[9999]"
+      style={{ left: x, top: y }}
+    >
+      {sparkles.map((sparkle) => (
+        <div
+          key={sparkle.id}
+          className="absolute text-yellow-400"
+          style={{
+            left: sparkle.x,
+            top: sparkle.y,
+            animation: `sparkle-burst 0.6s ease-out forwards`,
+            animationDelay: `${sparkle.delay}s`,
+          }}
+        >
+          ✦
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [sparkle, setSparkle] = useState(null);
+  const [glowingLink, setGlowingLink] = useState(null);
 
   const navLinks = [
     { name: 'Home', href: '/', isCategory: false },
@@ -30,44 +73,22 @@ const Navbar = () => {
     { name: 'Contact', href: '/contact', isCategory: false },
   ];
 
-  const createSparkles = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    // Create sparkle container
-    const container = document.createElement('div');
-    container.className = 'sparkle-container';
-    container.style.left = `${centerX}px`;
-    container.style.top = `${centerY}px`;
-    document.body.appendChild(container);
-    
-    // Create multiple sparkles
-    for (let i = 0; i < 12; i++) {
-      const sparkle = document.createElement('div');
-      sparkle.className = 'sparkle';
-      const angle = (i / 12) * Math.PI * 2;
-      const distance = 30 + Math.random() * 40;
-      sparkle.style.left = `${Math.cos(angle) * distance}px`;
-      sparkle.style.top = `${Math.sin(angle) * distance}px`;
-      sparkle.style.animationDelay = `${Math.random() * 0.2}s`;
-      container.appendChild(sparkle);
-    }
-    
-    // Remove container after animation
-    setTimeout(() => container.remove(), 800);
-  };
-
   const handleCategoryClick = (e, link) => {
     if (link.isCategory) {
       e.preventDefault();
-      e.target.classList.add('nav-link-sparkle');
-      createSparkles(e);
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      setGlowingLink(link.name);
+      setSparkle({ x: centerX, y: centerY, href: link.href });
       
       setTimeout(() => {
-        e.target.classList.remove('nav-link-sparkle');
+        setGlowingLink(null);
+        setSparkle(null);
         navigate(link.href);
-      }, 500);
+      }, 600);
     }
   };
 
