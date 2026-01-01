@@ -146,6 +146,32 @@ class PaymentRequest(BaseModel):
     order_id: str
     amount: int  # in cents
 
+class DesignCreate(BaseModel):
+    name: str
+    category: str  # "apparel" (for tshirts, hoodies, mugs) or "hats"
+    image_url: str = ""
+
+class DesignResponse(BaseModel):
+    design_id: str
+    name: str
+    category: str
+    image_url: str
+    created_at: datetime
+
+class CartItemWithDesign(BaseModel):
+    product_id: str
+    quantity: int
+    color: str = ""
+    size: str = ""
+    design_id: str = ""
+    design_name: str = ""
+    design_image: str = ""
+
+class OrderCreateWithDesign(BaseModel):
+    items: List[CartItemWithDesign]
+    shipping_address: dict
+    total_amount: float
+
 # ======================== HELPER FUNCTIONS ========================
 
 def hash_password(password: str) -> str:
