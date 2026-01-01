@@ -54,27 +54,13 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                onClick={(e) => handleCategoryClick(e, link)}
-                className={`text-foreground hover:text-primary font-medium transition-all duration-200 px-2 py-1 rounded-lg ${
-                  glowingLink === link.name 
-                    ? 'text-primary scale-110 shadow-[0_0_20px_rgba(217,119,6,0.8)] bg-primary/10' 
-                    : ''
-                }`}
+                className="text-foreground hover:text-primary font-medium transition-colors"
                 data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
               >
                 {link.name}
               </Link>
             ))}
           </div>
-
-          {/* Sparkle Effect */}
-          {sparkle && (
-            <SparkleEffect 
-              x={sparkle.x} 
-              y={sparkle.y} 
-              onComplete={() => setSparkle(null)} 
-            />
-          )}
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
