@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CreditCard, Truck, ShieldCheck, Loader2, CheckCircle } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { CreditCard, Truck, ShieldCheck, Loader2, CheckCircle, Mail } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Separator } from '../components/ui/separator';
+import { Checkbox } from '../components/ui/checkbox';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
@@ -14,12 +15,17 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { items, totalPrice, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
+  
+  // Check if this is guest checkout
+  const isGuestCheckout = location.state?.guestCheckout || !isAuthenticated;
   
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [subscribeToUpdates, setSubscribeToUpdates] = useState(false);
   
   const [shippingInfo, setShippingInfo] = useState({
     firstName: user?.name?.split(' ')[0] || '',
@@ -43,33 +49,49 @@ const CheckoutPage = () => {
   const handleCheckout = async (e) => {
     e.preventDefault();
     
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: '/checkout' } } });
+    // Validate required fields for guest checkout
+    if (isGuestCheckout && !shippingInfo.email) {
+      toast.error('Please enter your email address');
       return;
     }
 
     setLoading(true);
 
     try {
-      // Create order
-      const orderResponse = await axios.post(`${API_URL}/api/orders`, {
+      // For guest checkout, create a guest order
+      const orderData = {
         items: items.map(item => ({
           product_id: item.product_id,
           quantity: item.quantity,
           color: item.color,
-          size: item.size
+          size: item.size,
+          design_id: item.design_id || '',
+          design_name: item.design_name || ''
         })),
         shipping_address: {
           firstName: shippingInfo.firstName,
           lastName: shippingInfo.lastName,
+          email: shippingInfo.email,
           address: shippingInfo.address,
           city: shippingInfo.city,
           state: shippingInfo.state,
           zip: shippingInfo.zip,
           phone: shippingInfo.phone
         },
-        total_amount: finalTotal
-      }, { withCredentials: true });
+        total_amount: finalTotal,
+        is_guest: isGuestCheckout,
+        subscribe_to_updates: subscribeToUpdates
+      };
+
+      let orderResponse;
+      
+      if (isGuestCheckout) {
+        // Guest order endpoint (no auth required)
+        orderResponse = await axios.post(`${API_URL}/api/orders/guest`, orderData);
+      } else {
+        // Authenticated order
+        orderResponse = await axios.post(`${API_URL}/api/orders`, orderData, { withCredentials: true });
+      }
 
       const newOrderId = orderResponse.data.order_id;
 
@@ -77,8 +99,8 @@ const CheckoutPage = () => {
       await axios.post(`${API_URL}/api/payments/create`, {
         source_id: 'demo_payment_token',
         order_id: newOrderId,
-        amount: Math.round(finalTotal * 100) // cents
-      }, { withCredentials: true });
+        amount: Math.round(finalTotal * 100)
+      });
 
       setOrderId(newOrderId);
       setOrderComplete(true);
@@ -101,17 +123,30 @@ const CheckoutPage = () => {
             <h1 className="font-heading text-3xl font-bold mb-2">Order Confirmed!</h1>
             <p className="text-muted-foreground mb-4">
               Thank you for your purchase. Your order has been placed successfully.
+              {isGuestCheckout && " A confirmation email has been sent to your email address."}
             </p>
             <p className="font-medium mb-6">
               Order ID: <span className="text-primary">{orderId}</span>
             </p>
+            
+            {subscribeToUpdates && (
+              <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 mb-6">
+                <Mail className="h-6 w-6 text-accent mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  You're subscribed! We'll send you updates on new products and exclusive promotions.
+                </p>
+              </div>
+            )}
+            
             <div className="space-y-3">
-              <Button
-                onClick={() => navigate('/orders')}
-                className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift"
-              >
-                View My Orders
-              </Button>
+              {!isGuestCheckout && (
+                <Button
+                  onClick={() => navigate('/orders')}
+                  className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift"
+                >
+                  View My Orders
+                </Button>
+              )}
               <Button
                 onClick={() => navigate('/shop')}
                 variant="outline"
@@ -142,7 +177,12 @@ const CheckoutPage = () => {
   return (
     <div className="min-h-screen bg-background py-8" data-testid="checkout-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="font-heading text-4xl font-bold mb-8">Checkout</h1>
+        <h1 className="font-heading text-4xl font-bold mb-2">Checkout</h1>
+        {isGuestCheckout && (
+          <p className="text-muted-foreground mb-8">
+            Checking out as guest. <button onClick={() => navigate('/login')} className="text-primary underline">Sign in</button> to save your order history.
+          </p>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
@@ -191,6 +231,7 @@ const CheckoutPage = () => {
                       required
                       data-testid="shipping-email"
                     />
+                    <p className="text-xs text-muted-foreground">Order confirmation will be sent to this email</p>
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="address">Address</Label>
@@ -217,7 +258,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="state">State</Label>
+                    <Label htmlFor="state">Province/State</Label>
                     <Input
                       id="state"
                       name="state"
@@ -229,7 +270,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zip">ZIP Code</Label>
+                    <Label htmlFor="zip">Postal/ZIP Code</Label>
                     <Input
                       id="zip"
                       name="zip"
@@ -255,6 +296,26 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
+              {/* Newsletter Signup for Guest/All Customers */}
+              <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <h2 className="font-heading text-xl font-bold">Stay Updated</h2>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="subscribe"
+                    checked={subscribeToUpdates}
+                    onCheckedChange={(checked) => setSubscribeToUpdates(checked)}
+                    className="mt-1"
+                    data-testid="subscribe-checkbox"
+                  />
+                  <label htmlFor="subscribe" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                    Yes! Sign me up for email updates on new products, exclusive designs, and special promotions from Revolution Printing.
+                  </label>
+                </div>
+              </div>
+
               {/* Payment Info */}
               <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
                 <div className="flex items-center gap-2 mb-6">
@@ -272,14 +333,12 @@ const CheckoutPage = () => {
 
               <Button
                 type="submit"
-                disabled={loading || !isAuthenticated}
+                disabled={loading}
                 className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift h-14 text-lg"
                 data-testid="place-order-button"
               >
                 {loading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
-                ) : !isAuthenticated ? (
-                  'Sign in to checkout'
                 ) : (
                   `Place Order • $${finalTotal.toFixed(2)}`
                 )}
@@ -294,7 +353,7 @@ const CheckoutPage = () => {
               
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
-                  <div key={`${item.product_id}-${item.color}-${item.size}`} className="flex gap-3">
+                  <div key={`${item.product_id}-${item.color}-${item.size}-${item.design_id || ''}`} className="flex gap-3">
                     <div className="w-16 h-16 rounded-lg border-2 border-black overflow-hidden bg-muted flex-shrink-0">
                       <img src={item.image || 'https://via.placeholder.com/64'} alt={item.name} className="w-full h-full object-cover" />
                     </div>
@@ -303,6 +362,9 @@ const CheckoutPage = () => {
                       <p className="text-xs text-muted-foreground">
                         {item.color && item.color}{item.color && item.size && ' / '}{item.size && item.size}
                       </p>
+                      {item.design_name && (
+                        <p className="text-xs text-primary">Design: {item.design_name}</p>
+                      )}
                       <p className="text-sm">Qty: {item.quantity}</p>
                     </div>
                     <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
