@@ -133,13 +133,56 @@ const colorMap = {
   'khaki': '#C3B091',
   'cocoa': '#875F42',
   'olive': '#808000',
-  'pink lemonade': '#FFB6C1'
+  'pink lemonade': '#FFB6C1',
+  // Hat specific colors
+  'brown': '#8B4513',
+  'caramel': '#FFD59A',
+  'loden': '#4A6741',
+  'silver': '#C0C0C0',
+  'pink': '#FFC0CB',
+  'neon orange': '#FF6B00',
+  'neon pink': '#FF10F0',
+  'dark grey': '#404040',
+  'dark green': '#006400',
+  'birch': '#F5F5DC',
+  'spruce': '#2E8B57',
+  'cranberry': '#9C2542',
+  'green camo': '#78866B',
+  'forest camo': '#4A5D23',
+  'stone': '#928E85',
+  'army olive green': '#544E2E',
+  'ombre blue': '#4169E1',
+  'grey': '#808080',
+  'split': '#000000',
+  'camo': '#78866B',
+  'heather': '#9E9E9E'
 };
 
-// Get hex color from color name
+// Get hex color from color name - handles two-tone colors for hats
 const getColorHex = (colorName) => {
   const key = colorName.toLowerCase().trim();
-  return colorMap[key] || '#CCCCCC';
+  
+  // Direct match
+  if (colorMap[key]) {
+    return colorMap[key];
+  }
+  
+  // Handle two-tone colors (e.g., "Black/White", "Navy/White")
+  if (key.includes('/')) {
+    const primaryColor = key.split('/')[0].trim();
+    if (colorMap[primaryColor]) {
+      return colorMap[primaryColor];
+    }
+  }
+  
+  // Try to find a partial match
+  for (const [mapKey, hex] of Object.entries(colorMap)) {
+    if (key.includes(mapKey) || mapKey.includes(key)) {
+      return hex;
+    }
+  }
+  
+  return '#CCCCCC';
 };
 
 const ProductDetailPage = () => {
