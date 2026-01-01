@@ -121,13 +121,13 @@ const HomePage = () => {
                 style={{ animationDelay: `${index * 100}ms` }}
                 data-testid={`category-${category.slug}`}
               >
-                <div className="aspect-square">
+                <div className="aspect-[3/4] bg-muted">
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <h3 className="font-heading text-xl font-bold text-white">{category.name}</h3>
                   </div>
