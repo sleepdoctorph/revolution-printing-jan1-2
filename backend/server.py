@@ -972,6 +972,89 @@ async def get_contacts(user: dict = Depends(get_admin_user)):
     contacts = await db.contacts.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return contacts
 
+# ======================== CONTACT REPLY ROUTE ========================
+
+class ReplyMessage(BaseModel):
+    message: str
+
+@api_router.post("/admin/contacts/{contact_id}/reply")
+async def reply_to_contact(contact_id: str, reply: ReplyMessage, user: dict = Depends(get_admin_user)):
+    """Reply to a contact message via email"""
+    # Find the contact
+    contact = await db.contacts.find_one({"contact_id": contact_id}, {"_id": 0})
+    if not contact:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    
+    if not RESEND_API_KEY:
+        raise HTTPException(status_code=500, detail="Email service not configured")
+    
+    try:
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Response from Revolution Printing</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; padding: 20px 0; border-bottom: 3px solid #E53E3E;">
+                <h1 style="color: #E53E3E; margin: 0;">Revolution Printing</h1>
+                <p style="color: #666; font-style: italic; margin: 5px 0;">Inspired by Scripture. Designed for Life.</p>
+            </div>
+            
+            <div style="padding: 30px 0;">
+                <p>Dear {contact.get('name', 'Valued Customer')},</p>
+                <p>Thank you for reaching out to us. Here is our response to your inquiry:</p>
+                
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #E53E3E;">
+                    <p style="margin: 0; white-space: pre-wrap;">{reply.message}</p>
+                </div>
+                
+                <div style="background: #eee; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 0; font-size: 12px; color: #666;"><strong>Your original message:</strong></p>
+                    <p style="margin: 10px 0 0 0; font-size: 12px; color: #666; font-style: italic;">"{contact.get('message', '')}"</p>
+                </div>
+                
+                <p>If you have any more questions, feel free to reply to this email or contact us at:</p>
+                <ul style="color: #666;">
+                    <li>Email: myrevolutionprinting@gmail.com</li>
+                    <li>Phone: 604-787-0686</li>
+                </ul>
+                
+                <p>God bless,<br><strong>The Revolution Printing Team</strong></p>
+            </div>
+            
+            <div style="text-align: center; padding: 20px 0; border-top: 1px solid #eee; color: #666; font-size: 12px;">
+                <p>© {datetime.now().year} Revolution Printing. All rights reserved.</p>
+                <p>Inspired by Scripture. Designed for Life.</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        params = {
+            "from": "Revolution Printing <onboarding@resend.dev>",
+            "to": [contact.get('email')],
+            "subject": f"Re: {contact.get('subject', 'Your Inquiry')}",
+            "html": html_content,
+            "reply_to": "myrevolutionprinting@gmail.com"
+        }
+        
+        email = resend.Emails.send(params)
+        logger.info(f"Reply sent to {contact.get('email')}, email_id: {email.get('id')}")
+        
+        # Mark contact as read
+        await db.contacts.update_one(
+            {"contact_id": contact_id},
+            {"$set": {"read": True, "replied_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        return {"message": "Reply sent successfully"}
+        
+    except Exception as e:
+        logger.error(f"Failed to send reply: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
+
 # ======================== DESIGN ROUTES ========================
 
 @api_router.get("/designs", response_model=List[DesignResponse])
