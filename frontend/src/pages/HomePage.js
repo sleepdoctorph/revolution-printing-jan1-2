@@ -45,7 +45,7 @@ const HomePage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <span className="inline-block bg-secondary/10 text-secondary font-medium px-4 py-2 rounded-full text-sm mb-6 border border-secondary/20">
-                Faith-Inspired Fashion
+                Faith-Inspired Apparel for Everyday Life
               </span>
               <h1 className="font-heading text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-6">
                 Wear Your{' '}
