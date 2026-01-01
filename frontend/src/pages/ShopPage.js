@@ -77,7 +77,7 @@ const ShopPage = () => {
       }
     };
     fetchProducts();
-  }, [category, showBlanks, searchQuery, sortBy]);
+  }, [category, searchQuery, sortBy]);
 
   const handleCategoryChange = (value) => {
     if (value) {
