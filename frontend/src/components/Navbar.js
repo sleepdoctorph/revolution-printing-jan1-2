@@ -16,18 +16,19 @@ import { useCart } from '../context/CartContext';
 // Sparkle component
 const SparkleEffect = ({ x, y, onComplete }) => {
   React.useEffect(() => {
-    const timer = setTimeout(onComplete, 800);
+    const timer = setTimeout(onComplete, 1200);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
-  const sparkles = Array.from({ length: 12 }, (_, i) => {
-    const angle = (i / 12) * Math.PI * 2;
-    const distance = 30 + Math.random() * 40;
+  const sparkles = Array.from({ length: 16 }, (_, i) => {
+    const angle = (i / 16) * Math.PI * 2;
+    const distance = 40 + Math.random() * 50;
     return {
       id: i,
       x: Math.cos(angle) * distance,
       y: Math.sin(angle) * distance,
-      delay: Math.random() * 0.2,
+      delay: Math.random() * 0.3,
+      size: 14 + Math.random() * 10,
     };
   });
 
@@ -43,7 +44,8 @@ const SparkleEffect = ({ x, y, onComplete }) => {
           style={{
             left: sparkle.x,
             top: sparkle.y,
-            animation: `sparkle-burst 0.6s ease-out forwards`,
+            fontSize: sparkle.size,
+            animation: `sparkle-burst 1s ease-out forwards`,
             animationDelay: `${sparkle.delay}s`,
           }}
         >
