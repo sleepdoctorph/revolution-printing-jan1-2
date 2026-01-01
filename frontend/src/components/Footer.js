@@ -15,7 +15,7 @@ const Footer = () => {
               className="h-16 object-contain mb-4"
             />
             <p className="text-muted-foreground text-sm mb-4">
-              Faith-Inspired Apparel for Everyday Life
+              Inspired by Scripture. Designed for Life.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
