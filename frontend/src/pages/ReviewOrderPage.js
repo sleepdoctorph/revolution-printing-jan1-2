@@ -216,6 +216,14 @@ const ReviewOrderPage = () => {
                     <span className="text-muted-foreground">Design</span>
                     <span className="font-medium">{design.name}</span>
                   </div>
+
+                  {/* Print Placement */}
+                  {product.category !== 'mugs' && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Print Placement</span>
+                      <span className="font-medium">{placementLabel}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Quantity */}
