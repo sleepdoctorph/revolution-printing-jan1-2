@@ -138,6 +138,43 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Custom Orders CTA */}
+      <section className="py-16 bg-primary/10 border-y-2 border-black">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            {/* Graphic */}
+            <div className="flex-shrink-0">
+              <div className="w-32 h-32 md:w-40 md:h-40 bg-white border-2 border-black rounded-2xl shadow-brutal flex items-center justify-center">
+                <svg viewBox="0 0 80 80" className="w-20 h-20 md:w-24 md:h-24">
+                  {/* Custom design icon */}
+                  <rect x="15" y="15" width="50" height="50" rx="5" fill="#f5f5f5" stroke="#333" strokeWidth="2"/>
+                  <path d="M25 45 L35 35 L45 45 L55 30" stroke="#C41E3A" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="35" cy="28" r="5" fill="#C41E3A"/>
+                  <text x="40" y="60" textAnchor="middle" fontSize="8" fill="#333" fontWeight="bold">YOUR DESIGN</text>
+                </svg>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="text-center md:text-left flex-1">
+              <h2 className="font-heading text-2xl md:text-3xl font-bold mb-3">
+                Need Custom Printing?
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                Looking to print your own design? We offer DTF printing (1+ items), screen printing (7+ items), 
+                and UV DTF for mugs. Contact us with your requirements and we&apos;ll get back to you within <strong>24 hours</strong>.
+              </p>
+              <Button asChild className="bg-primary text-white border-2 border-black shadow-brutal hover-lift">
+                <Link to="/contact">
+                  Request Custom Quote
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Products */}
       <section className="py-20 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
