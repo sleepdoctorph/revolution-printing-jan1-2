@@ -81,6 +81,7 @@ const AppContent = () => {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/printing-info" element={<PrintingInfoPage />} />
           </Routes>
         </PageTransition>
       </main>
