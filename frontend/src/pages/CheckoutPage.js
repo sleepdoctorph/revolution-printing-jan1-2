@@ -533,12 +533,14 @@ const CheckoutPage = () => {
 
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift h-14 text-lg"
+                disabled={loading || !allConfirmationsChecked}
+                className="w-full bg-primary text-white border-2 border-black shadow-brutal hover-lift h-14 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 data-testid="place-order-button"
               >
                 {loading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
+                ) : !allConfirmationsChecked ? (
+                  'Please confirm all terms above'
                 ) : (
                   `Place Order • $${finalTotal.toFixed(2)}`
                 )}
