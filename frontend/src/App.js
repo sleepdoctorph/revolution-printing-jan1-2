@@ -22,6 +22,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import PrintingInfoPage from './pages/PrintingInfoPage';
 
 // Admin Pages
 import AdminLayout from './pages/admin/AdminLayout';
