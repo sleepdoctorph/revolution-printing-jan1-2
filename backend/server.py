@@ -194,6 +194,18 @@ class GuestOrderResponse(BaseModel):
     created_at: datetime
     is_guest: bool = True
 
+class RefundClaimCreate(BaseModel):
+    orderId: str
+    email: str
+    name: str
+    phone: str = ""
+    issueType: str
+    description: str
+    photoUrls: str
+    acknowledgePrinterDefect: bool
+    acknowledgeNoArtworkRefund: bool
+    acknowledge48Hours: bool
+
 # ======================== HELPER FUNCTIONS ========================
 
 def hash_password(password: str) -> str:
