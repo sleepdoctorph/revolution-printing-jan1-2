@@ -404,6 +404,113 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
+              {/* Order Confirmation - Custom Orders */}
+              {isCustomOrder && (
+                <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl shadow-brutal p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                    <h2 className="font-heading text-xl font-bold text-yellow-800">Custom Order Confirmation</h2>
+                  </div>
+                  <p className="text-sm text-yellow-700 mb-4">
+                    Please review and confirm before placing your custom order:
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="printReady"
+                        checked={confirmations.printReady}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, printReady: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="printReady" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand that custom orders require print-ready, high-resolution artwork suitable for apparel or drinkware printing.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="noDesignService"
+                        checked={confirmations.noDesignService}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, noDesignService: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="noDesignService" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand that Revolution Printing does not provide custom design services and will print my artwork exactly as submitted.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="spellingResponsibility"
+                        checked={confirmations.spellingResponsibility}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, spellingResponsibility: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="spellingResponsibility" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand that spelling, layout, and design accuracy are my responsibility, and errors will not be corrected.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="turnaround"
+                        checked={confirmations.turnaround}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, turnaround: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="turnaround" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand that custom order turnaround time is 3–10 business days, depending on printing method.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="shippingFees"
+                        checked={confirmations.shippingFees}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, shippingFees: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="shippingFees" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand that shipping fees always apply to custom orders, regardless of order total.
+                      </label>
+                    </div>
+                  </div>
+                  <p className="text-xs text-yellow-700 mt-4 pt-4 border-t border-yellow-300">
+                    <Link to="/printing-info" className="underline font-medium">View full printing & ordering information →</Link>
+                  </p>
+                </div>
+              )}
+
+              {/* Order Confirmation - Designed Products */}
+              {!isCustomOrder && (
+                <div className="bg-green-50 border-2 border-green-400 rounded-xl shadow-brutal p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <h2 className="font-heading text-xl font-bold text-green-800">Order Confirmation</h2>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="designedProducts"
+                        checked={confirmations.designedProducts}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, designedProducts: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="designedProducts" className="text-sm text-green-800 cursor-pointer">
+                        I understand that designed products are not customizable and are sold as shown.
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="designedShipping"
+                        checked={confirmations.designedShipping}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, designedShipping: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="designedShipping" className="text-sm text-green-800 cursor-pointer">
+                        I understand that designed products ship within 24 hours and qualify for free shipping on orders $75+ (Canada).
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Payment Info */}
               <div className="bg-white border-2 border-black rounded-xl shadow-brutal p-6">
                 <div className="flex items-center gap-2 mb-6">
