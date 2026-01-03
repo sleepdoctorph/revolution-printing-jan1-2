@@ -415,7 +415,7 @@ const CheckoutPage = () => {
                 <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl shadow-brutal p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                    <h2 className="font-heading text-xl font-bold text-yellow-800">Custom Order Confirmation</h2>
+                    <h2 className="font-heading text-xl font-bold text-yellow-800">✅ Custom Order Confirmation (Required)</h2>
                   </div>
                   <p className="text-sm text-yellow-700 mb-4">
                     Please review and confirm before placing your custom order:
@@ -429,7 +429,7 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="printReady" className="text-sm text-yellow-800 cursor-pointer">
-                        I understand that custom orders require print-ready, high-resolution artwork suitable for apparel or drinkware printing.
+                        I confirm my artwork is print-ready and high-resolution
                       </label>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -440,7 +440,7 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="noDesignService" className="text-sm text-yellow-800 cursor-pointer">
-                        I understand that Revolution Printing does not provide custom design services and will print my artwork exactly as submitted.
+                        I understand Revolution Printing does not provide design services
                       </label>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -451,7 +451,18 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="spellingResponsibility" className="text-sm text-yellow-800 cursor-pointer">
-                        I understand that spelling, layout, and design accuracy are my responsibility, and errors will not be corrected.
+                        I accept responsibility for spelling, layout, and content
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="sizeAdjustment"
+                        checked={confirmations.sizeAdjustment}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, sizeAdjustment: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="sizeAdjustment" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand only print size may be adjusted
                       </label>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -462,7 +473,7 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="turnaround" className="text-sm text-yellow-800 cursor-pointer">
-                        I understand that custom order turnaround time is 3–10 business days, depending on printing method.
+                        I understand custom orders take 3–10 business days
                       </label>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -473,12 +484,23 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="shippingFees" className="text-sm text-yellow-800 cursor-pointer">
-                        I understand that shipping fees always apply to custom orders, regardless of order total.
+                        I understand shipping always applies to custom orders
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="refundPolicy"
+                        checked={confirmations.refundPolicy}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, refundPolicy: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="refundPolicy" className="text-sm text-yellow-800 cursor-pointer">
+                        I understand refund eligibility is limited to printer-caused defects only
                       </label>
                     </div>
                   </div>
                   <p className="text-xs text-yellow-700 mt-4 pt-4 border-t border-yellow-300">
-                    <Link to="/printing-info" className="underline font-medium">View full printing & ordering information →</Link>
+                    <Link to="/printing-info" className="underline font-medium">View full policies, printing info & terms →</Link>
                   </p>
                 </div>
               )}
@@ -488,7 +510,7 @@ const CheckoutPage = () => {
                 <div className="bg-green-50 border-2 border-green-400 rounded-xl shadow-brutal p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <CheckCircle className="h-5 w-5 text-green-600" />
-                    <h2 className="font-heading text-xl font-bold text-green-800">Order Confirmation</h2>
+                    <h2 className="font-heading text-xl font-bold text-green-800">✅ Order Confirmation (Required)</h2>
                   </div>
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
@@ -499,7 +521,7 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="designedProducts" className="text-sm text-green-800 cursor-pointer">
-                        I understand that designed products are not customizable and are sold as shown.
+                        I understand that designed products are not customizable and are sold as shown
                       </label>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -510,10 +532,24 @@ const CheckoutPage = () => {
                         className="mt-1"
                       />
                       <label htmlFor="designedShipping" className="text-sm text-green-800 cursor-pointer">
-                        I understand that designed products ship within 24 hours and qualify for free shipping on orders $75+ (Canada).
+                        I understand that designed products ship within 24 hours and qualify for free shipping on orders $75+ (Canada)
+                      </label>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="refundPolicyDesigned"
+                        checked={confirmations.refundPolicy}
+                        onCheckedChange={(checked) => setConfirmations({...confirmations, refundPolicy: checked})}
+                        className="mt-1"
+                      />
+                      <label htmlFor="refundPolicyDesigned" className="text-sm text-green-800 cursor-pointer">
+                        I understand refund eligibility is limited to printer-caused defects only
                       </label>
                     </div>
                   </div>
+                  <p className="text-xs text-green-700 mt-4 pt-4 border-t border-green-300">
+                    <Link to="/printing-info" className="underline font-medium">View full policies, printing info & terms →</Link>
+                  </p>
                 </div>
               )}
 
