@@ -432,11 +432,15 @@ const CheckoutPage = () => {
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
+                  <span className="text-muted-foreground">
+                    Shipping ({shippingInfo.country === 'CA' ? '🇨🇦 Canada' : '🇺🇸 USA'})
+                  </span>
                   <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tax</span>
+                  <span className="text-muted-foreground">
+                    Tax ({shippingInfo.country === 'CA' ? 'HST 13%' : 'Sales Tax 8%'})
+                  </span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
               </div>
@@ -444,13 +448,16 @@ const CheckoutPage = () => {
               <Separator className="my-4" />
 
               <div className="flex justify-between font-bold text-lg">
-                <span>Total</span>
+                <span>Total ({shippingInfo.country === 'CA' ? 'CAD' : 'USD'})</span>
                 <span className="text-primary">${finalTotal.toFixed(2)}</span>
               </div>
 
-              {totalPrice < 50 && (
+              {shipping > 0 && (
                 <p className="text-xs text-muted-foreground mt-4 text-center">
-                  Add ${(50 - totalPrice).toFixed(2)} more for free shipping!
+                  {shippingInfo.country === 'CA' 
+                    ? `Add $${(75 - totalPrice).toFixed(2)} more for free shipping in Canada!`
+                    : `Add $${(100 - totalPrice).toFixed(2)} more for free shipping to USA!`
+                  }
                 </p>
               )}
             </div>
