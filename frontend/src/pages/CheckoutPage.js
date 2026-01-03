@@ -476,9 +476,15 @@ const CheckoutPage = () => {
                 <span className="text-primary">${finalTotal.toFixed(2)}</span>
               </div>
 
-              {shipping > 0 && shippingInfo.country === 'CA' && totalPrice < 75 && (
+              {shipping > 0 && canGetFreeShipping && totalPrice < 75 && (
                 <p className="text-xs text-muted-foreground mt-4 text-center">
                   Add ${(75 - totalPrice).toFixed(2)} more for free shipping in Canada!
+                </p>
+              )}
+              
+              {isCustomOrder && (
+                <p className="text-xs text-muted-foreground mt-4 text-center">
+                  Custom orders include a shipping fee.
                 </p>
               )}
             </div>
