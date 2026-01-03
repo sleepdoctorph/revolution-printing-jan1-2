@@ -353,11 +353,88 @@ const ProductDetailPage = () => {
                   ${product.price.toFixed(2)}
                 </span>
               </div>
+              {/* Price includes design notice */}
+              <div className="mt-3 bg-green-50 border border-green-300 rounded-lg p-3 flex items-center gap-2">
+                <svg className="h-5 w-5 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm text-green-800">
+                  <strong>Price includes</strong> your choice of our in-house Christian designs
+                </span>
+              </div>
             </div>
 
             <p className="text-muted-foreground text-lg leading-relaxed">
               {product.description}
             </p>
+
+            {/* Print Placement Selection */}
+            {product.category !== 'mugs' && (
+              <div>
+                <label className="font-heading font-bold text-sm mb-3 block">
+                  Print Placement
+                </label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: 'front', label: 'Front', icon: '👕' },
+                    { value: 'back', label: 'Back', icon: '🔙' },
+                    { value: 'left-chest', label: 'Left Chest', icon: '❤️' }
+                  ].map((placement) => (
+                    <button
+                      key={placement.value}
+                      type="button"
+                      onClick={() => setPrintPlacement(placement.value)}
+                      className={`p-4 rounded-xl border-2 transition-all ${
+                        printPlacement === placement.value
+                          ? 'border-primary bg-primary/10 shadow-brutal-sm'
+                          : 'border-black hover:border-primary'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">{placement.icon}</div>
+                      <div className="font-medium text-sm">{placement.label}</div>
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Visual Mockup */}
+                <div className="mt-4 bg-muted rounded-xl p-4">
+                  <p className="text-xs text-muted-foreground mb-3 text-center">Print Placement Preview</p>
+                  <div className="relative mx-auto w-48 h-56 bg-white rounded-lg border-2 border-black shadow-brutal-sm flex items-center justify-center">
+                    {/* T-shirt outline */}
+                    <svg viewBox="0 0 100 120" className="w-full h-full p-2">
+                      {/* Shirt body */}
+                      <path 
+                        d="M20 30 L10 45 L25 50 L25 110 L75 110 L75 50 L90 45 L80 30 L65 35 L50 25 L35 35 Z" 
+                        fill={getColorHex(selectedColor) || '#f5f5f5'} 
+                        stroke="#333" 
+                        strokeWidth="2"
+                      />
+                      {/* Collar */}
+                      <ellipse cx="50" cy="28" rx="12" ry="5" fill="none" stroke="#333" strokeWidth="2" />
+                      
+                      {/* Print area indicator */}
+                      {printPlacement === 'front' && (
+                        <rect x="32" y="45" width="36" height="40" fill="rgba(234,179,8,0.3)" stroke="#eab308" strokeWidth="2" strokeDasharray="4" rx="2" />
+                      )}
+                      {printPlacement === 'left-chest' && (
+                        <rect x="55" y="40" width="15" height="15" fill="rgba(234,179,8,0.3)" stroke="#eab308" strokeWidth="2" strokeDasharray="4" rx="2" />
+                      )}
+                      {printPlacement === 'back' && (
+                        <>
+                          <rect x="32" y="45" width="36" height="40" fill="rgba(234,179,8,0.3)" stroke="#eab308" strokeWidth="2" strokeDasharray="4" rx="2" />
+                          <text x="50" y="68" textAnchor="middle" fontSize="8" fill="#eab308">BACK</text>
+                        </>
+                      )}
+                    </svg>
+                    
+                    {/* Label */}
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                      {printPlacement === 'front' ? 'Front Print' : printPlacement === 'back' ? 'Back Print' : 'Left Chest'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Color Selection */}
             {product.colors?.length > 0 && (
