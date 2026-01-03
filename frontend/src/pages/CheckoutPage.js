@@ -451,12 +451,9 @@ const CheckoutPage = () => {
                 <span className="text-primary">${finalTotal.toFixed(2)}</span>
               </div>
 
-              {shipping > 0 && (
+              {shipping > 0 && shippingInfo.country === 'CA' && totalPrice < 75 && (
                 <p className="text-xs text-muted-foreground mt-4 text-center">
-                  {shippingInfo.country === 'CA' 
-                    ? `Add $${(75 - totalPrice).toFixed(2)} more for free shipping in Canada!`
-                    : `Add $${(100 - totalPrice).toFixed(2)} more for free shipping to USA!`
-                  }
+                  Add ${(75 - totalPrice).toFixed(2)} more for free shipping in Canada!
                 </p>
               )}
             </div>
