@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { CreditCard, Truck, ShieldCheck, Loader2, CheckCircle, Mail } from 'lucide-react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { CreditCard, Truck, ShieldCheck, Loader2, CheckCircle, Mail, AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -26,6 +26,18 @@ const CheckoutPage = () => {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [subscribeToUpdates, setSubscribeToUpdates] = useState(false);
+  
+  // Custom order confirmation checkboxes
+  const [confirmations, setConfirmations] = useState({
+    printReady: false,
+    noDesignService: false,
+    spellingResponsibility: false,
+    sizeAdjustment: false,
+    turnaround: false,
+    shippingFees: false,
+    designedProducts: false,
+    designedShipping: false
+  });
   
   const [shippingInfo, setShippingInfo] = useState({
     firstName: user?.name?.split(' ')[0] || '',
