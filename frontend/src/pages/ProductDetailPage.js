@@ -207,6 +207,7 @@ const ProductDetailPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [printPlacement, setPrintPlacement] = useState('front');
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -245,7 +246,8 @@ const ProductDetailPage = () => {
         product,
         selectedColor,
         selectedSize,
-        quantity
+        quantity,
+        printPlacement
       }
     });
   };
