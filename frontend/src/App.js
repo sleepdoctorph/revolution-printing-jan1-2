@@ -83,6 +83,7 @@ const AppContent = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/printing-info" element={<PrintingInfoPage />} />
+            <Route path="/refund-claim" element={<RefundClaimPage />} />
           </Routes>
         </PageTransition>
       </main>
