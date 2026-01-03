@@ -54,7 +54,8 @@ const DesignSelectionPage = () => {
         selectedColor,
         selectedSize,
         quantity,
-        design: selectedDesign
+        design: selectedDesign,
+        printPlacement: printPlacement || 'front'
       }
     });
   };
