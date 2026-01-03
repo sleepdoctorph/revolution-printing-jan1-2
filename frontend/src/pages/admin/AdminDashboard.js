@@ -141,6 +141,31 @@ const AdminDashboard = () => {
               </Link>
             </Button>
           </div>
+          
+          {/* Database Tools */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <h3 className="font-heading font-bold mb-4">Database Tools</h3>
+            <Button 
+              onClick={handleUpdateProductCodes}
+              disabled={updatingCodes}
+              className="w-full h-12 bg-accent text-white border-2 border-black shadow-brutal hover-lift"
+            >
+              {updatingCodes ? (
+                <>
+                  <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Tags className="h-5 w-5 mr-2" />
+                  Update Product Codes (Gildan 5000, etc.)
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              Adds wholesale style codes to all product names
+            </p>
+          </div>
         </div>
 
         {/* Pending Orders Alert */}
