@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
-import { Package, ShoppingCart, Users, DollarSign, TrendingUp, Clock, ArrowRight } from 'lucide-react';
+import { Package, ShoppingCart, Users, DollarSign, TrendingUp, Clock, ArrowRight, RefreshCw, Tags } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminDashboard = () => {
   const { stats } = useOutletContext() || {};
   const [recentOrders, setRecentOrders] = useState([]);
+  const [updatingCodes, setUpdatingCodes] = useState(false);
 
   useEffect(() => {
     const fetchRecentOrders = async () => {
@@ -21,6 +23,19 @@ const AdminDashboard = () => {
     };
     fetchRecentOrders();
   }, []);
+
+  const handleUpdateProductCodes = async () => {
+    setUpdatingCodes(true);
+    try {
+      const response = await axios.post(`${API_URL}/api/admin/update-product-codes`, {}, { withCredentials: true });
+      toast.success(response.data.message || 'Product codes updated!');
+    } catch (error) {
+      console.error('Error updating product codes:', error);
+      toast.error('Failed to update product codes');
+    } finally {
+      setUpdatingCodes(false);
+    }
+  };
 
   const statCards = [
     { name: 'Total Products', value: stats?.total_products || 0, icon: Package, color: 'text-primary' },
