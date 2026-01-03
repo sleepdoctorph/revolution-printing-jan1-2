@@ -39,12 +39,14 @@ const CheckoutPage = () => {
     country: 'CA'
   });
 
-  // Calculate shipping based on ChitChats rates (CAD)
-  // T-shirt ~200g: Canada $5.33, USA $8.60
-  // Hoodie ~500g: Canada $7.50, USA $12.00
-  // Hat ~150g: Canada $4.50, USA $7.50
-  // Mug ~425g: Canada $6.07, USA $10.61
+  // Calculate shipping based on ChitChats rates
+  // In-house designs: Free shipping for orders $75+ (Canada only)
+  // Custom orders: Always charged shipping
   const calculateShipping = () => {
+    // Check if order contains custom designs (no design_id means custom/blank)
+    const hasCustomOrder = items.some(item => !item.design_id || item.design_name?.toLowerCase().includes('custom'));
+    const hasInHouseDesign = items.some(item => item.design_id && !item.design_name?.toLowerCase().includes('custom'));
+    
     // Count items by type for weight estimation
     let hasHeavyItem = items.some(item => 
       item.name?.toLowerCase().includes('hoodie') || 
@@ -56,20 +58,43 @@ const CheckoutPage = () => {
     
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
     
-    // Base shipping rates
-    if (shippingInfo.country === 'CA') {
-      // Canada shipping - FREE over $75
-      if (totalPrice >= 75) return 0;
-      if (hasHeavyItem || hasMug) return 9.99;
-      if (itemCount >= 3) return 11.99;
-      return 6.99;
-    } else {
-      // USA shipping - NO free shipping
-      if (hasHeavyItem || hasMug) return 14.99;
-      if (itemCount >= 3) return 16.99;
-      return 9.99;
+    // Calculate base shipping rate
+    const getBaseRate = () => {
+      if (shippingInfo.country === 'CA') {
+        if (hasHeavyItem || hasMug) return 9.99;
+        if (itemCount >= 3) return 11.99;
+        return 6.99;
+      } else {
+        // USA shipping
+        if (hasHeavyItem || hasMug) return 14.99;
+        if (itemCount >= 3) return 16.99;
+        return 9.99;
+      }
+    };
+    
+    const baseRate = getBaseRate();
+    
+    // Custom orders: Always charge shipping (no free shipping)
+    if (hasCustomOrder && !hasInHouseDesign) {
+      return baseRate;
     }
+    
+    // Mixed order (custom + in-house): Always charge shipping
+    if (hasCustomOrder && hasInHouseDesign) {
+      return baseRate;
+    }
+    
+    // In-house designs only: Free shipping over $75 (Canada only)
+    if (shippingInfo.country === 'CA' && totalPrice >= 75) {
+      return 0;
+    }
+    
+    return baseRate;
   };
+
+  // Check if order qualifies for free shipping message
+  const isCustomOrder = items.some(item => !item.design_id || item.design_name?.toLowerCase().includes('custom'));
+  const canGetFreeShipping = !isCustomOrder && shippingInfo.country === 'CA';
 
   const shipping = calculateShipping();
   const taxRate = shippingInfo.country === 'CA' ? 0.13 : 0.08; // 13% HST for Canada, 8% for USA
