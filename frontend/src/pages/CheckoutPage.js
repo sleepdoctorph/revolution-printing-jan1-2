@@ -58,17 +58,16 @@ const CheckoutPage = () => {
     
     // Base shipping rates
     if (shippingInfo.country === 'CA') {
-      // Canada shipping (based on ChitChats)
-      if (totalPrice >= 75) return 0; // Free shipping over $75 CAD
-      if (hasHeavyItem || hasMug) return 9.99; // Heavier items
-      if (itemCount >= 3) return 11.99; // Multiple items
-      return 6.99; // Standard (1-2 light items)
+      // Canada shipping - FREE over $75
+      if (totalPrice >= 75) return 0;
+      if (hasHeavyItem || hasMug) return 9.99;
+      if (itemCount >= 3) return 11.99;
+      return 6.99;
     } else {
-      // USA shipping (based on ChitChats)
-      if (totalPrice >= 100) return 0; // Free shipping over $100 USD
-      if (hasHeavyItem || hasMug) return 14.99; // Heavier items
-      if (itemCount >= 3) return 16.99; // Multiple items
-      return 9.99; // Standard (1-2 light items)
+      // USA shipping - NO free shipping
+      if (hasHeavyItem || hasMug) return 14.99;
+      if (itemCount >= 3) return 16.99;
+      return 9.99;
     }
   };
 
