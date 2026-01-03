@@ -51,7 +51,7 @@ const ReviewOrderPage = () => {
   const [quantity, setQuantity] = useState(location.state?.quantity || 1);
 
   // Get data from navigation state
-  const { product, selectedColor, selectedSize, design } = location.state || {};
+  const { product, selectedColor, selectedSize, design, printPlacement } = location.state || {};
 
   // If no data, redirect back to shop
   if (!product || !design) {
@@ -60,7 +60,7 @@ const ReviewOrderPage = () => {
   }
 
   const handleAddToCart = () => {
-    addItem(product, quantity, selectedColor, selectedSize, design);
+    addItem(product, quantity, selectedColor, selectedSize, design, printPlacement);
     toast.success('Added to cart!');
     navigate('/shop');
   };
@@ -71,12 +71,13 @@ const ReviewOrderPage = () => {
       navigate('/login', { state: { from: '/review-order' } });
       return;
     }
-    addItem(product, quantity, selectedColor, selectedSize, design);
+    addItem(product, quantity, selectedColor, selectedSize, design, printPlacement);
     navigate('/checkout');
   };
 
   const totalPrice = product.price * quantity;
   const colorHex = getColorHex(selectedColor);
+  const placementLabel = printPlacement === 'left-chest' ? 'Left Chest' : printPlacement === 'back' ? 'Back' : 'Front';
 
   return (
     <div className="min-h-screen bg-background py-8" data-testid="review-order-page">
