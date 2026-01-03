@@ -964,8 +964,141 @@ async def get_payment_config():
 
 @api_router.get("/admin/customers")
 async def get_customers(user: dict = Depends(get_admin_user)):
+    """Get all customers with order history and totals"""
     customers = await db.users.find({"is_admin": {"$ne": True}}, {"_id": 0, "password": 0}).to_list(1000)
-    return customers
+    
+    # Enrich with order data
+    for customer in customers:
+        orders = await db.orders.find(
+            {"user_id": customer.get("user_id")}, 
+            {"_id": 0, "order_id": 1, "total_amount": 1, "status": 1, "created_at": 1, "items": 1}
+        ).to_list(100)
+        customer["orders"] = orders
+        customer["total_orders"] = len(orders)
+        customer["total_spent"] = sum(o.get("total_amount", 0) for o in orders)
+        customer["last_order"] = orders[0]["created_at"] if orders else None
+    
+    # Also get guest orders (not linked to user accounts)
+    guest_orders = await db.orders.find(
+        {"user_id": "guest", "customer_email": {"$exists": True}},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Group guest orders by email
+    guest_customers = {}
+    for order in guest_orders:
+        email = order.get("customer_email", "")
+        if email not in guest_customers:
+            guest_customers[email] = {
+                "user_id": f"guest_{email[:8]}",
+                "email": email,
+                "name": f"{order.get('shipping_address', {}).get('firstName', '')} {order.get('shipping_address', {}).get('lastName', '')}".strip() or "Guest",
+                "is_guest": True,
+                "orders": [],
+                "total_orders": 0,
+                "total_spent": 0,
+                "created_at": order.get("created_at")
+            }
+        guest_customers[email]["orders"].append(order)
+        guest_customers[email]["total_orders"] += 1
+        guest_customers[email]["total_spent"] += order.get("total_amount", 0)
+        guest_customers[email]["last_order"] = order.get("created_at")
+    
+    # Combine registered and guest customers
+    all_customers = customers + list(guest_customers.values())
+    
+    # Sort by total spent descending
+    all_customers.sort(key=lambda x: x.get("total_spent", 0), reverse=True)
+    
+    return all_customers
+
+@api_router.get("/admin/customers/{customer_id}")
+async def get_customer_detail(customer_id: str, user: dict = Depends(get_admin_user)):
+    """Get detailed customer info with full order history"""
+    customer = await db.users.find_one({"user_id": customer_id}, {"_id": 0, "password": 0})
+    
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    
+    # Get all orders for this customer
+    orders = await db.orders.find(
+        {"user_id": customer_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    customer["orders"] = orders
+    customer["total_orders"] = len(orders)
+    customer["total_spent"] = sum(o.get("total_amount", 0) for o in orders)
+    
+    return customer
+
+@api_router.get("/admin/newsletter-subscribers")
+async def get_newsletter_subscribers(user: dict = Depends(get_admin_user)):
+    """Get all newsletter subscribers"""
+    subscribers = await db.newsletter_subscribers.find({}, {"_id": 0}).to_list(1000)
+    return subscribers
+
+@api_router.get("/admin/crm/export")
+async def export_crm_data(user: dict = Depends(get_admin_user)):
+    """Export all customer data as CSV-ready JSON"""
+    customers = await db.users.find({"is_admin": {"$ne": True}}, {"_id": 0, "password": 0}).to_list(1000)
+    
+    export_data = []
+    for customer in customers:
+        orders = await db.orders.find({"user_id": customer.get("user_id")}, {"_id": 0}).to_list(100)
+        total_spent = sum(o.get("total_amount", 0) for o in orders)
+        
+        export_data.append({
+            "name": customer.get("name", ""),
+            "email": customer.get("email", ""),
+            "phone": customer.get("phone", ""),
+            "total_orders": len(orders),
+            "total_spent": round(total_spent, 2),
+            "joined_date": customer.get("created_at", ""),
+            "last_order_date": orders[0].get("created_at", "") if orders else "",
+            "source": "registered"
+        })
+    
+    # Add guest customers
+    guest_orders = await db.orders.find({"user_id": "guest"}, {"_id": 0}).to_list(1000)
+    guest_data = {}
+    for order in guest_orders:
+        email = order.get("customer_email", "")
+        if email and email not in guest_data:
+            guest_data[email] = {
+                "name": f"{order.get('shipping_address', {}).get('firstName', '')} {order.get('shipping_address', {}).get('lastName', '')}".strip(),
+                "email": email,
+                "phone": order.get("shipping_address", {}).get("phone", ""),
+                "total_orders": 0,
+                "total_spent": 0,
+                "joined_date": order.get("created_at", ""),
+                "last_order_date": order.get("created_at", ""),
+                "source": "guest"
+            }
+        if email:
+            guest_data[email]["total_orders"] += 1
+            guest_data[email]["total_spent"] += order.get("total_amount", 0)
+            guest_data[email]["last_order_date"] = order.get("created_at", "")
+    
+    export_data.extend(guest_data.values())
+    
+    # Add newsletter subscribers who haven't ordered
+    subscribers = await db.newsletter_subscribers.find({}, {"_id": 0}).to_list(1000)
+    existing_emails = {d["email"] for d in export_data}
+    for sub in subscribers:
+        if sub.get("email") not in existing_emails:
+            export_data.append({
+                "name": sub.get("name", ""),
+                "email": sub.get("email", ""),
+                "phone": "",
+                "total_orders": 0,
+                "total_spent": 0,
+                "joined_date": sub.get("subscribed_at", ""),
+                "last_order_date": "",
+                "source": "newsletter"
+            })
+    
+    return export_data
 
 @api_router.get("/admin/stats")
 async def get_admin_stats(user: dict = Depends(get_admin_user)):
