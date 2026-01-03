@@ -168,7 +168,7 @@ const CheckoutPage = () => {
               <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 mb-6">
                 <Mail className="h-6 w-6 text-accent mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  You're subscribed! We'll send you updates on new products and exclusive promotions.
+                  You&apos;re subscribed! We&apos;ll send you updates on new products and exclusive promotions.
                 </p>
               </div>
             )}
