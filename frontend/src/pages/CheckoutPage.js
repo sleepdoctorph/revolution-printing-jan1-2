@@ -36,7 +36,8 @@ const CheckoutPage = () => {
     turnaround: false,
     shippingFees: false,
     designedProducts: false,
-    designedShipping: false
+    designedShipping: false,
+    refundPolicy: false
   });
   
   const [shippingInfo, setShippingInfo] = useState({
