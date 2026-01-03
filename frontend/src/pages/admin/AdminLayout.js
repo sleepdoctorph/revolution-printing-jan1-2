@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Package, ShoppingCart, Users, Inbox, Palette,
-  ChevronRight, Menu, X 
+  ChevronRight, Menu, X, RefreshCw 
 } from 'lucide-react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,7 @@ const AdminLayout = () => {
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Customers', href: '/admin/customers', icon: Users },
     { name: 'Messages', href: '/admin/contacts', icon: Inbox },
+    { name: 'Refund Claims', href: '/admin/refund-claims', icon: RefreshCw },
   ];
 
   if (loading) {
