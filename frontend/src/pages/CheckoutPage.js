@@ -35,11 +35,46 @@ const CheckoutPage = () => {
     city: '',
     state: '',
     zip: '',
-    phone: ''
+    phone: '',
+    country: 'CA'
   });
 
-  const shipping = totalPrice >= 50 ? 0 : 5.99;
-  const tax = totalPrice * 0.08;
+  // Calculate shipping based on ChitChats rates (CAD)
+  // T-shirt ~200g: Canada $5.33, USA $8.60
+  // Hoodie ~500g: Canada $7.50, USA $12.00
+  // Hat ~150g: Canada $4.50, USA $7.50
+  // Mug ~425g: Canada $6.07, USA $10.61
+  const calculateShipping = () => {
+    // Count items by type for weight estimation
+    let hasHeavyItem = items.some(item => 
+      item.name?.toLowerCase().includes('hoodie') || 
+      item.name?.toLowerCase().includes('sweatshirt')
+    );
+    let hasMug = items.some(item => 
+      item.name?.toLowerCase().includes('mug')
+    );
+    
+    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // Base shipping rates
+    if (shippingInfo.country === 'CA') {
+      // Canada shipping (based on ChitChats)
+      if (totalPrice >= 75) return 0; // Free shipping over $75 CAD
+      if (hasHeavyItem || hasMug) return 9.99; // Heavier items
+      if (itemCount >= 3) return 11.99; // Multiple items
+      return 6.99; // Standard (1-2 light items)
+    } else {
+      // USA shipping (based on ChitChats)
+      if (totalPrice >= 100) return 0; // Free shipping over $100 USD
+      if (hasHeavyItem || hasMug) return 14.99; // Heavier items
+      if (itemCount >= 3) return 16.99; // Multiple items
+      return 9.99; // Standard (1-2 light items)
+    }
+  };
+
+  const shipping = calculateShipping();
+  const taxRate = shippingInfo.country === 'CA' ? 0.13 : 0.08; // 13% HST for Canada, 8% for USA
+  const tax = totalPrice * taxRate;
   const finalTotal = totalPrice + shipping + tax;
 
   const handleInputChange = (e) => {
