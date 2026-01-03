@@ -1131,6 +1131,156 @@ async def get_admin_stats(user: dict = Depends(get_admin_user)):
         "total_revenue": total_revenue
     }
 
+# ======================== REFUND CLAIMS ROUTES ========================
+
+@api_router.post("/refund-claims")
+async def submit_refund_claim(claim: RefundClaimCreate):
+    """Submit a refund claim from a customer"""
+    claim_id = f"claim_{uuid.uuid4().hex[:12]}"
+    
+    claim_doc = {
+        "claim_id": claim_id,
+        "order_id": claim.orderId,
+        "email": claim.email,
+        "name": claim.name,
+        "phone": claim.phone,
+        "issue_type": claim.issueType,
+        "description": claim.description,
+        "photo_urls": claim.photoUrls,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "admin_notes": "",
+        "resolution": ""
+    }
+    
+    await db.refund_claims.insert_one(claim_doc)
+    
+    # Send confirmation email to customer
+    try:
+        resend.api_key = os.environ.get("RESEND_API_KEY")
+        if resend.api_key:
+            resend.Emails.send({
+                "from": "Revolution Printing <onboarding@resend.dev>",
+                "to": [claim.email],
+                "subject": f"Refund Claim Received - {claim_id}",
+                "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #333;">Refund Claim Received</h2>
+                    <p>Hi {claim.name},</p>
+                    <p>We have received your refund claim for order <strong>{claim.orderId}</strong>.</p>
+                    <p><strong>Claim ID:</strong> {claim_id}</p>
+                    <p><strong>Issue Type:</strong> {claim.issueType.replace('_', ' ').title()}</p>
+                    <p>Our team will review your claim within 2-3 business days. We will contact you at this email address with our decision.</p>
+                    <hr style="border: 1px solid #eee; margin: 20px 0;">
+                    <p style="color: #666; font-size: 12px;">
+                        Please keep this email for your records.<br>
+                        If you have any questions, reply to this email or contact us at myrevolutionprinting@gmail.com
+                    </p>
+                    <p style="color: #888; font-size: 11px;">Revolution Printing</p>
+                </div>
+                """
+            })
+            logger.info(f"Refund claim confirmation email sent to {claim.email}")
+    except Exception as e:
+        logger.error(f"Failed to send refund claim confirmation email: {e}")
+    
+    # Notify admin
+    try:
+        if resend.api_key:
+            resend.Emails.send({
+                "from": "Revolution Printing <onboarding@resend.dev>",
+                "to": ["myrevolutionprinting@gmail.com"],
+                "subject": f"New Refund Claim - {claim_id}",
+                "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #c00;">New Refund Claim Submitted</h2>
+                    <p><strong>Claim ID:</strong> {claim_id}</p>
+                    <p><strong>Order ID:</strong> {claim.orderId}</p>
+                    <p><strong>Customer:</strong> {claim.name} ({claim.email})</p>
+                    <p><strong>Phone:</strong> {claim.phone or 'Not provided'}</p>
+                    <p><strong>Issue Type:</strong> {claim.issueType.replace('_', ' ').title()}</p>
+                    <p><strong>Description:</strong></p>
+                    <p style="background: #f5f5f5; padding: 10px; border-radius: 5px;">{claim.description}</p>
+                    <p><strong>Photo Evidence:</strong></p>
+                    <p>{claim.photoUrls}</p>
+                    <hr style="border: 1px solid #eee; margin: 20px 0;">
+                    <p><a href="https://revolutionprinting.ca/admin/refund-claims">View in Admin Dashboard</a></p>
+                </div>
+                """
+            })
+    except Exception as e:
+        logger.error(f"Failed to send admin notification: {e}")
+    
+    return {"claim_id": claim_id, "message": "Refund claim submitted successfully"}
+
+@api_router.get("/admin/refund-claims")
+async def get_refund_claims(user: dict = Depends(get_admin_user)):
+    """Get all refund claims"""
+    claims = await db.refund_claims.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return claims
+
+@api_router.put("/admin/refund-claims/{claim_id}")
+async def update_refund_claim(claim_id: str, update: dict, user: dict = Depends(get_admin_user)):
+    """Update a refund claim status or add notes"""
+    result = await db.refund_claims.update_one(
+        {"claim_id": claim_id},
+        {"$set": update}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Claim not found")
+    return {"message": "Claim updated successfully"}
+
+@api_router.post("/admin/send-refund-form")
+async def send_refund_form_email(data: dict, user: dict = Depends(get_admin_user)):
+    """Send refund claim form link to a customer"""
+    email = data.get("email")
+    order_id = data.get("order_id")
+    customer_name = data.get("customer_name", "Valued Customer")
+    
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+    
+    try:
+        resend.api_key = os.environ.get("RESEND_API_KEY")
+        if not resend.api_key:
+            raise HTTPException(status_code=500, detail="Email service not configured")
+        
+        # Build form URL with prefilled data
+        form_url = f"https://revolutionprinting.ca/refund-claim?order={order_id or ''}&email={email}"
+        
+        resend.Emails.send({
+            "from": "Revolution Printing <onboarding@resend.dev>",
+            "to": [email],
+            "subject": "Refund Claim Form - Revolution Printing",
+            "html": f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #333;">Refund Claim Form</h2>
+                <p>Hi {customer_name},</p>
+                <p>We're sorry to hear there may be an issue with your order. Please use the link below to submit a refund claim:</p>
+                <p style="text-align: center; margin: 30px 0;">
+                    <a href="{form_url}" style="background-color: #c00; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Submit Refund Claim
+                    </a>
+                </p>
+                <p><strong>Please note:</strong></p>
+                <ul>
+                    <li>Refunds are only issued for printer-caused defects</li>
+                    <li>Claims must be submitted within 48 hours of delivery</li>
+                    <li>Clear photos of the issue are required</li>
+                </ul>
+                <p>If you have any questions, please reply to this email or contact us at myrevolutionprinting@gmail.com</p>
+                <hr style="border: 1px solid #eee; margin: 20px 0;">
+                <p style="color: #888; font-size: 11px;">Revolution Printing</p>
+            </div>
+            """
+        })
+        
+        logger.info(f"Refund form email sent to {email}")
+        return {"message": f"Refund claim form sent to {email}"}
+    except Exception as e:
+        logger.error(f"Failed to send refund form email: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
+
 # ======================== CONTACT ROUTES ========================
 
 @api_router.post("/contact")
