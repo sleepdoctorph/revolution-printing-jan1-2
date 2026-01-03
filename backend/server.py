@@ -1540,6 +1540,79 @@ async def update_gildan_all_colors(user: dict = Depends(get_admin_user)):
         "gildan_64000_updated": result_64000.modified_count
     }
 
+@api_router.post("/admin/update-product-codes")
+async def update_product_codes(user: dict = Depends(get_admin_user)):
+    """Update all products with wholesale style codes"""
+    
+    product_codes = {
+        # GILDAN T-SHIRTS
+        'Gildan Unisex Heavy Cotton™ T-Shirt': 'Gildan 5000 - Unisex Heavy Cotton™ T-Shirt',
+        'Gildan Unisex Softstyle® T-Shirt': 'Gildan 64000 - Unisex Softstyle® T-Shirt',
+        'Gildan Unisex DryBlend® T-Shirt': 'Gildan 8000 - Unisex DryBlend® T-Shirt',
+        'Gildan Unisex Ultra Cotton® T-Shirt': 'Gildan 2000 - Unisex Ultra Cotton® T-Shirt',
+        'Gildan Youth Heavy Cotton™ T-Shirt': 'Gildan 5000B - Youth Heavy Cotton™ T-Shirt',
+        'Gildan Unisex Softstyle® CVC T-Shirt': 'Gildan 67000 - Unisex Softstyle® CVC T-Shirt',
+        'Gildan Unisex Softstyle® Midweight T-Shirt': 'Gildan 65000 - Unisex Softstyle® Midweight T-Shirt',
+        'Gildan Unisex Hammer™ T-Shirt': 'Gildan H000 - Unisex Hammer™ T-Shirt',
+        'Gildan Unisex Performance® T-Shirt': 'Gildan 42000 - Unisex Performance® T-Shirt',
+        'Gildan Unisex Light Cotton T-Shirt': 'Gildan 4100 - Unisex Light Cotton T-Shirt',
+        "Gildan Women's Heavy Cotton™ T-Shirt": 'Gildan 5000L - Women Heavy Cotton™ T-Shirt',
+        "Gildan Women's Softstyle® T-Shirt": 'Gildan 64000L - Women Softstyle® T-Shirt',
+        'Gildan Unisex Ultra Cotton® Pocket T-Shirt': 'Gildan 2300 - Unisex Ultra Cotton® Pocket T-Shirt',
+        'Gildan Unisex Heavy Cotton™ Pocket T-Shirt': 'Gildan 5300 - Unisex Heavy Cotton™ Pocket T-Shirt',
+        'Gildan Unisex Softstyle® V-Neck T-Shirt': 'Gildan 64V00 - Unisex Softstyle® V-Neck T-Shirt',
+        "Gildan Women's Softstyle® V-Neck T-Shirt": 'Gildan 64V00L - Women Softstyle® V-Neck T-Shirt',
+        'Gildan Unisex Hammer™ Maxweight T-Shirt': 'Gildan H300 - Unisex Hammer™ Maxweight T-Shirt',
+        'Gildan Unisex Softstyle® Lightweight T-Shirt': 'Gildan 980 - Unisex Softstyle® Lightweight T-Shirt',
+        'Gildan Unisex DryBlend® Pocket T-Shirt': 'Gildan 8300 - Unisex DryBlend® Pocket T-Shirt',
+        "Gildan Men's Tall Ultra Cotton® T-Shirt": 'Gildan 2000T - Men Tall Ultra Cotton® T-Shirt',
+        
+        # GILDAN HOODIES
+        'Gildan Unisex Heavy Blend™ Hooded Sweatshirt': 'Gildan 18500 - Unisex Heavy Blend™ Hooded Sweatshirt',
+        'Gildan Unisex Heavy Blend™ Full-Zip Hooded Sweatshirt': 'Gildan 18600 - Unisex Heavy Blend™ Full-Zip Hooded Sweatshirt',
+        'Gildan Youth Heavy Blend™ Hooded Sweatshirt': 'Gildan 18500B - Youth Heavy Blend™ Hooded Sweatshirt',
+        'Gildan Unisex Softstyle® Midweight Hooded Sweatshirt': 'Gildan SF500 - Unisex Softstyle® Midweight Hooded Sweatshirt',
+        'Gildan Unisex Hammer™ Maxweight Hooded Sweatshirt': 'Gildan HF500 - Unisex Hammer™ Maxweight Hooded Sweatshirt',
+        'Gildan Unisex DryBlend® Hooded Sweatshirt': 'Gildan 12500 - Unisex DryBlend® Hooded Sweatshirt',
+        'Gildan Youth Heavy Blend™ Full-Zip Hooded Sweatshirt': 'Gildan 18600B - Youth Heavy Blend™ Full-Zip Hooded Sweatshirt',
+        'Gildan Youth Softstyle® Midweight Hooded Sweatshirt': 'Gildan SF500B - Youth Softstyle® Midweight Hooded Sweatshirt',
+        
+        # YP CLASSICS HATS
+        'YP Classics Retro Trucker Cap': 'YP Classics 6606 - Retro Trucker Cap',
+        'YP Classics Five-Panel Retro Trucker Cap': 'YP Classics 6006 - Five-Panel Retro Trucker Cap',
+        'YP Classics Premium Flat Bill Snapback Cap': 'YP Classics 6089 - Premium Flat Bill Snapback Cap',
+        'YP Classics Five-Panel Classic Trucker Cap': 'YP Classics 6506 - Five-Panel Classic Trucker Cap',
+        'YP Classics Classic Dad Hat': 'YP Classics 6245CM - Classic Dad Hat',
+        'YP Classics Premium Curved Bill Snapback Cap': 'YP Classics 6789 - Premium Curved Bill Snapback Cap',
+        
+        # RICHARDSON HATS
+        'Richardson Snapback Trucker Cap': 'Richardson 112 - Snapback Trucker Cap',
+        'Richardson Low Pro Trucker Cap': 'Richardson 115 - Low Pro Trucker Cap',
+        'Richardson Five-Panel Trucker Cap': 'Richardson 168 - Five-Panel Trucker Cap',
+        'Richardson R-Flex Trucker Cap': 'Richardson 110 - R-Flex Trucker Cap',
+        'Richardson Twill Back Trucker Cap': 'Richardson 112FP - Twill Back Trucker Cap',
+        'Richardson Youth Trucker Snapback Cap': 'Richardson 112Y - Youth Trucker Snapback Cap',
+        
+        # FLEXFIT HATS
+        'Flexfit Cotton Blend Cap': 'Flexfit 6277 - Cotton Blend Cap',
+        'Flexfit 110® Mesh-Back Cap': 'Flexfit 110M - 110® Mesh-Back Cap',
+        'Flexfit 110® Snapback Cap': 'Flexfit 110F - 110® Snapback Cap',
+        'Flexfit Delta® Seamless Cap': 'Flexfit 180 - Delta® Seamless Cap',
+        'Flexfit Trucker Cap': 'Flexfit 6511 - Trucker Cap',
+        'Flexfit Wool-Blend Cap': 'Flexfit 6477 - Wool-Blend Cap',
+        'Flexfit V-Flexfit® Cotton Twill Cap': 'Flexfit 5001 - V-Flexfit® Cotton Twill Cap',
+        'Flexfit Cool & Dry Sport Cap': 'Flexfit 6597 - Cool & Dry Sport Cap',
+        'Flexfit NU® Adjustable Cap': 'Flexfit 6100NU - NU® Adjustable Cap',
+    }
+    
+    updated = 0
+    for old_name, new_name in product_codes.items():
+        result = await db.products.update_one({'name': old_name}, {'$set': {'name': new_name}})
+        if result.modified_count > 0:
+            updated += 1
+    
+    return {"message": f"Updated {updated} products with style codes"}
+
 @api_router.post("/admin/import-hats")
 async def import_hats(user: dict = Depends(get_admin_user)):
     """Import YP Classics, Richardson, and Flexfit hats from S&S Activewear"""
