@@ -108,6 +108,11 @@ const CheckoutPage = () => {
   const isCustomOrder = items.some(item => !item.design_id || item.design_name?.toLowerCase().includes('custom'));
   const canGetFreeShipping = !isCustomOrder && shippingInfo.country === 'CA';
 
+  // Check if all required confirmations are checked
+  const allConfirmationsChecked = isCustomOrder
+    ? (confirmations.printReady && confirmations.noDesignService && confirmations.spellingResponsibility && confirmations.turnaround && confirmations.shippingFees)
+    : (confirmations.designedProducts && confirmations.designedShipping);
+
   const shipping = calculateShipping();
   const taxRate = shippingInfo.country === 'CA' ? 0.13 : 0.08; // 13% HST for Canada, 8% for USA
   const tax = totalPrice * taxRate;
