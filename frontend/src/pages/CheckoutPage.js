@@ -280,6 +280,21 @@ const CheckoutPage = () => {
                       data-testid="shipping-address"
                     />
                   </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor="country">Country</Label>
+                    <select
+                      id="country"
+                      name="country"
+                      value={shippingInfo.country}
+                      onChange={handleInputChange}
+                      className="w-full border-2 border-black h-12 rounded-md px-3 bg-white"
+                      required
+                      data-testid="shipping-country"
+                    >
+                      <option value="CA">Canada 🇨🇦</option>
+                      <option value="US">United States 🇺🇸</option>
+                    </select>
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
                     <Input
@@ -293,25 +308,27 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="state">Province/State</Label>
+                    <Label htmlFor="state">{shippingInfo.country === 'CA' ? 'Province' : 'State'}</Label>
                     <Input
                       id="state"
                       name="state"
                       value={shippingInfo.state}
                       onChange={handleInputChange}
                       className="border-2 border-black h-12"
+                      placeholder={shippingInfo.country === 'CA' ? 'ON, BC, AB...' : 'CA, NY, TX...'}
                       required
                       data-testid="shipping-state"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zip">Postal/ZIP Code</Label>
+                    <Label htmlFor="zip">{shippingInfo.country === 'CA' ? 'Postal Code' : 'ZIP Code'}</Label>
                     <Input
                       id="zip"
                       name="zip"
                       value={shippingInfo.zip}
                       onChange={handleInputChange}
                       className="border-2 border-black h-12"
+                      placeholder={shippingInfo.country === 'CA' ? 'A1A 1A1' : '12345'}
                       required
                       data-testid="shipping-zip"
                     />
