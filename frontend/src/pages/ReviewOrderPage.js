@@ -123,7 +123,7 @@ const ReviewOrderPage = () => {
             Review Your Order
           </h1>
           <p className="text-muted-foreground">
-            Here's a preview of your custom product
+            Here&apos;s a preview of your custom product
           </p>
         </div>
 
