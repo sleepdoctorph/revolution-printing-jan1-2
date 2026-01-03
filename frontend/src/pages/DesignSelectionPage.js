@@ -15,7 +15,7 @@ const DesignSelectionPage = () => {
   const [selectedDesign, setSelectedDesign] = useState(null);
 
   // Get product data from navigation state
-  const { product, selectedColor, selectedSize, quantity } = location.state || {};
+  const { product, selectedColor, selectedSize, quantity, printPlacement } = location.state || {};
 
   useEffect(() => {
     // If no product data, redirect back to shop
