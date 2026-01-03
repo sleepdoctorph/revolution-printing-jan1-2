@@ -26,6 +26,7 @@ const Navbar = () => {
     { name: 'Hoodies', href: '/shop?category=hoodies' },
     { name: 'Hats', href: '/shop?category=hats' },
     { name: 'Mugs', href: '/shop?category=mugs' },
+    { name: 'FAQ', href: '/printing-info' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
