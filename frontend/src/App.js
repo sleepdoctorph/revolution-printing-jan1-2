@@ -34,6 +34,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminCustomers from './pages/admin/AdminCustomers';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminDesigns from './pages/admin/AdminDesigns';
+import AdminRefundClaims from './pages/admin/AdminRefundClaims';
 
 import './App.css';
 
