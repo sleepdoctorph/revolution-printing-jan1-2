@@ -40,9 +40,8 @@ const AdminDesigns = () => {
 
   const fetchDesigns = useCallback(async () => {
     try {
-      const token = getToken();
-      const response = await axios.get(`${API_URL}/api/admin/designs`, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await apiClient.get('/api/admin/designs', {
+        headers: getAuthHeaders()
       });
       setDesigns(response.data);
     } catch (error) {
