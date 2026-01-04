@@ -9,6 +9,9 @@ import { useAuth } from '../../context/AuthContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Helper to get token from either storage
+const getToken = () => localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const AdminDesigns = () => {
   const { user } = useAuth();
   const [designs, setDesigns] = useState([]);
@@ -25,7 +28,7 @@ const AdminDesigns = () => {
 
   const fetchDesigns = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       const response = await axios.get(`${API_URL}/api/admin/designs`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -51,7 +54,7 @@ const AdminDesigns = () => {
     uploadFormData.append('file', file);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       const response = await axios.post(`${API_URL}/api/admin/designs/upload`, uploadFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,7 +84,7 @@ const AdminDesigns = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       await axios.post(`${API_URL}/api/admin/designs`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -99,7 +102,7 @@ const AdminDesigns = () => {
     if (!window.confirm('Are you sure you want to delete this design?')) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       await axios.delete(`${API_URL}/api/admin/designs/${designId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
