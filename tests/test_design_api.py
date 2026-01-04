@@ -8,9 +8,9 @@ import os
 
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 
-# Test credentials
+# Test credentials (updated password)
 ADMIN_EMAIL = "admin@faithfulthreads.com"
-ADMIN_PASSWORD = "admin123"
+ADMIN_PASSWORD = "Loveboat123789"
 
 
 class TestDesignAPI:
