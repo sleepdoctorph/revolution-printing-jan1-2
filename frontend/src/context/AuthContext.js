@@ -17,14 +17,27 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper to get token from either storage
+  const getStoredToken = () => {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  };
+
   const checkAuth = useCallback(async () => {
     try {
+      // First try to use stored token for Bearer auth
+      const storedToken = getStoredToken();
+      const headers = storedToken ? { Authorization: `Bearer ${storedToken}` } : {};
+      
       const response = await axios.get(`${API_URL}/api/auth/me`, {
-        withCredentials: true
+        withCredentials: true,
+        headers
       });
       setUser(response.data);
     } catch (error) {
       setUser(null);
+      // Clear invalid tokens
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
@@ -34,14 +47,24 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = true) => {
     const response = await axios.post(`${API_URL}/api/auth/login`, 
       { email, password },
       { withCredentials: true }
     );
-    // Store token in localStorage for admin pages that use Bearer auth
+    // Store token based on remember me preference
     if (response.data.access_token) {
-      localStorage.setItem('token', response.data.access_token);
+      // Clear both storages first
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      
+      if (rememberMe) {
+        // Persistent storage - survives browser close
+        localStorage.setItem('token', response.data.access_token);
+      } else {
+        // Session storage - cleared when browser closes
+        sessionStorage.setItem('token', response.data.access_token);
+      }
     }
     setUser(response.data.user);
     return response.data;
@@ -81,8 +104,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     }
-    // Clear token from localStorage
+    // Clear token from both storages
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     setUser(null);
   };
 
