@@ -39,6 +39,10 @@ export const AuthProvider = ({ children }) => {
       { email, password },
       { withCredentials: true }
     );
+    // Store token in localStorage for admin pages that use Bearer auth
+    if (response.data.access_token) {
+      localStorage.setItem('token', response.data.access_token);
+    }
     setUser(response.data.user);
     return response.data;
   };
@@ -48,6 +52,10 @@ export const AuthProvider = ({ children }) => {
       { email, password, name },
       { withCredentials: true }
     );
+    // Store token in localStorage for admin pages that use Bearer auth
+    if (response.data.access_token) {
+      localStorage.setItem('token', response.data.access_token);
+    }
     setUser(response.data.user);
     return response.data;
   };
@@ -73,6 +81,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     }
+    // Clear token from localStorage
+    localStorage.removeItem('token');
     setUser(null);
   };
 
