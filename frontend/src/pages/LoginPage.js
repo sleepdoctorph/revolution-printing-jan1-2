@@ -15,7 +15,7 @@ const LoginPage = () => {
   const { login, register, loginWithGoogle, isAuthenticated } = useAuth();
   
   const [loading, setLoading] = useState(false);
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [loginForm, setLoginForm] = useState({ email: '', password: '', rememberMe: true });
   const [registerForm, setRegisterForm] = useState({ 
     name: '', 
     email: '', 
@@ -38,7 +38,7 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      const response = await login(loginForm.email, loginForm.password);
+      const response = await login(loginForm.email, loginForm.password, loginForm.rememberMe);
       toast.success('Welcome back!');
       if (response.user?.is_admin) {
         navigate('/admin', { replace: true });
@@ -146,6 +146,23 @@ const LoginPage = () => {
                     />
                   </div>
                 </div>
+                
+                {/* Remember Me Checkbox */}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember-me"
+                    checked={loginForm.rememberMe}
+                    onCheckedChange={(checked) => setLoginForm({ ...loginForm, rememberMe: checked })}
+                    data-testid="remember-me-checkbox"
+                  />
+                  <label 
+                    htmlFor="remember-me" 
+                    className="text-sm text-muted-foreground cursor-pointer select-none"
+                  >
+                    Remember me for 7 days
+                  </label>
+                </div>
+
                 <Button
                   type="submit"
                   disabled={loading}
