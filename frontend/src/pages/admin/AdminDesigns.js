@@ -9,11 +9,19 @@ import { useAuth } from '../../context/AuthContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Helper to get token from either storage
-const getToken = () => {
+// Create axios instance with credentials for cookie-based auth
+const apiClient = axios.create({
+  baseURL: API_URL,
+  withCredentials: true
+});
+
+// Helper to get token and build headers
+const getAuthHeaders = () => {
   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-  console.log('Token found:', token ? 'Yes (length: ' + token.length + ')' : 'No');
-  return token;
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+  return {};
 };
 
 const AdminDesigns = () => {
