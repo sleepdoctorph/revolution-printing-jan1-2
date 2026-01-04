@@ -78,12 +78,8 @@ const AdminDesigns = () => {
     uploadFormData.append('file', file);
 
     try {
-      const token = getToken();
-      // Don't set Content-Type header - let browser set it with boundary
-      const response = await axios.post(`${API_URL}/api/admin/designs/upload`, uploadFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await apiClient.post('/api/admin/designs/upload', uploadFormData, {
+        headers: getAuthHeaders()
       });
       setFormData(prev => ({ ...prev, image_url: response.data.url }));
       toast.success('Image uploaded successfully');
