@@ -94,6 +94,12 @@ export const AuthProvider = ({ children }) => {
       headers: { 'X-Session-ID': sessionId },
       withCredentials: true
     });
+    
+    // Store the session token for Bearer auth (used by admin pages)
+    if (response.data.session_token) {
+      localStorage.setItem('token', response.data.session_token);
+    }
+    
     setUser(response.data);
     return response.data;
   };
