@@ -3468,8 +3468,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_origins=[
         "http://localhost:3000",
+        "https://localhost:3000",
         "https://revprint-ecom.preview.emergentagent.com",
-        "https://localhost:3000"
+        "https://revolutionprinting.ca",
+        "https://www.revolutionprinting.ca",
+        "https://christian-tees-4.emergent.host",
+        "https://slumber-print.preview.emergentagent.com"
     ],
     allow_methods=["*"],
     allow_headers=["*"],
