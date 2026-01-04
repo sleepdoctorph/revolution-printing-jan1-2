@@ -152,7 +152,7 @@ The frontend now includes a comprehensive color map translating apparel color na
 
 ## Test Credentials
 - **Admin Email**: admin@faithfulthreads.com
-- **Admin Password**: admin123
+- **Admin Password**: Loveboat123789
 
 ## API Endpoints
 
