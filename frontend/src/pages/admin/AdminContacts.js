@@ -8,6 +8,9 @@ import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Helper to get token from either storage
+const getToken = () => localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const AdminContacts = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +21,7 @@ const AdminContacts = () => {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = getToken();
         const response = await axios.get(`${API_URL}/api/admin/contacts`, { 
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true 
@@ -41,7 +44,7 @@ const AdminContacts = () => {
 
     setSending(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       await axios.post(
         `${API_URL}/api/admin/contacts/${contact.contact_id}/reply`,
         { message: replyMessage },
