@@ -1,34 +1,219 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Faithful Threads - Custom Styles */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Global smooth transitions */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
+/* Page transition animations */
+@keyframes fadeIn {
     from {
-        transform: rotate(0deg);
+        opacity: 0;
+        transform: translateY(10px);
     }
     to {
-        transform: rotate(360deg);
+        opacity: 1;
+        transform: translateY(0);
     }
 }
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.page-enter {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Smooth link transitions */
+a {
+    transition: color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Product card hover effects */
+.product-card {
+    @apply transition-all duration-500 ease-out;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.03);
+    transition: transform 0.5s ease-out;
+}
+
+/* Category pill styles */
+.category-pill {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border-2 border-black transition-all duration-300 ease-out;
+}
+
+.category-pill:hover {
+    @apply shadow-brutal-sm;
+}
+
+.category-pill.active {
+    @apply bg-primary text-white;
+}
+
+/* Cart badge animation */
+@keyframes cart-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.cart-badge-animate {
+    animation: cart-bounce 0.3s ease-out;
+}
+
+/* Hero section gradient overlay */
+.hero-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(217, 119, 6, 0.1) 0%,
+        rgba(190, 18, 60, 0.1) 50%,
+        rgba(15, 118, 110, 0.1) 100%
+    );
+}
+
+/* Testimonial cards */
+.testimonial-card {
+    @apply relative;
+}
+
+.testimonial-card::before {
+    content: '"';
+    @apply absolute -top-4 -left-2 text-6xl text-primary/20 font-heading;
+}
+
+/* Admin dashboard styles */
+.stat-card {
+    @apply bg-white border-2 border-black rounded-xl p-6 shadow-brutal transition-all hover:shadow-brutal-lg;
+}
+
+/* Form input focus states */
+.input-brutal:focus {
+    @apply ring-2 ring-primary ring-offset-2;
+}
+
+/* Loading skeleton */
+.skeleton {
+    @apply bg-muted animate-pulse rounded;
+}
+
+/* Toast animations */
+.toast-enter {
+    @apply opacity-0 translate-y-4;
+}
+
+.toast-enter-active {
+    @apply opacity-100 translate-y-0 transition-all duration-300;
+}
+
+.toast-exit {
+    @apply opacity-100 translate-y-0;
+}
+
+.toast-exit-active {
+    @apply opacity-0 translate-y-4 transition-all duration-300;
+}
+
+/* Nav Link Sparkle & Glow Effect */
+@keyframes sparkle-glow {
+    0% {
+        box-shadow: 0 0 5px rgba(217, 119, 6, 0.5);
+        text-shadow: 0 0 5px rgba(217, 119, 6, 0.5);
+    }
+    25% {
+        box-shadow: 0 0 15px rgba(217, 119, 6, 0.8), 0 0 30px rgba(217, 119, 6, 0.4);
+        text-shadow: 0 0 10px rgba(217, 119, 6, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 215, 0, 0.6);
+        text-shadow: 0 0 15px rgba(255, 215, 0, 1);
+    }
+    75% {
+        box-shadow: 0 0 15px rgba(217, 119, 6, 0.8), 0 0 30px rgba(217, 119, 6, 0.4);
+        text-shadow: 0 0 10px rgba(217, 119, 6, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(217, 119, 6, 0.5);
+        text-shadow: 0 0 5px rgba(217, 119, 6, 0.5);
+    }
+}
+
+@keyframes sparkle-burst {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 3px gold);
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px gold);
+    }
+    100% {
+        transform: scale(0) rotate(360deg) translateY(-20px);
+        opacity: 0;
+        filter: drop-shadow(0 0 0px gold);
+    }
+}
+
+@keyframes sparkle-particle {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.nav-link-sparkle {
+    animation: sparkle-glow 0.6s ease-in-out;
+    border-radius: 8px;
+}
+
+.sparkle-container {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, transparent 70%);
+    border-radius: 50%;
+    animation: sparkle-particle 0.6s ease-out forwards;
+}
+
+.sparkle::before {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #FFD700;
+    text-shadow: 0 0 5px #FFD700;
+}
+
