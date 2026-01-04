@@ -49,23 +49,37 @@ const AdminDesigns = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Only JPEG, PNG, WebP, GIF allowed.');
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File too large. Maximum size is 10MB.');
+      return;
+    }
+
     setUploading(true);
     const uploadFormData = new FormData();
     uploadFormData.append('file', file);
 
     try {
       const token = getToken();
+      // Don't set Content-Type header - let browser set it with boundary
       const response = await axios.post(`${API_URL}/api/admin/designs/upload`, uploadFormData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+          Authorization: `Bearer ${token}`
         }
       });
       setFormData(prev => ({ ...prev, image_url: response.data.url }));
       toast.success('Image uploaded successfully');
     } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+      console.error('Upload error:', error.response?.data || error);
+      const errorMsg = error.response?.data?.detail || 'Failed to upload image';
+      toast.error(errorMsg);
     } finally {
       setUploading(false);
     }
