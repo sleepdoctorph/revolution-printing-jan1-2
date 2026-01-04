@@ -52,7 +52,17 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
 - ✅ Product image upload in admin
 - ✅ **Newsletter signup checkbox** at checkout
 
-### Latest Session Updates (January 1, 2026)
+### Latest Session Updates (January 4, 2026)
+- ✅ **Bug Fix: Admin Designs Page** (COMPLETE):
+  - **Issue**: Admin → Designs page showed "Failed to load designs" error
+  - **Root Cause**: JWT token wasn't stored in localStorage after login, causing admin API calls to fail with 401 Unauthorized
+  - **Fix Applied**: 
+    - AuthContext.js updated to store JWT token in localStorage after login/register
+    - CORS configuration fixed to use specific origins instead of wildcard '*' with credentials
+  - **Verification**: 17/17 backend tests passed, all frontend features working
+  - Designs now load correctly on Admin Designs page
+
+### Previous Session Updates (January 1, 2026)
 - ✅ **Guest Checkout Feature** (COMPLETE):
   - "Continue as Guest" button on login page
   - Guest users can checkout without creating an account
