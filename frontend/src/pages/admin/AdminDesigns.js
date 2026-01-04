@@ -105,9 +105,8 @@ const AdminDesigns = () => {
     }
 
     try {
-      const token = getToken();
-      await axios.post(`${API_URL}/api/admin/designs`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
+      await apiClient.post('/api/admin/designs', formData, {
+        headers: getAuthHeaders()
       });
       toast.success('Design created successfully');
       setFormData({ name: '', category: 'apparel', image_url: '' });
@@ -123,9 +122,8 @@ const AdminDesigns = () => {
     if (!window.confirm('Are you sure you want to delete this design?')) return;
 
     try {
-      const token = getToken();
-      await axios.delete(`${API_URL}/api/admin/designs/${designId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      await apiClient.delete(`/api/admin/designs/${designId}`, {
+        headers: getAuthHeaders()
       });
       toast.success('Design deleted successfully');
       fetchDesigns();
