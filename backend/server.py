@@ -3466,7 +3466,11 @@ app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads"
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://revprint-ecom.preview.emergentagent.com",
+        "https://localhost:3000"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
