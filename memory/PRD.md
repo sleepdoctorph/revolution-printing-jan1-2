@@ -62,6 +62,12 @@ Build a Christian t-shirt, Hat and mug business e-commerce site with authenticat
   - **Verification**: 17/17 backend tests passed, all frontend features working
   - Designs now load correctly on Admin Designs page
 
+- ✅ **"Remember Me" Feature** (COMPLETE):
+  - Added "Remember me for 7 days" checkbox to login form (checked by default)
+  - When checked: Token stored in `localStorage` - persists across browser sessions
+  - When unchecked: Token stored in `sessionStorage` - cleared when browser closes
+  - Updated all admin pages to check both storage types for token retrieval
+
 ### Previous Session Updates (January 1, 2026)
 - ✅ **Guest Checkout Feature** (COMPLETE):
   - "Continue as Guest" button on login page
