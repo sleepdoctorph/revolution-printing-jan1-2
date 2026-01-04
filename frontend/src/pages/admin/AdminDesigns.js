@@ -10,7 +10,11 @@ import { useAuth } from '../../context/AuthContext';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 // Helper to get token from either storage
-const getToken = () => localStorage.getItem('token') || sessionStorage.getItem('token');
+const getToken = () => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  console.log('Token found:', token ? 'Yes (length: ' + token.length + ')' : 'No');
+  return token;
+};
 
 const AdminDesigns = () => {
   const { user } = useAuth();
